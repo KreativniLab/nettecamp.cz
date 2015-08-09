@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<title>{ifset title}{include title|striptags} | {/ifset}Nette Camp</title>
+
+	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
+
+	<!--[if lte IE 8]><script src="{$basePath}/assets/js/ie/html5shiv.js"></script><![endif]-->
+	<link rel="stylesheet" href="{$basePath}/assets/css/main.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="{$basePath}/assets/css/ie8.css" /><![endif]-->
+</head>
+
+<body>
+	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+
+	{include content}
+
+	<!-- Footer -->
+	<div id="footer">
+		<div class="container 75%">
+
+			<header class="major last">
+				<h2>Registrace</h2>
+			</header>
+
+			<p>Vyplňujte v případě zájmu, nejpozději do 21.8.</p>
+
+			<form method="post" action="#">
+				<div class="row">
+					<div class="6u 12u(mobilep)">
+						<input type="text" name="name" placeholder="Jméno" />
+					</div>
+					<div class="6u 12u(mobilep)">
+						<input type="email" name="email" placeholder="Email" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="6u 12u(mobilep)">
+						<input type="text" name="name" placeholder="Telefon" />
+					</div>
+					<div class="6u 12u(mobilep)">
+						<select>
+							<option>přijedu ve čtvrtek</option>
+							<option>přijedu v pátek</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="12u">
+						<textarea name="message" placeholder="Poznámka" rows="6"></textarea>
+					</div>
+				</div>
+				<div class="row">
+					<div class="12u">
+						<ul class="actions">
+							<li><input type="submit" value="Registrovat" /></li>
+						</ul>
+					</div>
+				</div>
+			</form>
+
+			<ul class="icons">
+				<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+				<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+			</ul>
+
+			<ul class="copyright">
+				<li>made by Kreativni Laborator s.r.o.</li><li>Based on theme from <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+
+		</div>
+	</div>
+
+
+	{block scripts}
+		<script src="//nette.github.io/resources/js/netteForms.min.js"></script>
+		<script src="{$basePath}/assets/js/netteForms.min.js"></script>
+
+		<script src="{$basePath}/assets/js/jquery.min.js"></script>
+		<script src="{$basePath}/assets/js/skel.min.js"></script>
+		<script src="{$basePath}/assets/js/util.js"></script>
+		<!--[if lte IE 8]><script src="{$basePath}/assets/js/ie/respond.min.js"></script><![endif]-->
+		<script src="{$basePath}/assets/js/main.js"></script>
+
+	{/block}
+</body>
+</html>

@@ -1,0 +1,24 @@
+{*
+	Posila se do admina
+*}
+{layout @layout.latte}
+{block subject}NetteCamp: Registrace{/block}
+{block content}
+
+<div style="font-size:18px">Registrace : <strong>{$variables[name]}</strong></div>
+<br>
+
+<div style="font-size:16px">Level: <br><strong>{$variables[level]}</strong></div>
+<br>
+
+
+<div style="font-size:16px">From: <br><strong>{$variables[from]}</strong></div>
+<br>
+
+
+<div style="font-size:16px">E-mail: <strong><a href="mailto:{$variables[email]}">{$variables[email]}</a></strong></div>
+<div style="font-size:16px">Telefon: <strong>{$variables[phone]}</strong></div>
+<div style="font-size:16px">Note: <strong>{$variables[note]}</strong></div>
+<br>
+---------<br>
+Sent from store. ({$language})

@@ -22,6 +22,7 @@
 		"tracy/tracy": "~2.3.0"
 	},
 	"require-dev": {
-		"nette/tester": "~1.4"
+		"nette/tester": "~1.4",
+		"jandrabek/nette-mailpanel": "~3.2"
 	}
 }

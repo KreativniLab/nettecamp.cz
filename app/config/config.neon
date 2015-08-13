@@ -2,7 +2,16 @@
 # http://nette.org/security-warning
 
 parameters:
+	database:
+		host: 127.0.0.1
 
+	site:
+		develMode: false
+		version: blackmamba
+
+	email:
+		from: info@kreativnilaborator.cz
+		name: Kreativni Laborator
 
 php:
 	date.timezone: Europe/Prague
@@ -17,6 +26,13 @@ application:
 session:
 	expiration: 14 days
 
+database:
+	dsn: 'mysql:host=%database.host%;dbname=%database.dbname%'
+	user: %database.user%
+	password: %database.password%
+	options: {lazy: yes}
+
 
 services:
 	router: App\RouterFactory::createRouter
+	- MailManager(%email%)

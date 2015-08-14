@@ -158,47 +158,22 @@
 						</tr>
 					</tbody>
 				</table>
+
+				<p>Celkově vás Nette Camp vyjde přibližně na <i>3 * 250 + 3*(60+90+80) + 3 * (6 * 35) =</i> 2000,- bez dopravy</p>
 			</div>
 		</section>
-		{*
 			<section>
 			<header>
-				<h3>Registrace</h3>
+				<h3>F.A.Q.</h3>
 			</header>
-			<form method="post" action="#">
-				<div class="row">
-					<div class="6u 12u(mobilep)">
-						<label for="name">Jméno</label>
-						<input class="text" type="text" name="name" id="name" value="" placeholder="John Doe" />
-					</div>
-					<div class="6u 12u(mobilep)">
-						<label for="email">Email</label>
-						<input class="text" type="text" name="email" id="email" value="" placeholder="johndoe@domain.tld" />
-					</div>
-				</div>
-				<div class="row">
-					<div class="12u">
-						<label for="subject">Subject</label>
-						<input class="text" type="text" name="subject" id="subject" value="" placeholder="Enter your subject" />
-					</div>
-				</div>
-				<div class="row">
-					<div class="12u">
-						<label for="subject">Message</label>
-						<textarea name="message" id="message" placeholder="Enter your message" rows="6"></textarea>
-					</div>
-				</div>
-				<div class="row">
-					<div class="12u">
-						<ul class="actions">
-							<li><input type="submit" value="Send" /></li>
-							<li><input type="reset" value="Reset" class="alt" /></li>
-						</ul>
-					</div>
-				</div>
-			</form>
+			<p>
+				<strong>Je tam WiFi?</strong> Ano WiFi je.
+			</p>
+			<p>
+				<strong>Je tam konferenční místnost?</strong> Ano je.
+			</p>
+
 		</section>
-		*}
 	</div>
 
 
@@ -209,7 +184,17 @@
 		<ul class="actions">
 			<li><a href="mailto:info@nettecamp.cz" class="button">zeptej se nás</a></li>
 		</ul>
+
+		<h3>Učastníci {$count}/20</h3>
+		<p>
+			{foreach $users as $user}
+				{$user}
+				{sep},{/sep}
+			{/foreach}
+		</p>
+
 	</footer>
+
 
 </div>
 

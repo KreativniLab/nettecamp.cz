@@ -30,6 +30,10 @@
 	<!-- Footer -->
 	<div id="footer">
 		<div class="container 75%" n:snippet="order">
+
+			{if isset($formSend)}
+
+
 			{if $formSend}
 				<h2>Děkujeme</h2>
 				<p>Brzy se ozveme s dalšími informacemi</p>
@@ -80,6 +84,8 @@
 				</div>
 			</form>
 
+
+			{/if}
 
 			{/if}
 

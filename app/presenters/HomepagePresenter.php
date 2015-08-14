@@ -23,6 +23,9 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		}
 
 		$this->template->formSend = $this->formSendSuccess;
+
+		$this->template->count = $this->mailManager->getCampUsersCount();
+		$this->template->users = $this->mailManager->getCampUsers();
 	}
 
 

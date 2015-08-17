@@ -43,9 +43,14 @@
 				<h2>Registrace</h2>
 			</header>
 
-			<p>Vyplňujte v případě zájmu, nejpozději do pondělí 17.8. 10:00 </p>
+			<p>
+				Registrace již skončila, ale pokud máte zájem můžete zkusit zdali je volná kapacita.
+				Po vyplnění formuláře vám dáme vědět co nejdříve. <br>
+				<a href="#registrationForm" id="btn-showRegistrationForm">Chci se registrovat</a>
 
-			<form n:name="registrationForm" class="ajax">
+			</p>
+
+			<form n:name="registrationForm" class="ajax" id="registrationForm" style="display:none">
 				<div class="row">
 					<div class="6u 12u(mobilep)">
 						<input type="text" n:name="name" placeholder="Jméno" />
@@ -112,7 +117,7 @@
 		<script src="{$basePath}/assets/js/util.js"></script>
 		<!--[if lte IE 8]><script src="{$basePath}/assets/js/ie/respond.min.js"></script><![endif]-->
 		<script src="{$basePath}/assets/js/nette.ajax.js"></script>
-		<script src="{$basePath}/assets/js/main.js"></script>
+		<script src="{$basePath}/assets/js/main.js?v=registration-end"></script>
 
 	{/block}
 </body>

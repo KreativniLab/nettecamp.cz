@@ -1,0 +1,42 @@
+{layout none}
+
+
+<!doctype html>
+<html lang="cs">
+<head>
+	<meta charset="UTF-8">
+	<title>Nette Camp 2015</title>
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+</head>
+<body>
+<table class="pure-table">
+	<thead>
+	<tr>
+		<th>Name</th>
+		<th>nick</th>
+		<th>from</th>
+		<th>phone</th>
+		<th>email</th>
+		<th>note</th>
+		<th>level</th>
+	</tr>
+	</thead>
+	<tbody>
+	{foreach $users as $user}
+		<tr>
+			<td>{$user->name}</td>
+			<td>{$user->nickname}</td>
+			<td>{$user->from}</td>
+			<td>{$user->phone}</td>
+			<td>{$user->email}</td>
+			<td>{$user->level}</td>
+			<td>{$user->note}</td>
+		</tr>
+	{/foreach}
+	</tbody>
+</table>
+
+</body>
+</html>
+
+

@@ -119,6 +119,19 @@ class MailManager extends \Nette\Object
 	}
 
 
+	public function adminGetCampUsers()
+	{
+		$users = [];
+		$variables = $this->database->query("select variables from emails where subject = 'Registration Nette Camp'")->fetchAll();
+		foreach ($variables as $variable){
+			$var = unserialize($variable->variables);
+			$users[] = $var;
+		}
+
+		return $users;
+	}
+
+
 	public function getCampUsersCount()
 	{
 		return  $this->database->query("select count(id) as cnt from emails where subject = 'Registration Nette Camp'")->fetchField('cnt');

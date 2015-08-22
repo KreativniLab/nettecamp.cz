@@ -3128,3 +3128,17 @@
 	}
 
 option { color: #6e6e6e; }
+
+
+.text-center {
+	text-align: center;
+}
+
+small.name {
+	font-size: 70%;
+}
+
+
+table.default th.small {
+	font-size: 50%;
+}

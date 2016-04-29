@@ -35,7 +35,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 
 		$form->addHidden('email');
 		$form->addText('name', "Jméno:")->setRequired('Vyplň jméno');
-		$form->addText('liame', "Email:")->setRequired('Vyplň email');
+		$form->addText('liame', "Email:")->setRequired('Vyplň email')->addRule(Form::EMAIL, 'Emailová adresa je špatně zadaná');
 		$form->addText('phone', "Telefon:")->setRequired('Vyplň telefon');
 
 		$time = array(

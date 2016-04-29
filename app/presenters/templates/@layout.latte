@@ -4,7 +4,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>{ifset title}{include title|striptags} | {/ifset}Nette Camp</title>
+	<title>{ifset title}{include title|striptags} | {/ifset}Nette Camp / 25.–28. srpna 2016 </title>
+	<meta name="description" content="Setkání příznivců Nette Framework mimo město v Českém ráji v obci Nová Ves nad Popelkou">
 
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
@@ -43,14 +44,13 @@
 				<h2>Registrace</h2>
 			</header>
 
+			{*
 			<p>
-				Registrace již skončila, ale pokud máte zájem můžete zkusit zdali je volná kapacita.
-				Po vyplnění formuláře vám dáme vědět co nejdříve. <br>
 				<a href="#registrationForm" id="btn-showRegistrationForm">Chci se registrovat</a>
-
 			</p>
+			*}
 
-			<form n:name="registrationForm" class="ajax" id="registrationForm" style="display:none">
+			<form n:name="registrationForm" class="ajax" id="registrationForm" {* style="display:none" *}>
 				<div class="row">
 					<div class="6u 12u(mobilep)">
 						<input type="text" n:name="name" placeholder="Jméno" />

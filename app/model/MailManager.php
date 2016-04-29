@@ -107,7 +107,7 @@ class MailManager extends \Nette\Object
 	public function getCampUsers()
 	{
 		$users = [];
-		$variables = $this->database->query("select variables from emails where subject = 'Registration Nette Camp'")->fetchAll();
+		$variables = $this->database->query("select variables from emails where subject = 'Registration Nette Camp' and YEAR(created_date) != 2015")->fetchAll();
 		foreach ($variables as $variable){
 			$var = unserialize($variable->variables);
 			if (isset($var->nickname) && $var->nickname != '') {
@@ -122,7 +122,7 @@ class MailManager extends \Nette\Object
 	public function adminGetCampUsers()
 	{
 		$users = [];
-		$variables = $this->database->query("select variables from emails where subject = 'Registration Nette Camp'")->fetchAll();
+		$variables = $this->database->query("select variables from emails where subject = 'Registration Nette Camp' and YEAR(created_date) != 2015")->fetchAll();
 		foreach ($variables as $variable){
 			$var = unserialize($variable->variables);
 			$users[] = $var;
@@ -134,7 +134,7 @@ class MailManager extends \Nette\Object
 
 	public function getCampUsersCount()
 	{
-		return  $this->database->query("select count(id) as cnt from emails where subject = 'Registration Nette Camp'")->fetchField('cnt');
+		return  $this->database->query("select count(id) as cnt from emails where subject = 'Registration Nette Camp' and YEAR(created_date) != 2015")->fetchField('cnt');
 	}
 
 	/********************* email storage *********************/

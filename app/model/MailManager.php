@@ -112,6 +112,10 @@ class MailManager extends \Nette\Object
 			$var = unserialize($variable->variables);
 			if (isset($var->nickname) && $var->nickname != '') {
 				$users[] = $var->nickname;
+			} else {
+				if (isset($var->name) && $var->name != '') {
+					$users[] = $var->name;
+				}
 			}
 		}
 

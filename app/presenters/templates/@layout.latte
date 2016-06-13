@@ -32,65 +32,74 @@
 	<div id="footer">
 		<div class="container 75%" n:snippet="order">
 
+
 			{if isset($formSend)}
 
+				{if count($users) >= 60}
 
-			{if $formSend}
-				<h2>Děkujeme</h2>
-				<p>Brzy se ozveme s dalšími informacemi</p>
-			{else}
+					<h3>Kapacita campu je již naplněna.</h3>
+					<p>Pokud se chcete stát náhradníkem napište email na hello@honzacerny.com</p>
 
-			<header class="major last">
-				<h2>Registrace</h2>
-			</header>
+				{else}
 
-			{*
-			<p>
-				<a href="#registrationForm" id="btn-showRegistrationForm">Chci se registrovat</a>
-			</p>
-			*}
+					{if $formSend}
+						<h2>Děkujeme</h2>
+						<p>Brzy se ozveme s dalšími informacemi</p>
+					{else}
 
-			<form n:name="registrationForm" class="ajax" id="registrationForm" {* style="display:none" *}>
-				<div class="row">
-					<div class="6u 12u(mobilep)">
-						<input type="text" n:name="name" placeholder="Jméno" />
-					</div>
-					<div class="6u 12u(mobilep)">
-						<input type="email" n:name="liame" placeholder="Email" />
-					</div>
-				</div>
-				<div class="row">
-					<div class="6u 12u(mobilep)">
-						<input type="text" n:name="phone" placeholder="Telefon" />
-					</div>
-					<div class="6u 12u(mobilep)">
-						{input "from"}
-					</div>
-				</div>
-				<div class="row">
-					<div class="6u 12u(mobilep)">
-						<input type="text" n:name="nickname" placeholder="Nickname (zobrazen na stránkách)" />
-					</div>
-					<div class="6u 12u(mobilep)">
-						{input "level"}
-					</div>
-				</div>
-				<div class="row">
-					<div class="12u">
-						<textarea n:name="note" placeholder="Poznámka" rows="6"></textarea>
-					</div>
-				</div>
-				<div class="row">
-					<div class="12u">
-						<ul class="actions">
-							<li><input type="submit" value="Registrovat" /></li>
-						</ul>
-					</div>
-				</div>
-			</form>
+						<header class="major last">
+							<h2>Registrace</h2>
+						</header>
+
+						{*
+						<p>
+							<a href="#registrationForm" id="btn-showRegistrationForm">Chci se registrovat</a>
+						</p>
+						*}
+
+						<form n:name="registrationForm" class="ajax" id="registrationForm" {* style="display:none" *}>
+							<div class="row">
+								<div class="6u 12u(mobilep)">
+									<input type="text" n:name="name" placeholder="Jméno" />
+								</div>
+								<div class="6u 12u(mobilep)">
+									<input type="email" n:name="liame" placeholder="Email" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="6u 12u(mobilep)">
+									<input type="text" n:name="phone" placeholder="Telefon" />
+								</div>
+								<div class="6u 12u(mobilep)">
+									{input "from"}
+								</div>
+							</div>
+							<div class="row">
+								<div class="6u 12u(mobilep)">
+									<input type="text" n:name="nickname" placeholder="Nickname (zobrazen na stránkách)" />
+								</div>
+								<div class="6u 12u(mobilep)">
+									{input "level"}
+								</div>
+							</div>
+							<div class="row">
+								<div class="12u">
+									<textarea n:name="note" placeholder="Poznámka" rows="6"></textarea>
+								</div>
+							</div>
+							<div class="row">
+								<div class="12u">
+									<ul class="actions">
+										<li><input type="submit" value="Registrovat" /></li>
+									</ul>
+								</div>
+							</div>
+						</form>
 
 
-			{/if}
+					{/if}
+
+				{/if}
 
 			{/if}
 

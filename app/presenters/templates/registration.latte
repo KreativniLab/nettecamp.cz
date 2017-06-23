@@ -1,0 +1,93 @@
+<div id="footer">
+	<div class="container 75%" n:snippet="order">
+
+
+		{if isset($formSend)}
+
+			{if count($users) >= 65}
+
+				{*<h3>Kapacita campu je již naplněna.</h3>*}
+				{*<p>Pokud se chcete stát náhradníkem napište email na hello@honzacerny.com</p>*}
+
+				<h3>Poslední místa po odpadlících</h3>
+				<p>
+					Pokud máte zájem dorazit, ozvěte se na 777 148 481 nebo na hello@honzacerny.com
+				</p>
+
+			{else}
+
+				{if $formSend}
+					<h2>Děkujeme</h2>
+					<p>Brzy se ozveme s dalšími informacemi</p>
+				{else}
+
+					<header class="major last">
+						<h2>Registrace</h2>
+					</header>
+
+					{*
+					<p>
+						<a href="#registrationForm" id="btn-showRegistrationForm">Chci se registrovat</a>
+					</p>
+					*}
+
+					<form n:name="registrationForm" class="ajax" id="registrationForm" {* style="display:none" *}>
+						<div class="row">
+							<div class="6u 12u(mobilep)">
+								<input type="text" n:name="name" placeholder="Jméno" />
+							</div>
+							<div class="6u 12u(mobilep)">
+								<input type="email" n:name="liame" placeholder="Email" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="6u 12u(mobilep)">
+								<input type="text" n:name="phone" placeholder="Telefon" />
+							</div>
+							<div class="6u 12u(mobilep)">
+								{input "from"}
+							</div>
+						</div>
+						<div class="row">
+							<div class="6u 12u(mobilep)">
+								<input type="text" n:name="nickname" placeholder="Nickname (zobrazen na stránkách)" />
+							</div>
+							<div class="6u 12u(mobilep)">
+								{input "level"}
+							</div>
+						</div>
+						<div class="row">
+							<div class="12u">
+								<textarea n:name="note" placeholder="Poznámka" rows="6"></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="12u">
+								<ul class="actions">
+									<li><input type="submit" value="Registrovat" /></li>
+								</ul>
+							</div>
+						</div>
+					</form>
+
+
+				{/if}
+
+			{/if}
+
+		{/if}
+
+
+		<ul class="icons">
+			<li><a href="http://twitter.com/nettecamp" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+			{*<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>*}
+			{*<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>*}
+			{*<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>*}
+		</ul>
+
+		<ul class="copyright">
+			<li>made by <a href="http://www.kreativnilaborator.cz">Kreativni Laborator s.r.o.</a></li><li>Based on theme from <a href="http://html5up.net">HTML5 UP</a></li>
+		</ul>
+
+	</div>
+</div>

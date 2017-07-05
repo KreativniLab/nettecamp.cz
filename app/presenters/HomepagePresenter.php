@@ -7,6 +7,8 @@ use Nette\Application\UI\Form;
 
 class HomepagePresenter extends Nette\Application\UI\Presenter
 {
+	use \IPub\Gravatar\TGravatar;
+
 	/**
 	 * @var \MailManager
 	 * @inject
@@ -39,11 +41,13 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		$form->addText('phone', "Telefon:")->setRequired('Vyplň telefon');
 
 		$time = array(
-			'ctvrte' => "přijedu ve čtvrtek",
+			'ctvrtek' => "přijedu ve čtvrtek",
 			'patek' => 'přijedu v pátek',
 		);
 
 		$form->addSelect('from', 'Varianta:', $time);
+		$form->addSelect('invoice', 'Faktura:', ['no'=>'fakturu neřeším', 'yes'=>'fakturu chci na firmu (viz poznámka)']);
+		$form->addSelect('vege', 'Vegetarián:', ['no'=>'sním všechno', 'yes'=>'nejím maso']);
 
 		$form->addText('nickname', "Přezdívka:");
 
@@ -51,10 +55,20 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 			'rookie' => "Rookie",
 			'normal' => "Normal",
 			'pro' => 'Pro',
-			'allstart' => 'Allstar',
+			'allstar' => 'Allstar',
 		);
 
-		$form->addSelect('level', 'Schopnosti:', $levels)->setPrompt('Nette skills?')->setRequired('Zvolt svojí Nette dovednost');
+		$form->addSelect('level', 'Schopnosti:', $levels)->setPrompt('Nette skills?')->setRequired('Zvol svojí Nette dovednost');
+
+		$shirts = array(
+			'S' => "S",
+			'M' => "M",
+			'L' => "L",
+			'XL' => "XL",
+			'2XL' => "2XL",
+		);
+
+		$form->addSelect('tshirt', 'Tríčko:', $shirts)->setPrompt('velikost trička?')->setRequired('Zvol velikos trička');
 
 		$form->addTextArea('note', 'Poznámka');
 

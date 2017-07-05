@@ -9,15 +9,71 @@
 
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
 	<link rel="stylesheet" href="{$basePath}/css/foundation.min.css">
+	<link rel="stylesheet" href="{$basePath}/css/nittro.min.css">
+	<script src="{$basePath}/js/nittro.min.js" async defer></script>
+	<style>
+		.error {
+			color: red;
+			margin-bottom: 10px;
+			margin-top: -10px;
+			display: block;
+		}
 
-	{*<!--[if lte IE 8]><script src="{$basePath}/assets/js/ie/html5shiv.js"></script><![endif]-->*}
-	{*<link rel="stylesheet" href="{$basePath}/assets/css/main.css?program" />*}
-	{*<!--[if lte IE 8]><link rel="stylesheet" href="{$basePath}/assets/css/ie8.css" /><![endif]-->*}
+		.green {
+			color: #63bb63;
+		}
+
+		.footer {
+			background: black;
+			margin-top: 25px;
+			padding: 2em;
+			color: whitesmoke;
+		}
+
+		.empty-partner {
+			border: 2px dashed black;
+			margin: 10px;
+			padding: 40px;
+			font-size: 30px;
+			text-align: center;
+			display: block;
+			text-decoration: none;
+			color: black;
+		}
+
+		.empty-partner:hover {
+			color: black;
+			background: greenyellow;
+		}
+
+		.footer a {
+			color: white;
+			font-weight: bold;
+		}
+
+		.super-small {
+			font-size: 0.5em;
+		}
+
+		.avatar {
+			border-radius: 20px;
+			width: 40px;
+			height: 40px
+		}
+	</style>
+
 	<script n:syntax="double">
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		(function (i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function () {
+					(i[r].q = i[r].q || []).push(arguments)
+				}, i[r].l = 1 * new Date();
+			a = s.createElement(o),
+				m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
 		ga('create', 'UA-62960382-2', 'auto');
 		ga('send', 'pageview');
@@ -25,19 +81,28 @@
 </head>
 
 <body>
-	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
-	{include content}
+{include content}
 
+<div class="footer">
+	<div class="row">
+		<div class="column text-right">
+			<p>
+				made by <a href="http://www.kreativnilaborator.cz">Kreativní Laboratoř s.r.o.</a>
+			</p>
+		</div>
+	</div>
+</div>
 
-	{block scripts}
-		{*<script src="{$basePath}/assets/js/netteForms.min.js"></script>*}
-		{*<script src="{$basePath}/assets/js/jquery.min.js"></script>*}
-		{*<script src="{$basePath}/assets/js/skel.min.js"></script>*}
-		{*<script src="{$basePath}/assets/js/util.js"></script>*}
-		{*<!--[if lte IE 8]><script src="{$basePath}/assets/js/ie/respond.min.js"></script><![endif]-->*}
-		{*<script src="{$basePath}/assets/js/nette.ajax.js"></script>*}
-		{*<script src="{$basePath}/assets/js/main.js?v=registration-end"></script>*}
-	{/block}
+{block scripts}
+	{*<script src="{$basePath}/assets/js/netteForms.min.js"></script>*}
+	{*<script src="{$basePath}/assets/js/jquery.min.js"></script>*}
+	{*<script src="{$basePath}/assets/js/skel.min.js"></script>*}
+	{*<script src="{$basePath}/assets/js/util.js"></script>*}
+	{*<!--[if lte IE 8]><script src="{$basePath}/assets/js/ie/respond.min.js"></script><![endif]-->*}
+	{*<script src="{$basePath}/assets/js/nette.ajax.js"></script>*}
+	{*<script src="{$basePath}/assets/js/main.js?v=registration-end"></script>*}
+{/block}
 </body>
 </html>

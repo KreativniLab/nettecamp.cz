@@ -4,9 +4,77 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "55d5ecba7dac3370b8c5d8ecba336a04",
-    "content-hash": "2350d505033df2f3676d831a3e870168",
+    "content-hash": "ec8b1fb5fc5d89321be887f0751f6af1",
     "packages": [
+        {
+            "name": "ipub/gravatar",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iPublikuj/gravatar.git",
+                "reference": "9d99f552512f3f7897064136b2460ff8847b133b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iPublikuj/gravatar/zipball/9d99f552512f3f7897064136b2460ff8847b133b",
+                "reference": "9d99f552512f3f7897064136b2460ff8847b133b",
+                "shasum": ""
+            },
+            "require": {
+                "latte/latte": "~2.3",
+                "nette/application": "~2.3",
+                "nette/di": "~2.3",
+                "nette/http": "~2.3",
+                "nette/utils": "~2.3",
+                "pds/skeleton": "@dev",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "nette/bootstrap": "~2.3",
+                "nette/mail": "~2.3",
+                "nette/robot-loader": "~2.3",
+                "nette/safe-stream": "~2.3",
+                "nette/tester": "@dev",
+                "tracy/tracy": "@dev"
+            },
+            "type": "library",
+            "extra": {
+                "ipub": {
+                    "configuration": {
+                        "extensions": {
+                            "gravatar": "IPub\\Gravatar\\DI\\GravatarExtension"
+                        }
+                    }
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "IPub\\Gravatar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "iPublikuj:cms",
+                    "email": "info@ipublikuj.eu",
+                    "homepage": "http://www.ipublikuj.eu/"
+                }
+            ],
+            "description": "Gravatar creator for Nette Framework",
+            "homepage": "https://github.com/iPublikuj/gravatar",
+            "keywords": [
+                "gravatar",
+                "ipub",
+                "ipublikuj",
+                "nette",
+                "tools"
+            ],
+            "time": "2017-01-15T15:41:08+00:00"
+        },
         {
             "name": "latte/latte",
             "version": "v2.3.13",
@@ -60,7 +128,7 @@
                 "templating",
                 "twig"
             ],
-            "time": "2016-12-21 02:04:59"
+            "time": "2016-12-21T02:04:59+00:00"
         },
         {
             "name": "nette/application",
@@ -122,7 +190,7 @@
             ],
             "description": "Nette Application MVC Component",
             "homepage": "https://nette.org",
-            "time": "2016-06-17 17:40:16"
+            "time": "2016-06-17T17:40:16+00:00"
         },
         {
             "name": "nette/bootstrap",
@@ -188,7 +256,7 @@
             ],
             "description": "Nette Bootstrap",
             "homepage": "https://nette.org",
-            "time": "2016-05-17 19:52:51"
+            "time": "2016-05-17T19:52:51+00:00"
         },
         {
             "name": "nette/caching",
@@ -246,7 +314,7 @@
             ],
             "description": "Nette Caching Component",
             "homepage": "https://nette.org",
-            "time": "2016-02-22 02:08:08"
+            "time": "2016-02-22T02:08:08+00:00"
         },
         {
             "name": "nette/component-model",
@@ -296,7 +364,7 @@
             ],
             "description": "Nette Component Model",
             "homepage": "https://nette.org",
-            "time": "2016-12-12 12:12:37"
+            "time": "2016-12-12T12:12:37+00:00"
         },
         {
             "name": "nette/database",
@@ -350,7 +418,7 @@
             ],
             "description": "Nette Database Component",
             "homepage": "https://nette.org",
-            "time": "2016-12-12 12:46:29"
+            "time": "2016-12-12T12:46:29+00:00"
         },
         {
             "name": "nette/di",
@@ -402,7 +470,7 @@
             ],
             "description": "Nette Dependency Injection Component",
             "homepage": "https://nette.org",
-            "time": "2017-03-17 15:13:49"
+            "time": "2017-03-17T15:13:49+00:00"
         },
         {
             "name": "nette/finder",
@@ -452,7 +520,7 @@
             ],
             "description": "Nette Finder: Files Searching",
             "homepage": "https://nette.org",
-            "time": "2015-10-20 17:15:41"
+            "time": "2015-10-20T17:15:41+00:00"
         },
         {
             "name": "nette/forms",
@@ -507,7 +575,7 @@
             ],
             "description": "Nette Forms: greatly facilitates web forms",
             "homepage": "https://nette.org",
-            "time": "2016-12-21 00:59:07"
+            "time": "2016-12-21T00:59:07+00:00"
         },
         {
             "name": "nette/http",
@@ -561,7 +629,7 @@
             ],
             "description": "Nette HTTP Component",
             "homepage": "https://nette.org",
-            "time": "2017-03-16 15:47:05"
+            "time": "2017-03-16T15:47:05+00:00"
         },
         {
             "name": "nette/mail",
@@ -616,7 +684,7 @@
             ],
             "description": "Nette Mail: Sending E-mails",
             "homepage": "https://nette.org",
-            "time": "2016-04-10 12:50:29"
+            "time": "2016-04-10T12:50:29+00:00"
         },
         {
             "name": "nette/neon",
@@ -663,7 +731,7 @@
             ],
             "description": "Nette NEON: parser & generator for Nette Object Notation",
             "homepage": "http://ne-on.org",
-            "time": "2016-05-17 17:14:44"
+            "time": "2016-05-17T17:14:44+00:00"
         },
         {
             "name": "nette/php-generator",
@@ -713,7 +781,7 @@
             ],
             "description": "Nette PHP Generator",
             "homepage": "https://nette.org",
-            "time": "2016-06-17 16:33:17"
+            "time": "2016-06-17T16:33:17+00:00"
         },
         {
             "name": "nette/reflection",
@@ -766,7 +834,7 @@
             ],
             "description": "Nette PHP Reflection Component",
             "homepage": "https://nette.org",
-            "time": "2016-03-12 14:57:07"
+            "time": "2016-03-12T14:57:07+00:00"
         },
         {
             "name": "nette/robot-loader",
@@ -818,7 +886,7 @@
             ],
             "description": "Nette RobotLoader: comfortable autoloading",
             "homepage": "https://nette.org",
-            "time": "2016-05-17 15:36:50"
+            "time": "2016-05-17T15:36:50+00:00"
         },
         {
             "name": "nette/safe-stream",
@@ -873,7 +941,7 @@
             ],
             "description": "Nette SafeStream: Atomic Operations",
             "homepage": "https://nette.org",
-            "time": "2016-03-19 13:06:04"
+            "time": "2016-03-19T13:06:04+00:00"
         },
         {
             "name": "nette/security",
@@ -925,7 +993,7 @@
             ],
             "description": "Nette Security: Access Control Component",
             "homepage": "https://nette.org",
-            "time": "2016-05-17 15:37:18"
+            "time": "2016-05-17T15:37:18+00:00"
         },
         {
             "name": "nette/utils",
@@ -982,7 +1050,38 @@
             ],
             "description": "Nette Utility Classes",
             "homepage": "https://nette.org",
-            "time": "2016-12-12 12:20:10"
+            "time": "2016-12-12T12:20:10+00:00"
+        },
+        {
+            "name": "pds/skeleton",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-pds/skeleton.git",
+                "reference": "95e476e5d629eadacbd721c5a9553e537514a231"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-pds/skeleton/zipball/95e476e5d629eadacbd721c5a9553e537514a231",
+                "reference": "95e476e5d629eadacbd721c5a9553e537514a231",
+                "shasum": ""
+            },
+            "bin": [
+                "bin/pds-skeleton"
+            ],
+            "type": "standard",
+            "autoload": {
+                "psr-4": {
+                    "Pds\\Skeleton\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC-BY-SA-4.0"
+            ],
+            "description": "Standard for PHP package skeletons.",
+            "homepage": "https://github.com/php-pds/skeleton",
+            "time": "2017-01-25T23:30:41+00:00"
         },
         {
             "name": "tracy/tracy",
@@ -1037,7 +1136,7 @@
                 "debugger",
                 "nette"
             ],
-            "time": "2017-01-18 14:14:42"
+            "time": "2017-01-18T14:14:42+00:00"
         }
     ],
     "packages-dev": [
@@ -1086,7 +1185,7 @@
                 "mailpanel",
                 "sessionmailer"
             ],
-            "time": "2015-02-02 12:12:35"
+            "time": "2015-02-02T12:12:35+00:00"
         },
         {
             "name": "nette/deprecated",
@@ -1143,7 +1242,7 @@
             ],
             "description": "APIs and features removed from Nette Framework",
             "homepage": "https://nette.org",
-            "time": "2016-07-15 13:06:38"
+            "time": "2016-07-15T13:06:38+00:00"
         },
         {
             "name": "nette/nette",
@@ -1215,7 +1314,7 @@
                 "mvc",
                 "templating"
             ],
-            "time": "2016-04-13 18:47:10"
+            "time": "2016-04-13T18:47:10+00:00"
         },
         {
             "name": "nette/tester",
@@ -1271,7 +1370,7 @@
                 "testing",
                 "unit"
             ],
-            "time": "2016-03-19 14:34:02"
+            "time": "2016-03-19T14:34:02+00:00"
         },
         {
             "name": "nette/tokenizer",
@@ -1321,7 +1420,7 @@
             ],
             "description": "Nette Tokenizer",
             "homepage": "https://nette.org",
-            "time": "2016-04-21 13:06:32"
+            "time": "2016-04-21T13:06:32+00:00"
         }
     ],
     "aliases": [],

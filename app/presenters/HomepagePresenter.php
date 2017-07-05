@@ -7,7 +7,7 @@ use Nette\Application\UI\Form;
 
 class HomepagePresenter extends Nette\Application\UI\Presenter
 {
-	use \IPub\Gravatar\TGravatar;
+//	use \IPub\Gravatar\TGravatar;
 
 	/**
 	 * @var \MailManager

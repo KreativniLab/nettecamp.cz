@@ -109,19 +109,18 @@ class MailManager extends \Nette\Object
 		$users = [];
 		$variables = $this->database->query("select variables from emails where subject = 'Registration Nette Camp' and (YEAR(created_date) != 2015 AND YEAR(created_date) != 2016)")->fetchAll();
 		foreach ($variables as $variable){
-			$var = unserialize($variable->variables);
+			$var = @unserialize($variable->variables);
+			if ($var) {
 
-
-			if (isset($var->nickname) && $var->nickname != '') {
-				$name = $var->nickname;
-			} else {
-				if (isset($var->name) && $var->name != '') {
-					$name = $var->name;
+				if (isset($var->nickname) && $var->nickname != '') {
+					$name = $var->nickname;
+				} else {
+					if (isset($var->name) && $var->name != '') {
+						$name = $var->name;
+					}
 				}
+				$users[] = ['name' => $name, 'email' => $var->email];
 			}
-
-			$users[] = ['name' => $name, 'email' => $var->email];
-
 		}
 
 		return $users;

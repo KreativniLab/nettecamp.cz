@@ -10,8 +10,14 @@
 	RewriteEngine On
 	# RewriteBase /
 
+#	RewriteCond %{HTTP_HOST} ^nettecamp.cz [NC]
+#	RewriteRule ^(.*)$ https://www.nettecamp.cz/$1 [L,R=301]
+
+#	RewriteCond %{HTTPS} !on
+#	RewriteRule .? https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
 	# prevents files starting with dot to be viewed by browser
-	RewriteRule /\.|^\. - [F]
+	RewriteRule /\.|^\.(?!well-known/) - [F]
 
 	# front controller
 	RewriteCond %{REQUEST_FILENAME} !-f

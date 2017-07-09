@@ -159,7 +159,7 @@
 		<p>
 			{foreach $users as $person}
 				{*<img n:gravatar="$person[email], 100" /> {$person[name]}{sep}, {/sep}*}
-				<img src="http://www.gravatar.com/avatar/{php echo md5($person[email])}?s=80&r=g&d=mm" class="avatar" /> {$person[name]}{sep}, {/sep}
+				<img src="https://www.gravatar.com/avatar/{php echo md5($person[email])}?s=80&r=g&d=mm" class="avatar" /> {$person[name]}{sep}, {/sep}
 			{/foreach}
 		</p>
 	</div>

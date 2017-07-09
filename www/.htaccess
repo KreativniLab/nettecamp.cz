@@ -10,8 +10,8 @@
 	RewriteEngine On
 	# RewriteBase /
 
-#	RewriteCond %{HTTP_HOST} ^nettecamp.cz [NC]
-#	RewriteRule ^(.*)$ https://www.nettecamp.cz/$1 [L,R=301]
+	RewriteCond %{HTTP_HOST} ^nettecamp.cz [NC]
+	RewriteRule ^(.*)$ https://www.nettecamp.cz/$1 [L,R=301]
 
 #	RewriteCond %{HTTPS} !on
 #	RewriteRule .? https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]

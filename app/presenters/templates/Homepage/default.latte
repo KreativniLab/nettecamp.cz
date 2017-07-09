@@ -157,9 +157,9 @@
 
 		<h3>Učastníci {$count}/35</h3>
 		<p>
-			{foreach $users as $user}
-				{*<img n:gravatar="$user[email], 100" /> {$user[name]}{sep}, {/sep}*}
-				<img src="http://www.gravatar.com/avatar/{php echo md5($user[email])}?s=80&r=g&d=mm" class="avatar" /> {$user[name]}{sep}, {/sep}
+			{foreach $users as $person}
+				{*<img n:gravatar="$person[email], 100" /> {$person[name]}{sep}, {/sep}*}
+				<img src="http://www.gravatar.com/avatar/{php echo md5($person[email])}?s=80&r=g&d=mm" class="avatar" /> {$person[name]}{sep}, {/sep}
 			{/foreach}
 		</p>
 	</div>

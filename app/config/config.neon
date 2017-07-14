@@ -49,4 +49,5 @@ database:
 services:
 	router: App\RouterFactory::createRouter
 	- MailManager(%email%)
-	- RegistrationManager
+	- App\Model\RegistrationManager
+	- App\Model\RegistrationRepository

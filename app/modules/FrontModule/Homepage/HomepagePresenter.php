@@ -2,6 +2,7 @@
 
 namespace App\FrontModule\Presenters;
 
+use App\Model\RegistrationManager;
 use Nittro;
 
 class HomepagePresenter extends Nittro\Bridges\NittroUI\Presenter
@@ -9,7 +10,7 @@ class HomepagePresenter extends Nittro\Bridges\NittroUI\Presenter
 	/** @var \MailManager @inject */
 	public $mailManager;
 
-	/** @var \RegistrationManager @inject */
+	/** @var RegistrationManager @inject */
 	public $registrationManager;
 
 

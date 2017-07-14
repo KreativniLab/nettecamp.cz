@@ -2,6 +2,7 @@
 
 namespace App\FrontModule\Presenters;
 
+use App\Model\RegistrationManager;
 use Nittro;
 use Nette\Application\UI\Form;
 
@@ -11,7 +12,7 @@ class RegistrationPresenter extends Nittro\Bridges\NittroUI\Presenter
 	/** @var \MailManager @inject */
 	public $mailManager;
 
-	/** @var \RegistrationManager @inject */
+	/** @var RegistrationManager @inject */
 	public $registrationManager;
 
 	public $formSendSuccess = FALSE;
@@ -91,6 +92,21 @@ class RegistrationPresenter extends Nittro\Bridges\NittroUI\Presenter
 
 			$template = $this->createTemplate();
 
+			$data = [
+				'year' => '2017',
+				'name' => $values['name'],
+				'nickname' => $values['nickname'],
+				'email' => $values['email'],
+				'phone' => $values['phone'],
+				'arrival' => $values['from'],
+				'invoice' => $values['invoice'],
+				'vegetarian' => $values['vege'],
+				'skills' => $values['level'],
+				'tshirt' => $values['tshirt'],
+				'note' => $values['note'],
+				];
+
+			$this->registrationManager->add($data);
 			$status = $this->mailManager->sendOrderEmail($values, 'cs', $template);
 
 			if ($status) {

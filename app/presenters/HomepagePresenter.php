@@ -2,12 +2,11 @@
 
 namespace App\Presenters;
 
-use Nette;
+use Nittro;
 use Nette\Application\UI\Form;
 
-class HomepagePresenter extends Nette\Application\UI\Presenter
+class HomepagePresenter extends Nittro\Bridges\NittroUI\Presenter
 {
-//	use \IPub\Gravatar\TGravatar;
 
 	/**
 	 * @var \MailManager

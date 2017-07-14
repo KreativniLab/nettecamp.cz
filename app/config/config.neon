@@ -16,6 +16,9 @@ parameters:
 php:
 	date.timezone: Europe/Prague
 
+latte:
+    macros:
+        - Nittro\Bridges\NittroLatte\NittroMacros
 
 application:
 	errorPresenter: Error

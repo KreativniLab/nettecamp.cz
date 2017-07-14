@@ -34,7 +34,9 @@
 <body>
 <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
-{include content}
+<div n:snippet="content" class="nittro-transition-auto nittro-transition-fade">
+	{include content}
+</div>
 
 <div class="footer">
 	<div class="row">

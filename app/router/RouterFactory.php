@@ -5,7 +5,7 @@ namespace App;
 use Nette;
 use Nette\Application\Routers\RouteList;
 use Nette\Application\Routers\Route;
-
+use Nextras\Routing\StaticRouter;
 
 class RouterFactory
 {
@@ -15,8 +15,9 @@ class RouterFactory
 	 */
 	public static function createRouter()
 	{
-		$router = new RouteList;
-		$router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
+		$router = new StaticRouter([
+			'Homepage:default' => '',
+		]);
 		return $router;
 	}
 

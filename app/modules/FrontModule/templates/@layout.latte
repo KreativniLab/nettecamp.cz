@@ -33,6 +33,14 @@
 </head>
 
 <body>
+<div class="header">
+	<div class="row">
+		<div class="column">
+			<h5>Nette Camp</h5>
+		</div>
+	</div>
+</div>
+
 <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
 <div n:snippet="content" class="nittro-transition-auto nittro-transition-fade">
@@ -50,13 +58,7 @@
 </div>
 
 {block scripts}
-	{*<script src="{$basePath}/assets/js/netteForms.min.js"></script>*}
-	{*<script src="{$basePath}/assets/js/jquery.min.js"></script>*}
-	{*<script src="{$basePath}/assets/js/skel.min.js"></script>*}
-	{*<script src="{$basePath}/assets/js/util.js"></script>*}
-	{*<!--[if lte IE 8]><script src="{$basePath}/assets/js/ie/respond.min.js"></script><![endif]-->*}
-	{*<script src="{$basePath}/assets/js/nette.ajax.js"></script>*}
-	{*<script src="{$basePath}/assets/js/main.js?v=registration-end"></script>*}
+	{*<script src="{$basePath}/js/site.js"></script>*}
 {/block}
 </body>
 </html>

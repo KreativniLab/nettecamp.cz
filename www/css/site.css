@@ -1,3 +1,20 @@
+.header {
+    display: none;
+}
+
+
+.sticky .header {
+    padding-top: 5px;
+    z-index: 100;
+    background: white;
+    box-shadow: 0px 2px 6px 0px rgba(140,140,140,0.75);
+    width: 100%;
+    display: block;
+    position: fixed;
+    top: 0;
+}
+
+
 .error {
     color: red;
     margin-bottom: 10px;

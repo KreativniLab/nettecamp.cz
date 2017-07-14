@@ -1,0 +1,133 @@
+{block content}
+<div class="row">
+	<div class="small-12 medium-8 columns" style="padding-top: 2em;">
+		<h1>Registrace na Nette Camp</h1>
+		<h3>Setkání PHP vývojářů v přírodě<br> 24.—27. srpna 2017<br><a href="https://mapy.cz/s/1OqyK" target="_blank">Křižanov, Vysočina</a>
+			<small class="super-small">(ve 4/5 na D1 mezi Prahou a Brnem)</small></h3>
+		<p>
+			<a n:href="Homepage:">&larr; zpět na homepage</a>
+		</p>
+	</div>
+	<div class="small-12 medium-4 columns">
+		<img src="{$basePath}/img/cup.png" alt="hrneček" style="padding-top: 4em;">
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="column">
+		<h3>S kým se potkáš?</h3>
+		<p>
+			{foreach $users as $person}
+				{*<img n:gravatar="$person[email], 100" /> {$person[name]}{sep}, {/sep}*}
+				<img src="https://www.gravatar.com/avatar/{php echo md5($person[email])}?s=80&r=g&d=mm" class="avatar" /> {$person[name]}{sep}, {/sep}
+			{/foreach}
+		</p>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="column">
+		{if $count >= 35}
+			<h3>Kapacita campu je již naplněna.</h3>
+			<p>Pokud se chcete stát náhradníkem napište email na <a href="mailto:honza@kreativnilaborator.cz">honza@kreativnilaborator.cz</a></p>
+		{else}
+
+			<div n:snippet="order">
+				{if $formSend}
+					<h2 class="green">Děkujeme</h2>
+					<p>Brzy se ozveme s dalšími informacemi</p>
+				{else}
+					<h2>Přidej se i ty <small>kapacita {$count}/35</small></h2>
+
+					<form n:name="registrationForm" class="ajax" id="registrationForm">
+						<div class="row">
+							<div class="medium-6 columns">
+								<input type="text" n:name="name" placeholder="jméno a příjmení" />
+							</div>
+							<div class="medium-6 columns">
+								<input type="email" n:name="liame" placeholder="email" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="medium-6 columns">
+								<input type="text" n:name="phone" placeholder="telefon" />
+							</div>
+							<div class="medium-6 columns">
+								<input type="text" n:name="nickname" placeholder="nickname (zobrazí se tady na stránce)" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="medium-6 columns">
+								{input "from"}
+							</div>
+							<div class="medium-6 columns">
+								{input "level"}
+							</div>
+						</div>
+						<div class="row">
+							<div class="medium-6 columns">
+								{input "invoice"}
+							</div>
+							<div class="medium-6 columns">
+								{input "vege"}
+							</div>
+						</div>
+						<div class="row">
+							<div class="medium-6 columns">
+								{input "tshirt"}
+							</div>
+							<div class="medium-6 columns"></div>
+						</div>
+						<div class="row">
+							<div class="column">
+								<textarea n:name="note" placeholder="Poznámka, faktura? vegetarian? " rows="6"></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="columns medium-2">
+								<input type="submit" class="button" value="Registrovat" />
+							</div>
+							<div class="columns medium-10">
+								<p>
+									<small>fakturu na 3500,-<em>s DPH</em> posíláme manuálně, tak se případně nediv, že ji nemáš ihned ;-)</small>
+								</p>
+							</div>
+						</div>
+					</form>
+				{/if}
+			</div>
+		{/if}
+
+	</div>
+</div>
+
+<div class="row">
+	<div class="column">
+		<h5 class="text-center">hledáme partnery akce</h5>
+
+		<div class="row">
+			<div class="columns small-12 medium-4">
+				<a n:href="Partners:" class="empty-partner">+</a>
+			</div>
+			<div class="columns small-12 medium-4">
+				<a n:href="Partners:" class="empty-partner">+</a>
+			</div>
+			<div class="columns small-12 medium-4">
+				<a n:href="Partners:" class="empty-partner">+</a>
+			</div>
+		</div>
+		<p class="text-center"><small><a n:href="Partners:">Podpořte vzdělávací akci a buďte vidět.</a></small></p>
+	</div>
+</div>
+
+<div class="row">
+	<div class="column">
+		<p>
+			<a n:href="Homepage:">&larr; zpět na homepage</a>
+		</p>
+	</div>
+</div>
+
+

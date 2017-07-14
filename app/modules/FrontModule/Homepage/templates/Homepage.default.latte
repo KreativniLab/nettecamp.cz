@@ -6,7 +6,7 @@
 			<small class="super-small">(ve 4/5 na D1 mezi Prahou a Brnem)</small></h3>
 
 
-		<h2><a href="#jedu" data-ajax="false" class="button large">JEDU!!!</a></h2>
+		<h2><a n:href="Registration:" class="button large">JEDU!!!</a></h2>
 		<p>
 			diskutujem na <a href="https://forum.nette.org/cs/28962-nette-camp-2017-setkani-priznivcu-nette-framework-mimo-mesto">Nette fóru</a> nebo
 			<a href="https://pehapkari.slack.com/messages/C664BNY7P">slacku #nettecamp</a>
@@ -154,102 +154,22 @@
 	<div class="column">
 		<h3>Jdu do toho</h3>
 		<p>Pokud už nemáš otázek a víš, že se chces potkat na výletním sletu PHP čarodějů, zaskroluj níže, kde je
-			<a href="#jedu" data-ajax="false">registrační formulář</a></p>
-		<p>Jestli ale máš nějakou otázku co ti brání vyrazit neboj se <a href="mailto:hello@honzacerny.com">zeptat</a></p>
+			<a n:href="Registration:" data-ajax="false">registrační formulář</a></p>
+		<p>Jestli ale máš nějakou otázku co ti brání vyrazit neboj se <a href="mailto:honza@kreativnilaborator.cz">zeptat</a></p>
 
 		<hr>
 
 		<h3>Učastníci {$count}/35</h3>
 		<p>
 			{foreach $users as $person}
-				{*<img n:gravatar="$person[email], 100" /> {$person[name]}{sep}, {/sep}*}
 				<img src="https://www.gravatar.com/avatar/{php echo md5($person[email])}?s=80&r=g&d=mm" class="avatar" /> {$person[name]}{sep}, {/sep}
 			{/foreach}
+
+			<h3><a n:href="Registration:" class="button large">JEDU!!!</a></h3>
 		</p>
-	</div>
-</div>
-
-<div class="row" id="jedu">
-	<div class="column">
-			<div n:snippet="order">
-				{if isset($formSend)}
-					{if $count >= 35}
-						<h3>Kapacita campu je již naplněna.</h3>
-						<p>Pokud se chcete stát náhradníkem napište email na hello@honzacerny.com</p>
-					{else}
-						{if $formSend}
-							<h2 class="green">Děkujeme</h2>
-							<p>Brzy se ozveme s dalšími informacemi</p>
-						{else}
-							<h2>Registrace</h2>
-
-							<form n:name="registrationForm" class="ajax" id="registrationForm" {* style="display:none" *}>
-								<div class="row">
-									<div class="medium-6 columns">
-										<input type="text" n:name="name" placeholder="jméno a příjmení" />
-									</div>
-									<div class="medium-6 columns">
-										<input type="email" n:name="liame" placeholder="email" />
-									</div>
-								</div>
-								<div class="row">
-									<div class="medium-6 columns">
-										<input type="text" n:name="phone" placeholder="telefon" />
-									</div>
-									<div class="medium-6 columns">
-										<input type="text" n:name="nickname" placeholder="nickname (zobrazí se tady na stránce)" />
-									</div>
-								</div>
-								<div class="row">
-									<div class="medium-6 columns">
-										{input "from"}
-									</div>
-									<div class="medium-6 columns">
-										{input "level"}
-									</div>
-								</div>
-								<div class="row">
-									<div class="medium-6 columns">
-										{input "invoice"}
-									</div>
-									<div class="medium-6 columns">
-										{input "vege"}
-									</div>
-								</div>
-								<div class="row">
-									<div class="medium-6 columns">
-										{input "tshirt"}
-									</div>
-									<div class="medium-6 columns">
-									</div>
-								</div>
-								<div class="row">
-									<div class="column">
-										<textarea n:name="note" placeholder="Poznámka, faktura? vegetarian? " rows="6"></textarea>
-									</div>
-								</div>
-								<div class="row">
-									<div class="columns medium-2">
-										<input type="submit" class="button" value="Registrovat" />
-									</div>
-									<div class="columns medium-10">
-										<p>
-											<small>fakturu na 3500,-
-												<small>s DPH</small> posíláme manuálně, tak se případně nediv, že ji nemáš ihned ;-)</small>
-										</p>
-									</div>
-								</div>
-							</form>
-						{/if}
-					{/if}
-				{/if}
-			</div>
-		</div>
 
 	</div>
 </div>
-
-
 
 {*
 <div class="row">

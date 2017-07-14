@@ -13,6 +13,7 @@
 	RewriteCond %{HTTP_HOST} ^nettecamp.cz [NC]
 	RewriteRule ^(.*)$ https://www.nettecamp.cz/$1 [L,R=301]
 
+	RewriteCond %{REMOTE_ADDR} !^127\.0\.0\.1$
 	RewriteCond %{HTTPS} !on
 	RewriteRule .? https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 

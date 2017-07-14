@@ -16,6 +16,16 @@ parameters:
 php:
 	date.timezone: Europe/Prague
 
+extensions:
+    kdyby.console: Kdyby\Console\DI\ConsoleExtension
+    nextras.migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
+
+nextras.migrations:
+    dir: %appDir%/../migrations # migrations base directory
+    driver: mysql               # pgsql or mysql
+    dbal: nette                 # nextras, nette, doctrine or dibi
+
+
 latte:
     macros:
         - Nittro\Bridges\NittroLatte\NittroMacros

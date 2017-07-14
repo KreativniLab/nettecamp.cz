@@ -16,8 +16,9 @@ class RouterFactory
 	public static function createRouter()
 	{
 		$router = new StaticRouter([
-			'Homepage:default' => '',
-			'Partners:default' => 'partneri',
+			'Front:Homepage:default' => '',
+			'Front:Partners:default' => 'partneri',
+			'Export:Admin:default' => 'export',
 		]);
 		return $router;
 	}

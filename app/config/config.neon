@@ -10,8 +10,8 @@ parameters:
 		version: blackmamba
 
 	email:
-		from: info@kreativnilaborator.cz
-		name: Kreativni Laborator
+		from: honza@kreativnilaborator.cz
+		name: Honza
 
 php:
 	date.timezone: Europe/Prague

@@ -17,6 +17,7 @@ class RouterFactory
 	{
 		$router = new StaticRouter([
 			'Homepage:default' => '',
+			'Partners:default' => 'partneri',
 		]);
 		return $router;
 	}

@@ -39,3 +39,4 @@ database:
 services:
 	router: App\RouterFactory::createRouter
 	- MailManager(%email%)
+	- RegistrationManager

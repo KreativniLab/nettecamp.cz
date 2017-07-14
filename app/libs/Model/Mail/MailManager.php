@@ -1,6 +1,5 @@
 <?php
 
-
 use Nette\Database\Context;
 
 class MailManager extends \Nette\Object
@@ -101,48 +100,6 @@ class MailManager extends \Nette\Object
 			return FALSE;
 		}
 
-	}
-
-
-	public function getCampUsers()
-	{
-		$users = [];
-		$variables = $this->database->query("select variables from emails where subject = 'Registration Nette Camp' and (YEAR(created_date) != 2015 AND YEAR(created_date) != 2016)")->fetchAll();
-		foreach ($variables as $variable){
-			$var = @unserialize($variable->variables);
-			if ($var) {
-
-				if (isset($var->nickname) && $var->nickname != '') {
-					$name = $var->nickname;
-				} else {
-					if (isset($var->name) && $var->name != '') {
-						$name = $var->name;
-					}
-				}
-				$users[] = ['name' => $name, 'email' => $var->email];
-			}
-		}
-
-		return $users;
-	}
-
-
-	public function adminGetCampUsers()
-	{
-		$users = [];
-		$variables = $this->database->query("select variables from emails where subject = 'Registration Nette Camp' and (YEAR(created_date) != 2015 and YEAR(created_date) != 2016)")->fetchAll();
-		foreach ($variables as $variable){
-			$var = unserialize($variable->variables);
-			$users[] = $var;
-		}
-
-		return $users;
-	}
-
-
-	public function getCampUsersCount()
-	{
-		return  $this->database->query("select count(id) as cnt from emails where subject = 'Registration Nette Camp' and (YEAR(created_date) != 2015 AND YEAR(created_date) != 2016 )")->fetchField('cnt');
 	}
 
 	/********************* email storage *********************/

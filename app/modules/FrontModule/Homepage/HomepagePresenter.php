@@ -6,16 +6,16 @@ use Nittro;
 
 class HomepagePresenter extends Nittro\Bridges\NittroUI\Presenter
 {
-
-	/**
-	 * @var \MailManager
-	 * @inject
-	 */
+	/** @var \MailManager @inject */
 	public $mailManager;
+
+	/** @var \RegistrationManager @inject */
+	public $registrationManager;
+
 
 	public function renderDefault()
 	{
-		$this->template->count = $this->mailManager->getCampUsersCount();
-		$this->template->users = $this->mailManager->getCampUsers();
+		$this->template->count = $this->registrationManager->getCampUsersCount();
+		$this->template->users = $this->registrationManager->getCampUsers();
 	}
 }

@@ -4,7 +4,7 @@
 	"type": "project",
 	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"require": {
-		"nette/nette": "~2.4",
+		"aprila/aprila": "@dev",
 		"nittro/nette-bridges": "^2.0",
 		"nextras/static-router": "^1.1"
 	},

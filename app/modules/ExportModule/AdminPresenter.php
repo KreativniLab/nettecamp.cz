@@ -2,16 +2,13 @@
 
 namespace App\ExportModule\Presenters;
 
+use App\Model\RegistrationManager;
 use Nette;
-use Nette\Application\UI\Form;
 
 class AdminPresenter extends Nette\Application\UI\Presenter
 {
-	/**
-	 * @var \MailManager
-	 * @inject
-	 */
-	public $mailManager;
+	/** @var RegistrationManager @inject */
+	public $registrationManager;
 
 	public function renderDefault($hash = '')
 	{
@@ -19,7 +16,7 @@ class AdminPresenter extends Nette\Application\UI\Presenter
 			$this->error();
 		}
 
-		$this->template->users = $this->mailManager->adminGetCampUsers();
+		$this->template->users = $this->registrationManager->adminGetCampUsers();
 	}
 
 }

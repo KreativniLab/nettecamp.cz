@@ -36,22 +36,22 @@ class RegistrationPresenter extends Nittro\Bridges\NittroUI\Presenter
 		$form = new Form();
 
 		$form->addHidden('email');
-		$form->addText('name', "Jméno:")->setRequired('Vyplň jméno');
-		$form->addText('liame', "Email:")->setRequired('Vyplň email')->addRule(Form::EMAIL,
-			'Emailová adresa je špatně zadaná');
-		$form->addText('phone', "Telefon:")->setRequired('Vyplň telefon');
+		$form->addText('name', "jméno a příjmení:")->setRequired('Vyplň jméno a příjmení');
+		$form->addText('liame', "email:")->setRequired('Vyplň email')->addRule(Form::EMAIL,
+			'emailová adresa je špatně zadaná');
+		$form->addText('phone', "telefon:")->setRequired('Vyplň telefon');
 
 		$time = [
-			'ctvrtek' => "přijedu ve čtvrtek",
-			'patek' => 'přijedu v pátek',
+			'ctvrtek' => "čtvrtek",
+			'patek' => 'pátek',
 		];
 
-		$form->addSelect('from', 'Varianta:', $time);
-		$form->addSelect('invoice', 'Faktura:',
-			['no' => 'fakturu neřeším', 'yes' => 'fakturu chci na firmu (viz poznámka)']);
-		$form->addSelect('vege', 'Vegetarián:', ['no' => 'sním všechno', 'yes' => 'nejím maso']);
+		$form->addSelect('arrival', 'přijedu ve:', $time);
+		$form->addSelect('invoice', 'fakturu:',
+			['no' => 'neřeším', 'yes' => 'chci na firmu']);
+		$form->addSelect('vegetarian', 'strava:', ['no' => 'sním všechno', 'yes' => 'nejím maso']);
 
-		$form->addText('nickname', "Přezdívka:");
+		$form->addText('nickname', "nickname:");
 
 		$levels = [
 			'rookie' => "Rookie",
@@ -60,8 +60,9 @@ class RegistrationPresenter extends Nittro\Bridges\NittroUI\Presenter
 			'allstar' => 'Allstar',
 		];
 
-		$form->addSelect('level', 'Schopnosti:',
-			$levels)->setPrompt('Nette skills?')->setRequired('Zvol svojí Nette dovednost');
+		$form->addSelect('skills', 'Nette skills:',$levels)
+			 ->setPrompt('?')
+			 ->setRequired('Zvol svojí Nette dovednost');
 
 		$shirts = [
 			'S' => "S",
@@ -71,10 +72,12 @@ class RegistrationPresenter extends Nittro\Bridges\NittroUI\Presenter
 			'2XL' => "2XL",
 		];
 
-		$form->addSelect('tshirt', 'Tríčko:',
-			$shirts)->setPrompt('velikost trička?')->setRequired('Zvol velikos trička');
+		$form->addSelect('tshirt', 'tríčko:',
+			$shirts)->setPrompt('velikost ?')->setRequired('Zvol velikos trička');
 
-		$form->addTextArea('note', 'Poznámka');
+		$note = $form->addTextArea('note', 'Poznámka');
+		$note->addConditionOn($form['invoice'], Form::EQUAL, 'yes')
+			 ->setRequired('Doplňte do poznámky IČ firmy');
 
 		$form->addSubmit('actionSend', 'Save');
 
@@ -98,10 +101,10 @@ class RegistrationPresenter extends Nittro\Bridges\NittroUI\Presenter
 				'nickname' => $values['nickname'],
 				'email' => $values['email'],
 				'phone' => $values['phone'],
-				'arrival' => $values['from'],
+				'arrival' => $values['arrival'],
 				'invoice' => $values['invoice'],
-				'vegetarian' => $values['vege'],
-				'skills' => $values['level'],
+				'vegetarian' => $values['vegetarian'],
+				'skills' => $values['skills'],
 				'tshirt' => $values['tshirt'],
 				'note' => $values['note'],
 				];

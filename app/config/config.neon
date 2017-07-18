@@ -51,3 +51,4 @@ services:
 	- MailManager(%email%)
 	- App\Model\RegistrationManager
 	- App\Model\RegistrationRepository
+	- App\FrontModule\Components\RegistrationFormFactory

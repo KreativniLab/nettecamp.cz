@@ -19,6 +19,7 @@ class RouterFactory
 			'Front:Homepage:default' => '',
 			'Front:Partners:default' => 'partneri',
 			'Front:Registration:default' => 'registrace',
+			'Front:Registration:success' => 'registrace-ok',
 			'Export:Admin:default' => 'export',
 		]);
 		return $router;

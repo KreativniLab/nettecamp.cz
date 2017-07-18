@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4913a72d606369dd33460bf63bb0a236",
+    "content-hash": "7d91fb3f75a48fec528acf550ce3c5cf",
     "packages": [
         {
             "name": "aprila/aprila",
@@ -2162,6 +2162,59 @@
                 "profiler"
             ],
             "time": "2017-07-14T06:38:56+00:00"
+        },
+        {
+            "name": "ublaboo/mailing",
+            "version": "v1.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ublaboo/mailing.git",
+                "reference": "8fc5a8fda928886b17514f34dab15540faae65bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ublaboo/mailing/zipball/8fc5a8fda928886b17514f34dab15540faae65bc",
+                "reference": "8fc5a8fda928886b17514f34dab15540faae65bc",
+                "shasum": ""
+            },
+            "require": {
+                "latte/latte": "~2.3|~2.4",
+                "nette/application": "~2.3|~2.4",
+                "nette/di": "~2.3|~2.4",
+                "nette/mail": "~2.3|~2.4",
+                "nette/utils": "~2.3|~2.4"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "nette/tester": "~1.6.1",
+                "tracy/tracy": "^2.3|^2.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ublaboo\\Mailing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Janda",
+                    "homepage": "http://paveljanda.com"
+                }
+            ],
+            "description": "Extension for Nette Framework: Easy & object-oriented way of sending & logging mails",
+            "homepage": "http://ublaboo.paveljanda.com/mailing",
+            "keywords": [
+                "extension",
+                "log",
+                "mail",
+                "mailing",
+                "nette"
+            ],
+            "time": "2016-08-14T08:19:14+00:00"
         }
     ],
     "packages-dev": [],

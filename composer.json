@@ -6,7 +6,8 @@
 	"require": {
 		"aprila/aprila": "@dev",
 		"nittro/nette-bridges": "^2.0",
-		"nextras/static-router": "^1.1"
+		"nextras/static-router": "^1.1",
+		"ublaboo/mailing": "^1.1"
 	},
 	"require-dev": {
 		"nextras/mail-panel": "~2.3"

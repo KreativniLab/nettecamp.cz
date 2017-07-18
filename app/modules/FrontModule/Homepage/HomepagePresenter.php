@@ -7,9 +7,6 @@ use Nittro;
 
 class HomepagePresenter extends Nittro\Bridges\NittroUI\Presenter
 {
-	/** @var \MailManager @inject */
-	public $mailManager;
-
 	/** @var RegistrationManager @inject */
 	public $registrationManager;
 

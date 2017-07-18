@@ -2,10 +2,13 @@
 
 namespace App\FrontModule\Components;
 
+use App\FrontModule\Mails\RegistrationAdminMail;
+use App\FrontModule\Mails\RegistrationMail;
 use App\Model\RegistrationManager;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\ArrayHash;
+use Ublaboo\Mailing\MailFactory;
 
 /**
  * @method onSave(RegistrationForm $self, $registration)
@@ -19,17 +22,19 @@ class RegistrationForm extends Control
 	/** @var ArrayHash */
 	private $registration;
 
-	/** @var \MailManager */
-	private $mailManager;
-
 	/** @var RegistrationManager */
 	private $registrationManager;
 
+	/**
+	 * @var MailFactory
+	 */
+	private $mailFactory;
 
-	public function __construct(\MailManager $mailManager, RegistrationManager $registrationManager)
+
+	public function __construct(RegistrationManager $registrationManager, MailFactory $mailFactory)
 	{
-		$this->mailManager = $mailManager;
 		$this->registrationManager = $registrationManager;
+		$this->mailFactory = $mailFactory;
 	}
 
 
@@ -119,7 +124,12 @@ class RegistrationForm extends Control
 		];
 
 		$this->registrationManager->add($this->registration);
-		$this->mailManager->sendOrderEmail($values, 'cs', $template);
+
+		$mail = $this->mailFactory->createByType(RegistrationMail::class, $this->registration);
+		$mail->send();
+
+		$mailAdmin = $this->mailFactory->createByType(RegistrationAdminMail::class, $this->registration);
+		$mailAdmin->send();
 	}
 
 

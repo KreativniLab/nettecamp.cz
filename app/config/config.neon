@@ -9,22 +9,27 @@ parameters:
 		develMode: false
 		version: blackmamba
 
-	email:
-		from: honza@kreativnilaborator.cz
-		name: Honza
-
 php:
 	date.timezone: Europe/Prague
 
 extensions:
     kdyby.console: Kdyby\Console\DI\ConsoleExtension
     nextras.migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
+    ublaboo.mailing: Ublaboo\Mailing\DI\MailingExtension
 
 nextras.migrations:
     dir: %appDir%/../migrations # migrations base directory
     driver: mysql               # pgsql or mysql
     dbal: nette                 # nextras, nette, doctrine or dibi
 
+ublaboo.mailing:
+	do: both # log|send|both
+	log_directory: '%appDir%/../log/mails' # this is default option
+	mail_images_base_path: %wwwDir% # this is default option
+	mails: [
+	    default_sender: honza@kreativnilaborator.cz
+	    default_recipient: honza@kreativnilaborator.cz
+	]
 
 latte:
     macros:
@@ -48,7 +53,6 @@ database:
 
 services:
 	router: App\RouterFactory::createRouter
-	- MailManager(%email%)
 	- App\Model\RegistrationManager
 	- App\Model\RegistrationRepository
 	- App\FrontModule\Components\RegistrationFormFactory

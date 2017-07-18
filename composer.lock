@@ -318,16 +318,16 @@
         },
         {
             "name": "nette/application",
-            "version": "v2.4.7",
+            "version": "v2.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/application.git",
-                "reference": "e9a7cfa3370fc7e4dd4a1a2d967e3332d0427891"
+                "reference": "8f8f1071162c1bef8b0bc53ed7b435d342b81308"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/application/zipball/e9a7cfa3370fc7e4dd4a1a2d967e3332d0427891",
-                "reference": "e9a7cfa3370fc7e4dd4a1a2d967e3332d0427891",
+                "url": "https://api.github.com/repos/nette/application/zipball/8f8f1071162c1bef8b0bc53ed7b435d342b81308",
+                "reference": "8f8f1071162c1bef8b0bc53ed7b435d342b81308",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
             ],
             "description": "Nette Application MVC Component",
             "homepage": "https://nette.org",
-            "time": "2017-07-11T12:50:48+00:00"
+            "time": "2017-07-16T19:14:17+00:00"
         },
         {
             "name": "nette/bootstrap",
@@ -1854,7 +1854,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.3.4",
+            "version": "v3.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -1923,7 +1923,7 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v3.3.4",
+            "version": "v3.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",

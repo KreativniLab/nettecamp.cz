@@ -1,3 +1,5 @@
 app/config/config.local.neon
 vendor/*
 !vendor/.htaccess
+node_modules
+.tmp

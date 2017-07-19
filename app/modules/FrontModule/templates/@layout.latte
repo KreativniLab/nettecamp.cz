@@ -46,6 +46,8 @@
 </head>
 
 <body>
+
+{*
 <div class="header">
 	<div class="row">
 		<div class="column">
@@ -53,6 +55,7 @@
 		</div>
 	</div>
 </div>
+*}
 
 <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
@@ -70,8 +73,7 @@
 	</div>
 </div>
 
-{block scripts}
-	{*<script src="{$basePath}/js/site.js"></script>*}
-{/block}
+{block scripts}{/block}
+
 </body>
 </html>

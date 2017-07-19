@@ -1,0 +1,249 @@
+.nittro-transition-fade.nittro-transition-middle {
+  transition: none;
+  opacity: 0;
+}
+.nittro-transition-fade.nittro-transition-active {
+  transition: opacity .3s;
+}
+.nittro-transition-fade.nittro-transition-out,
+.nittro-transition-fade.nittro-transition-middle {
+  opacity: 0;
+}
+.nittro-transition-fade.nittro-transition-in {
+  opacity: 1;
+}
+.nittro-transition-slide {
+  transform-origin: center top;
+}
+.nittro-transition-slide.nittro-transition-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+.nittro-transition-slide.nittro-transition-out {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+.nittro-transition-slide.nittro-transition-middle {
+  transition: none;
+  opacity: 0;
+  transform: translateX(50px);
+}
+.nittro-transition-slide.nittro-transition-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+.nittro-transition-dim {
+  position: relative;
+}
+.nittro-transition-dim::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  content: '';
+  transform: scale(0, 0);
+}
+.nittro-transition-dim.nittro-transition-active::before,
+.nittro-transition-dim.nittro-transition-middle::before {
+  transform: none;
+}
+.nittro-transition-dim.nittro-transition-out {
+  transition: opacity .3s;
+}
+.nittro-transition-dim.nittro-transition-out::before {
+  transition: opacity .3s;
+  opacity: 1;
+}
+.nittro-transition-dim.nittro-transition-middle,
+.nittro-transition-dim.nittro-transition-middle::before {
+  transition: none;
+  opacity: 1;
+}
+.nittro-transition-dim.nittro-transition-in {
+  transition: opacity .2s;
+}
+.nittro-transition-dim.nittro-transition-in::before {
+  transition: opacity .2s;
+  opacity: 0;
+}
+.nittro-transition-bar::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 3px;
+  background: #900;
+  transform-origin: left center;
+  transform: scaleX(0);
+  opacity: 0;
+  content: '';
+}
+.nittro-transition-bar.nittro-transition-out {
+  transition: opacity 0.3s;
+}
+.nittro-transition-bar.nittro-transition-out::before {
+  transition: transform 0.3s;
+  transform: scaleX(0.5);
+  opacity: 1;
+}
+.nittro-transition-bar.nittro-transition-middle::before {
+  transition: transform 10s;
+  transform: scaleX(0.9);
+  opacity: 1;
+}
+.nittro-transition-bar.nittro-transition-in {
+  transition: opacity 0.2s;
+}
+.nittro-transition-bar.nittro-transition-in::before {
+  transition: transform 0.2s, opacity 0.2s step-end;
+  transform: scaleX(1);
+  opacity: 0;
+}
+body .nittro-transition-bar {
+  position: relative;
+}
+body.nittro-transition-bar::before {
+  position: fixed;
+}
+.nittro-flash {
+  transition: transform 400ms, opacity 400ms;
+}
+.nittro-flash.nittro-flash-plain {
+  white-space: pre-line;
+}
+.nittro-flash.nittro-flash-prepare {
+  transition: none;
+  opacity: 0;
+}
+.nittro-flash.nittro-flash-hide {
+  opacity: 0;
+}
+.nittro-flash.nittro-flash-info {
+  background: #ffa;
+}
+.nittro-flash.nittro-flash-info:before {
+  border-color: #ffa;
+}
+.nittro-flash.nittro-flash-warning {
+  background: #f90;
+}
+.nittro-flash.nittro-flash-warning:before {
+  border-color: #f90;
+}
+.nittro-flash.nittro-flash-error {
+  background: #f50;
+}
+.nittro-flash.nittro-flash-error:before {
+  border-color: #f50;
+}
+.nittro-flash.nittro-flash-inline {
+  padding: 10px 20px;
+}
+.nittro-flash.nittro-flash-inline.nittro-flash-prepare {
+  transform: translateX(10px);
+}
+.nittro-flash.nittro-flash-inline.nittro-flash-hide {
+  transform: translateX(-10px);
+}
+.nittro-flash.nittro-flash-inline + .nittro-flash-inline {
+  margin-top: 5px;
+}
+.nittro-flash.nittro-flash-floating {
+  max-width: 300px;
+  padding: 10px 20px;
+  text-align: center;
+}
+.nittro-flash.nittro-flash-floating:before {
+  position: absolute;
+  content: '';
+  width: 0;
+  height: 0;
+  border-width: 5px;
+  border-style: solid;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  transform-origin: center center;
+}
+.nittro-flash.nittro-flash-above {
+  margin-top: -7px;
+  text-align: center;
+}
+.nittro-flash.nittro-flash-above:before {
+  left: 50%;
+  top: 100%;
+  transform: translate(-5px, -5px) rotate(135deg);
+}
+.nittro-flash.nittro-flash-above.nittro-flash-prepare,
+.nittro-flash.nittro-flash-above.nittro-flash-hide {
+  transform: translateY(-10px);
+}
+.nittro-flash.nittro-flash-below {
+  margin-top: 7px;
+  text-align: center;
+}
+.nittro-flash.nittro-flash-below:before {
+  left: 50%;
+  bottom: 100%;
+  transform: translate(-5px, 5px) rotate(-45deg);
+}
+.nittro-flash.nittro-flash-below.nittro-flash-prepare,
+.nittro-flash.nittro-flash-below.nittro-flash-hide {
+  transform: translateY(10px);
+}
+.nittro-flash.nittro-flash-leftOf {
+  margin-left: -7px;
+  text-align: right;
+}
+.nittro-flash.nittro-flash-leftOf:before {
+  left: 100%;
+  top: 50%;
+  transform: translate(-5px, -5px) rotate(45deg);
+}
+.nittro-flash.nittro-flash-leftOf.nittro-flash-prepare,
+.nittro-flash.nittro-flash-leftOf.nittro-flash-hide {
+  transform: translateX(-10px);
+}
+.nittro-flash.nittro-flash-rightOf {
+  margin-left: 7px;
+}
+.nittro-flash.nittro-flash-rightOf:before {
+  right: 100%;
+  top: 50%;
+  transform: translate(5px, -5px) rotate(-135deg);
+}
+.nittro-flash.nittro-flash-rightOf.nittro-flash-prepare,
+.nittro-flash.nittro-flash-rightOf.nittro-flash-hide {
+  transform: translateX(10px);
+}
+.nittro-flash-global-holder {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 0;
+  overflow: visible;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+.nittro-flash-global-holder .nittro-flash {
+  flex: 0 0 auto;
+  min-width: 30vw;
+  max-width: 90vw;
+  padding: 3px 2vw;
+  text-align: center;
+}
+.nittro-flash-global-holder .nittro-flash.nittro-flash-prepare {
+  transform: translateX(10px);
+}
+.nittro-flash-global-holder .nittro-flash.nittro-flash-hide {
+  transform: translateX(-10px);
+}
+.nittro-flash-global-holder .nittro-flash + .nittro-flash {
+  margin-top: 2px;
+}

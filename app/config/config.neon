@@ -56,3 +56,4 @@ services:
 	- App\Model\RegistrationManager
 	- App\Model\RegistrationRepository
 	- App\FrontModule\Components\RegistrationFormFactory
+	- Aprila\Website\SiteLayout(%site%)

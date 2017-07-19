@@ -2,9 +2,7 @@
 
 namespace App\FrontModule\Presenters;
 
-use Nittro;
-
-class PartnersPresenter extends Nittro\Bridges\NittroUI\Presenter
+class PartnersPresenter extends BasePresenter
 {
 
 	public function renderDefault()

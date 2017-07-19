@@ -4,9 +4,8 @@ namespace App\FrontModule\Presenters;
 
 use App\FrontModule\Components\RegistrationFormFactory;
 use App\Model\RegistrationManager;
-use Nittro;
 
-class RegistrationPresenter extends Nittro\Bridges\NittroUI\Presenter
+class RegistrationPresenter extends BasePresenter
 {
 	/** @var RegistrationManager @inject */
 	public $registrationManager;

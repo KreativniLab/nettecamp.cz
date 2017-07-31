@@ -2,15 +2,32 @@
 # http://nette.org/security-warning
 
 parameters:
-	database:
-		host: 127.0.0.1
+    database:
+        host: 127.0.0.1
 
-	site:
-		develMode: false
-		version: blackmamba
+    site:
+        develMode: false
+        version: blackmamba
+
+    partners:
+        ulozto:
+            url: https://www.ulozto.cz/kariera
+            img: '/img/partner/logo-nubium.png'
+            title: Nubium
+        empty1:
+            empty: true
+            url: https://www.domain.cz/
+            img: '/img/partner/logo-.png'
+            title: Title
+        empty2:
+            empty: true
+            url: https://www.domain.cz
+            img: '/img/partner/logo-.png'
+            title: Title
+
 
 php:
-	date.timezone: Europe/Prague
+    date.timezone: Europe/Prague
 
 extensions:
     kdyby.console: Kdyby\Console\DI\ConsoleExtension
@@ -23,37 +40,38 @@ nextras.migrations:
     dbal: nette                 # nextras, nette, doctrine or dibi
 
 ublaboo.mailing:
-	do: both # log|send|both
-	log_directory: '%appDir%/../log/mails' # this is default option
-	mail_images_base_path: %wwwDir% # this is default option
-	mails: [
-	    default_sender: honza@kreativnilaborator.cz
-	    default_recipient: honza@kreativnilaborator.cz
-	]
+    do: both # log|send|both
+    log_directory: '%appDir%/../log/mails' # this is default option
+    mail_images_base_path: %wwwDir% # this is default option
+    mails: [
+        default_sender: honza@kreativnilaborator.cz
+        default_recipient: honza@kreativnilaborator.cz
+    ]
 
 latte:
     macros:
         - Nittro\Bridges\NittroLatte\NittroMacros
 
 application:
-	errorPresenter: Error
-	mapping:
-		*: App\*Module\Presenters\*Presenter
+    errorPresenter: Error
+    mapping:
+        *: App\*Module\Presenters\*Presenter
 
 
 session:
-	expiration: 14 days
+    expiration: 14 days
 
 database:
-	dsn: 'mysql:host=%database.host%;dbname=%database.dbname%'
-	user: %database.user%
-	password: %database.password%
-	options: {lazy: yes}
+    dsn: 'mysql:host=%database.host%;dbname=%database.dbname%'
+    user: %database.user%
+    password: %database.password%
+    options: {lazy: yes}
 
 
 services:
-	router: App\RouterFactory::createRouter
-	- App\Model\RegistrationManager
-	- App\Model\RegistrationRepository
-	- App\FrontModule\Components\RegistrationFormFactory
-	- Aprila\Website\SiteLayout(%site%)
+    router: App\RouterFactory::createRouter
+    - App\Model\RegistrationManager
+    - App\Model\RegistrationRepository
+    - App\FrontModule\Components\RegistrationFormFactory
+    - App\FrontModule\Components\PartnersBlockControl(%partners%)
+    - Aprila\Website\SiteLayout(%site%)

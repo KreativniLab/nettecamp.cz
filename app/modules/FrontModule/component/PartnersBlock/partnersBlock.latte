@@ -1,0 +1,23 @@
+{if $empty}
+	<h5 class="text-center">hledáme partnery akce</h5>
+{else}
+	<h5 class="text-center">děkuje našim partnerům</h5>
+{/if}
+
+<div class="row">
+	{foreach $partners as $partner}
+		{ifset $partner->empty}
+			<div class="columns small-12 medium-4">
+				<a href="{plink :Front:Partners:default}" class="empty-partner">+</a>
+			</div>
+		{else}
+			<div class="columns small-12 medium-4">
+				<a href="{$partner->url}"><img src="{$basePath}{$partner->img}" alt="{$partner->title}"></a>
+			</div>
+		{/ifset}
+	{/foreach}
+
+</div>
+{if $empty}
+	<p class="text-center"><small><a href="{plink :Front:Partners:default}">Podpořte vzdělávací akci a buďte vidět.</a></small></p>
+{/if}

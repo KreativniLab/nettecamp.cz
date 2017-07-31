@@ -21,6 +21,7 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 
 		$this->template->production = !$this->siteLayout->get('develMode');
 		$this->template->version = $this->siteLayout->get('version');
+		$this->template->campCapacity = 13;
 	}
 
 

@@ -145,7 +145,7 @@
 
 		<hr>
 
-		<h3>Učastníci {$count}/40</h3>
+		<h3>Učastníci {$count}/{$campCapacity}</h3>
 		<p>
 			{foreach $users as $person}
 				<img src="https://www.gravatar.com/avatar/{php echo md5($person[email])}?s=80&r=g&d=mm" class="avatar" /> {$person[name]}{sep}, {/sep}

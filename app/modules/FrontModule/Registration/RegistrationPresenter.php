@@ -15,10 +15,19 @@ class RegistrationPresenter extends BasePresenter
 
 	public $formSendSuccess = FALSE;
 
+	public $campUsersCount = 0;
+
+
+	public function actionDefault()
+	{
+		$this->campUsersCount = $this->registrationManager->getCampUsersCount();
+
+	}
+
 
 	public function renderDefault()
 	{
-		$this->template->count = $this->registrationManager->getCampUsersCount();
+		$this->template->count = $this->campUsersCount;
 		$this->template->users = $this->registrationManager->getCampUsers();
 	}
 
@@ -27,14 +36,28 @@ class RegistrationPresenter extends BasePresenter
 	{
 	}
 
+	public function renderWaitinglist()
+	{
+	}
 
 	public function createComponentRegistrationForm()
 	{
-		$form = $this->registrationFormFactory->create();
+		$fullCamp = FALSE;
+		if ($this->campCapacity <= $this->campUsersCount){
+			$fullCamp = TRUE;
+		}
 
-		$form->onSave[] = function () {
-			$this->postGet('Registration:success');
-			$this->setView('success');
+		$form = $this->registrationFormFactory->create($fullCamp);
+
+		$form->onSave[] = function () use ($fullCamp) {
+			if ($fullCamp){
+				$this->postGet('Registration:waitinglist');
+				$this->setView('waitinglist');
+
+			} else {
+				$this->postGet('Registration:success');
+				$this->setView('success');
+			}
 			$this->redrawControl('content');
 		};
 

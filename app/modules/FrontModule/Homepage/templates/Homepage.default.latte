@@ -5,8 +5,15 @@
 		<h3>Setkání PHP vývojářů v přírodě<br> 24.—27. srpna 2017<br><a href="https://mapy.cz/s/1OqyK" target="_blank">Křižanov, Vysočina</a>
 			<small class="super-small">(ve 4/5 na D1 mezi Prahou a Brnem)</small></h3>
 
+		{block registrationButton}
+			{if $campCapacity <= $count}
+				<p><small>kapacita je již <strong>naplňena</strong>, ale můžeš se zapsat jako náhradník</small></p>
+				<h2><a n:href="Registration:" class="button large">připsat na čekačku</a></h2>
+			{else}
+				<h2><a n:href="Registration:" class="button large">JEDU!!!</a></h2>
+			{/if}
+		{/block}
 
-		<h2><a n:href="Registration:" class="button large">JEDU!!!</a></h2>
 		<p>
 			diskutujem na <a href="https://forum.nette.org/cs/28962-nette-camp-2017-setkani-priznivcu-nette-framework-mimo-mesto">Nette fóru</a> nebo
 			<a href="https://pehapkari.slack.com/messages/C664BNY7P">slacku #nettecamp</a>
@@ -151,7 +158,7 @@
 				<img src="https://www.gravatar.com/avatar/{php echo md5($person[email])}?s=80&r=g&d=mm" class="avatar" /> {$person[name]}{sep}, {/sep}
 			{/foreach}
 
-			<h3><a n:href="Registration:" class="button large">JEDU!!!</a></h3>
+			{include registrationButton}
 		</p>
 
 	</div>

@@ -30,14 +30,14 @@
 <div class="row">
 	<div class="column medium-8 medium-centered">
 		{if $count >= $campCapacity}
-			<h3>Kapacita campu je již naplněna.</h3>
-			<p>Pokud se chcete stát náhradníkem napište email na <a href="mailto:honza@kreativnilaborator.cz">honza@kreativnilaborator.cz</a></p>
+			<h3 class="text-center">Kapacita campu je již <span style="color: red">naplněna</span>.</h3>
+			<p class="text-center">ale můžes se tu zapsat jako náhradník a jakmile se uvolní místo, tak ti dáme vědět.</p>
 		{else}
-
 			<h2 class="text-center">Přidej se i ty <small>kapacita {$count}/{$campCapacity}</small></h2>
-			{control registrationForm}
-			<hr>
 		{/if}
+
+		{control registrationForm}
+		<hr>
 
 	</div>
 </div>

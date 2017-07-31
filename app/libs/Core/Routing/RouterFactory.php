@@ -20,6 +20,7 @@ class RouterFactory
 			'Front:Partners:default' => 'partneri',
 			'Front:Registration:default' => 'registrace',
 			'Front:Registration:success' => 'registrace-ok',
+			'Front:Registration:waitinglist' => 'registrace-waitinglist',
 			'Export:Admin:default' => 'export',
 		]);
 		return $router;

@@ -14,6 +14,15 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 	/** @var PartnersBlockControl @inject */
 	public $partnersBlock;
 
+	public $campCapacity = 0;
+
+
+	protected function startup()
+	{
+		parent::startup();
+		$this->campCapacity = 40;
+	}
+
 
 	public function beforeRender()
 	{
@@ -21,7 +30,7 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 
 		$this->template->production = !$this->siteLayout->get('develMode');
 		$this->template->version = $this->siteLayout->get('version');
-		$this->template->campCapacity = 13;
+		$this->template->campCapacity = $this->campCapacity;
 	}
 
 

@@ -6,8 +6,10 @@ interface RegistrationFormFactory
 {
 
 	/**
+	 * @param bool $fullCamp
+	 *
 	 * @return RegistrationForm
 	 */
-	public function create();
+	public function create($fullCamp = FALSE);
 
 }

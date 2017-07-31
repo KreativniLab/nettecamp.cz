@@ -30,11 +30,17 @@ class RegistrationForm extends Control
 	 */
 	private $mailFactory;
 
+	/**
+	 * @var bool
+	 */
+	private $fullCamp;
 
-	public function __construct(RegistrationManager $registrationManager, MailFactory $mailFactory)
+
+	public function __construct($fullCamp = FALSE, RegistrationManager $registrationManager, MailFactory $mailFactory)
 	{
 		$this->registrationManager = $registrationManager;
 		$this->mailFactory = $mailFactory;
+		$this->fullCamp = $fullCamp;
 	}
 
 
@@ -122,6 +128,9 @@ class RegistrationForm extends Control
 			'tshirt' => $values['tshirt'],
 			'note' => $values['note'],
 		];
+		if ($this->fullCamp){
+			$this->registration['status'] = 'waitinglist';
+		}
 
 		$this->registrationManager->add($this->registration);
 

@@ -43,17 +43,18 @@ class RegistrationPresenter extends BasePresenter
 		$this->title = 'Zařazen na čekačku';
 	}
 
+
 	public function createComponentRegistrationForm()
 	{
 		$fullCamp = FALSE;
-		if ($this->campCapacity <= $this->campUsersCount){
+		if ($this->campCapacity <= $this->campUsersCount) {
 			$fullCamp = TRUE;
 		}
 
 		$form = $this->registrationFormFactory->create($fullCamp);
 
 		$form->onSave[] = function () use ($fullCamp) {
-			if ($fullCamp){
+			if ($fullCamp) {
 				$this->postGet('Registration:waitinglist');
 				$this->setView('waitinglist');
 

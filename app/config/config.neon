@@ -15,10 +15,10 @@ parameters:
             img: '/img/partner/logo-nubium.png'
             title: Nubium
         empty1:
-            empty: true
-            url: https://www.domain.cz/
-            img: '/img/partner/logo-.png'
-            title: Title
+#            empty: true
+            url: https://www.heurekashopping.cz/kariera
+            img: '/img/partner/logo-heureka.png'
+            title: Heureka
         empty2:
             empty: true
             url: https://www.domain.cz

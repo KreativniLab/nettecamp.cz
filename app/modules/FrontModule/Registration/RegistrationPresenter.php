@@ -21,7 +21,7 @@ class RegistrationPresenter extends BasePresenter
 	public function actionDefault()
 	{
 		$this->campUsersCount = $this->registrationManager->getCampUsersCount();
-
+		$this->title = 'Registrace na Nette Camp';
 	}
 
 
@@ -32,12 +32,15 @@ class RegistrationPresenter extends BasePresenter
 	}
 
 
-	public function renderSuccess()
+	public function actionSuccess()
 	{
+		$this->title = 'Registrován';
 	}
 
-	public function renderWaitinglist()
+
+	public function actionWaitinglist()
 	{
+		$this->title = 'Zařazen na čekačku';
 	}
 
 	public function createComponentRegistrationForm()

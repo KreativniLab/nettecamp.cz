@@ -27,7 +27,7 @@
 </div>
 
 
-<div class="row">
+<div n:if="!$disableRegistration" class="row">
 	<div class="column medium-8 medium-centered">
 		{if $count >= $campCapacity}
 			<h3 class="text-center">Kapacita campu je již <span style="color: red">naplněna</span>.</h3>

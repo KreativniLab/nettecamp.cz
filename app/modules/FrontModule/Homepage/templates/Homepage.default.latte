@@ -158,23 +158,26 @@
 
 		<hr>
 
-		<h3>Učastníci {$count}/{$campCapacity}</h3>
+		<h3>Učastníci {$count}{if !$disableRegistration}/{$campCapacity}{/if}</h3>
 		<p>
 			{foreach $users as $person}
 				<img src="https://www.gravatar.com/avatar/{php echo md5($person[email])}?s=80&r=g&d=mm" class="avatar" /> {$person[name]}{sep}, {/sep}
 			{/foreach}
 		</p>
 
-		{block registrationButton}
-			{if $campCapacity <= $count}
-				<p>
-					<small>kapacita je již <strong>naplňena</strong>, ale můžeš se zapsat jako náhradník</small>
-				</p>
-				<h2><a n:href="Registration:" class="button large">připsat na čekačku</a></h2>
-			{else}
-				<h2><a n:href="Registration:" class="button large">JEDU!!!</a></h2>
-			{/if}
-		{/block}
+		{if !$disableRegistration}
+			{block registrationButton}
+				{if $campCapacity <= $count}
+					<p>
+						<small>kapacita je již <strong>naplňena</strong>, ale můžeš se zapsat jako náhradník</small>
+					</p>
+					<h2><a n:href="Registration:" class="button large">připsat na čekačku</a></h2>
+				{else}
+					<h2><a n:href="Registration:" class="button large">JEDU!!!</a></h2>
+				{/if}
+			{/block}
+		{/if}
+
 	</div>
 </div>
 

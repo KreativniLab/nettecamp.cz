@@ -43,6 +43,7 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 		$this->template->version = $this->siteLayout->get('version');
 		$this->template->campCapacity = $this->campCapacity;
 		$this->template->title = $this->title;
+		$this->template->disableRegistration = $this->siteLayout->get('disableRegistration', false);
 	}
 
 

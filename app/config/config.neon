@@ -8,6 +8,7 @@ parameters:
     site:
         develMode: false
         version: blackmamba
+        disableRegistration: true
 
     partners:
         ulozto:

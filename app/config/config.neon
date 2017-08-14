@@ -17,7 +17,7 @@ parameters:
             title: Nubium
         empty1:
 #            empty: true
-            url: https://www.heurekashopping.cz/kariera
+            url: http://www.heurekadevs.cz/volne-zidle/
             img: '/img/partner/logo-heureka.png'
             title: Heureka
         empty2:

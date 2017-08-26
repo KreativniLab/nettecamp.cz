@@ -21,10 +21,10 @@ parameters:
             img: '/img/partner/logo-heureka.png'
             title: Heureka
         empty2:
-            empty: true
-            url: https://www.domain.cz
-            img: '/img/partner/logo-.png'
-            title: Title
+#            empty: true
+            url: https://sunfox.cz
+            img: '/img/partner/logo-sunfox.png'
+            title: Sunfox
 
 
 php:

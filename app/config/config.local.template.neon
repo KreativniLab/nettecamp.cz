@@ -1,0 +1,16 @@
+parameters:
+    database:
+        dbname: nettecamp
+        user: nettecamp
+        password: "p@55w0rD"
+    site:
+        develMode: true
+
+
+services:
+    nette.mailer: Nextras\MailPanel\SessionMailer
+
+tracy:
+    bar:
+        - Nextras\MailPanel\MailPanel(%tempDir%)
+    editor: 'phpstorm://open?file=%file&line=%line'

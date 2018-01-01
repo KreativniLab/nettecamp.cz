@@ -12,6 +12,7 @@ class HomepagePresenter extends BasePresenter
 
 	public function renderDefault()
 	{
+		$this->setView('closed');
 		$this->template->count = $this->registrationManager->getCampUsersCount();
 		$this->template->users = $this->registrationManager->getCampUsers();
 	}

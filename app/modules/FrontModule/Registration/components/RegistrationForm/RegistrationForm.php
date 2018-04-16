@@ -116,7 +116,7 @@ class RegistrationForm extends Control
 		$template = $this->createTemplate();
 
 		$this->registration = [
-			'year' => '2017',
+			'year' => '2018',
 			'name' => $values['name'],
 			'nickname' => $values['nickname'],
 			'email' => $values['email'],

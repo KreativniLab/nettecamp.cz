@@ -7,24 +7,25 @@ parameters:
 
     site:
         develMode: false
-        version: blackmamba
-        disableRegistration: true
+        version: 2018
+        disableRegistration: false
 
     partners:
-        ulozto:
-            url: https://www.ulozto.cz/kariera
-            img: '/img/partner/logo-nubium.png'
-            title: Nubium
+        empty0:
+            empty: true
+            url:
+            img:
+            title:
         empty1:
-#            empty: true
-            url: http://www.heurekadevs.cz/volne-zidle/
-            img: '/img/partner/logo-heureka.png'
-            title: Heureka
+            empty: true
+            url:
+            img:
+            title:
         empty2:
-#            empty: true
-            url: https://sunfox.cz
-            img: '/img/partner/logo-sunfox.png'
-            title: Sunfox
+            empty: true
+            url:
+            img:
+            title:
 
 
 php:

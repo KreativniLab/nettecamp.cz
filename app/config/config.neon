@@ -11,11 +11,11 @@ parameters:
         disableRegistration: false
 
     partners:
-        empty0:
-            empty: true
-            url:
-            img:
-            title:
+        nms:
+#            empty: true
+            url: https://www.nms.cz/it/
+            img: img/partner/logo-nms.png
+            title: NMS Market Research
         empty1:
             empty: true
             url:

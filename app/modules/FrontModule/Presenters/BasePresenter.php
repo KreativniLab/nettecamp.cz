@@ -24,7 +24,7 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->campCapacity = 40;
+		$this->campCapacity = 45;
 
 		$this->title = 'Nette Camp / 23.—26. srpna 2018';
 

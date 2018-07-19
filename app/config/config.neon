@@ -17,15 +17,15 @@ parameters:
             img: img/partner/logo-nms.png
             title: NMS Market Research
         empty1:
-            empty: true
-            url:
-            img:
-            title:
+#            empty: true
+            url: https://www.ispalliance.cz/
+            img: img/partner/logo-isp.png
+            title: ISP
         empty2:
-            empty: true
-            url:
-            img:
-            title:
+#            empty: true
+            url: https://sledovanitv.cz/career
+            img: img/partner/logo-sledovani.png
+            title: sledovani
 
 
 php:

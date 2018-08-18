@@ -18,7 +18,7 @@ parameters:
             title: NMS Market Research
         empty1:
 #            empty: true
-            url: https://www.ispalliance.cz/
+            url: https://www.adminus.cz/kariera
             img: img/partner/logo-isp.png
             title: ISP
         empty2:

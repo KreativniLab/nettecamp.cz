@@ -158,7 +158,7 @@
 
 		<hr>
 
-		<h3>Učastníci {$count}{if !$disableRegistration}/{$campCapacity}{/if}</h3>
+		<h3>Učastníci {$count} {if $campCapacity > $count}{if !$disableRegistration}/{$campCapacity}{/if}{/if}</h3>
 		<p>
 			{foreach $users as $person}
 				<img src="https://www.gravatar.com/avatar/{php echo md5($person[email])}?s=80&r=g&d=mm" class="avatar" /> {$person[name]}{sep}, {/sep}
@@ -171,7 +171,7 @@
 					<p>
 						<small>kapacita je již <strong>naplňena</strong>, ale můžeš se zapsat jako náhradník</small>
 					</p>
-					<h2><a n:href="Registration:" class="button large">připsat na čekačku</a></h2>
+					<h2><a n:href="Registration:" class="button large">přihlásit se jako náhradník</a></h2>
 				{else}
 					<h2><a n:href="Registration:" class="button large">JEDU!!!</a></h2>
 				{/if}

@@ -66,6 +66,8 @@ class RegistrationForm extends Control
 
 		$form->addText('nickname', "nickname:");
 
+		$form->addTextArea('presentation', "workshop/přednáška:")->setRequired('doplň o co se zajímáš');
+
 		$levels = [
 			'rookie' => "Rookie",
 			'normal' => "Normal",
@@ -116,7 +118,7 @@ class RegistrationForm extends Control
 		$template = $this->createTemplate();
 
 		$this->registration = [
-			'year' => '2018',
+			'year' => '2019',
 			'name' => $values['name'],
 			'nickname' => $values['nickname'],
 			'email' => $values['email'],
@@ -126,6 +128,7 @@ class RegistrationForm extends Control
 			'vegetarian' => $values['vegetarian'],
 			'skills' => $values['skills'],
 			'tshirt' => $values['tshirt'],
+			'presentation' => $values['presentation'],
 			'note' => $values['note'],
 		];
 		if ($this->fullCamp){

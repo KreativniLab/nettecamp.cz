@@ -7,25 +7,25 @@ parameters:
 
     site:
         develMode: false
-        version: 2018
+        version: 2019
         disableRegistration: false
 
     partners:
         nms:
-#            empty: true
-            url: https://www.nms.cz/it/
-            img: img/partner/logo-nms.png
-            title: NMS Market Research
+            empty: true
+#            url: https://www.nms.cz/it/
+#            img: img/partner/logo-nms.png
+#            title: NMS Market Research
         empty1:
-#            empty: true
-            url: https://www.adminus.cz/kariera
-            img: img/partner/logo-isp.png
-            title: ISP
+            empty: true
+#            url: https://www.adminus.cz/kariera
+#            img: img/partner/logo-isp.png
+#            title: ISP
         empty2:
-#            empty: true
-            url: https://sledovanitv.cz/career
-            img: img/partner/logo-sledovani.png
-            title: sledovani
+            empty: true
+#            url: https://sledovanitv.cz/career
+#            img: img/partner/logo-sledovani.png
+#            title: sledovani
 
 
 php:

@@ -26,7 +26,7 @@ class RegistrationManager extends BaseManager
 
 	public function findAll()
 	{
-		return parent::findAll()->where('year', 2018)->where('deleted_at', null);
+		return parent::findAll()->where('year', 2019)->where('deleted_at', null);
 	}
 
 

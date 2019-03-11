@@ -16,6 +16,7 @@ class RegistrationAdminMail extends Mail implements IComposableMail
 		$message->setFrom($this->mails['default_sender']);
 		$message->addReplyTo($params['email'], $params['name']);
 		$message->addTo($this->mails['default_recipient']);
+		$message->addCc($this->mails['copy_recipient']);
 	}
 
 }

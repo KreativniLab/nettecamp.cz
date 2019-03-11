@@ -46,8 +46,9 @@ ublaboo.mailing:
     log_directory: '%appDir%/../log/mails' # this is default option
     mail_images_base_path: %wwwDir% # this is default option
     mails: [
-        default_sender: honza@kreativnilaborator.cz
-        default_recipient: honza@kreativnilaborator.cz
+        default_sender: hello@nettecamp.cz
+        default_recipient: petra@kreativnilaborator.cz
+        copy_recipient: honza@kreativnilaborator.cz
     ]
 
 latte:

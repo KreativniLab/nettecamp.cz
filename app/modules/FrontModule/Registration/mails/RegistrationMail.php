@@ -14,6 +14,7 @@ class RegistrationMail extends Mail implements IComposableMail
 	public function compose(Nette\Mail\Message $message, $params = NULL)
 	{
 		$message->setFrom($this->mails['default_sender']);
+		$message->addReplyTo($this->mails['default_recipient']);
 		$message->addTo($params['email']);
 	}
 

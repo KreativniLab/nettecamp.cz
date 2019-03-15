@@ -8,10 +8,42 @@
 </head>
 <body>
 	<p style="font-size:18px">Registrace : <strong>{$name}</strong></p>
-	<p style="font-size:16px">Level: <br><strong>{$skills}</strong></p>
+	<p style="font-size:16px">Invoice: <br><strong>{$invoice}</strong></p>
 	<p style="font-size:16px">From: <br><strong>{$arrival}</strong></p>
 	<p style="font-size:16px">E-mail: <strong><a href="mailto:{$email}">{$email}</a></strong></p>
 	<p style="font-size:16px">Telefon: <strong>{$phone}</strong></p>
 	<p style="font-size:16px">Note: <strong>{$note}</strong></p>
+	<hr>
+	<table>
+		<tr>
+			<td>status</td>
+			<td>jmeno</td>
+			<td>nick</td>
+			<td>email</td>
+			<td>phone</td>
+			<td>when</td>
+			<td>skills</td>
+			<td>invoice</td>
+			<td>vegetarian</td>
+			<td>t-shirt</td>
+			<td>talk</td>
+			<td>note</td>
+		</tr>
+		<tr>
+			<td>registration</td>
+			<td>{$name}</td>
+			<td>{$nickname}</td>
+			<td>{$email}</td>
+			<td>{$phone}</td>
+			<td>{$arrival}</td>
+			<td>{$skills}</td>
+			<td>{$invoice}</td>
+			<td>{$vegetarian}</td>
+			<td>{$tshirt}</td>
+			<td>{$presentation}</td>
+			<td>{$note}</td>
+		</tr>
+	</table>
+
 </body>
 </html>

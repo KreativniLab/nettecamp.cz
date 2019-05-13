@@ -4,13 +4,15 @@
 	"type": "project",
 	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"require": {
-		"aprila/aprila": "@dev",
+		"php": ">= 7.1",
+		"nette/nette": "3.0.*",
+		"contributte/console": "^0.5",
+		"nextras/migrations": "^3.0",
+		"nextras/static-router": "v2.0.0-rc2",
+		"nextras/mail-panel": "^2.5",
+		"texy/texy": "~2.9.0",
 		"nittro/nette-bridges": "^2.0",
-		"nextras/static-router": "^1.1",
-		"ublaboo/mailing": "^1.1"
-	},
-	"require-dev": {
-		"nextras/mail-panel": "~2.3"
+		"ublaboo/mailing": "^1.2"
 	},
 	"config": {
 		"discard-changes": true

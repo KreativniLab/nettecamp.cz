@@ -5,7 +5,7 @@
 
 namespace App\FrontModule\Components;
 
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 
 class PartnersBlockControl extends \Nette\Application\UI\Control
 {

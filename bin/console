@@ -1,8 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-$dic = require __DIR__ . '/../app/bootstrap.php';;
+/** @var Nette\DI\Container $container */
+$container = require __DIR__ . '/../app/bootstrap.php';
 
-/** @var Nette\Application\Application $app */
-$app = $dic->getByType('Nette\Application\Application');
-$app->run();
+// Get application from DI container.
+$application = $container->getByType(Contributte\Console\Application::class);
+
+// Run application.
+exit($application->run());

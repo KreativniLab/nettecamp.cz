@@ -3,6 +3,7 @@
 namespace App\FrontModule\Components;
 
 use App\FrontModule\Mails\RegistrationAdminMail;
+use App\FrontModule\Mails\RegistrationData;
 use App\FrontModule\Mails\RegistrationMail;
 use App\Model\RegistrationManager;
 use Nette\Application\UI\Control;
@@ -131,16 +132,20 @@ class RegistrationForm extends Control
 			'presentation' => $values['presentation'],
 			'note' => $values['note'],
 		];
+
 		if ($this->fullCamp){
 			$this->registration['status'] = 'waitinglist';
 		}
 
 		$this->registrationManager->add($this->registration);
 
-		$mail = $this->mailFactory->createByType(RegistrationMail::class, $this->registration);
+
+		$registrationData = new RegistrationData('2019', $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['vegetarian'], $values['skills'], $values['tshirt'], $values['presentation'], $values['note']);
+
+		$mail = $this->mailFactory->createByType(RegistrationMail::class, $registrationData);
 		$mail->send();
 
-		$mailAdmin = $this->mailFactory->createByType(RegistrationAdminMail::class, $this->registration);
+		$mailAdmin = $this->mailFactory->createByType(RegistrationAdminMail::class, $registrationData);
 		$mailAdmin->send();
 	}
 

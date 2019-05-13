@@ -3,19 +3,17 @@
 namespace App\FrontModule\Mails;
 
 use Nette;
-use Ublaboo\Mailing\Mail;
+use Ublaboo\Mailing\AbstractMail;
 use Ublaboo\Mailing\IComposableMail;
+use Ublaboo\Mailing\IMessageData;
 
-class RegistrationMail extends Mail implements IComposableMail
+class RegistrationMail extends AbstractMail implements IComposableMail
 {
-	protected $mails;
-
-
-	public function compose(Nette\Mail\Message $message, $params = NULL)
+	public function compose(Nette\Mail\Message $message, ?IMessageData $mailData): void
 	{
-		$message->setFrom($this->mails['default_sender']);
-		$message->addReplyTo($this->mails['default_recipient']);
-		$message->addTo($params['email']);
+		$message->setFrom($this->mailAddresses['default_sender']);
+		$message->addReplyTo($this->mailAddresses['default_recipient']);
+		$message->addTo($mailData->email);
 	}
 
 }

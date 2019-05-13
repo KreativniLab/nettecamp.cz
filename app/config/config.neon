@@ -32,9 +32,12 @@ php:
     date.timezone: Europe/Prague
 
 extensions:
-    kdyby.console: Kdyby\Console\DI\ConsoleExtension
+    contribute.console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
     nextras.migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
     ublaboo.mailing: Ublaboo\Mailing\DI\MailingExtension
+
+contribute.console:
+    url: https://www.nettecamp.cz
 
 nextras.migrations:
     dir: %appDir%/../migrations # migrations base directory
@@ -43,8 +46,8 @@ nextras.migrations:
 
 ublaboo.mailing:
     do: both # log|send|both
-    log_directory: '%appDir%/../log/mails' # this is default option
-    mail_images_base_path: %wwwDir% # this is default option
+    logDirectory: '%appDir%/../log/mails' # this is default option
+    mailImagesBasePath: %wwwDir% # this is default option
     mails: [
         default_sender: hello@nettecamp.cz
         default_recipient: petra@kreativnilaborator.cz

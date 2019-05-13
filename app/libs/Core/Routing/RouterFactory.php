@@ -9,13 +9,13 @@ use Nextras\Routing\StaticRouter;
 
 class RouterFactory
 {
+	use Nette\StaticClass;
 
-	/**
-	 * @return Nette\Application\IRouter
-	 */
-	public static function createRouter()
+	public static function createRouter(): RouteList
 	{
-		$router = new StaticRouter([
+		$router = new RouteList;
+
+		$staticRouter = new StaticRouter([
 			'Front:Homepage:default' => '',
 			'Front:Program:default' => 'program',
 			'Front:Partners:default' => 'partneri',
@@ -23,6 +23,9 @@ class RouterFactory
 			'Front:Registration:success' => 'registrace-ok',
 			'Front:Registration:waitinglist' => 'registrace-waitinglist',
 		]);
+
+		$router->add($staticRouter);
+
 		return $router;
 	}
 

@@ -158,12 +158,7 @@
 
 		<hr>
 
-		<h3>Učastníci {$count} {if $campCapacity > $count}{if !$disableRegistration}/{$campCapacity}{/if}{/if}</h3>
-		<p>
-			{foreach $participants as $participant}
-				<img src="https://www.gravatar.com/avatar/{php echo md5($participant->email)}?s=80&r=g&d=mm" class="avatar" /> {$participant->name}{sep}, {/sep}
-			{/foreach}
-		</p>
+		{control participants}
 
 		{if !$disableRegistration}
 			{block registrationButton}

@@ -2,7 +2,9 @@
 
 namespace App\FrontModule\Presenters;
 
+use App\FrontModule\Components\ParticipantsBlockFactory;
 use App\FrontModule\Components\PartnersBlockControl;
+use App\Model\Model;
 use Aprila\Website\SiteLayout;
 use Nittro;
 
@@ -14,17 +16,25 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 	/** @var PartnersBlockControl @inject */
 	public $partnersBlock;
 
-	/** @var int */
-	public $campCapacity = 0;
+	/** @var ParticipantsBlockFactory @inject */
+	public $participantsFactory;
+
+	/** @var Model @inject */
+	public $model;
 
 	/** @var string */
 	public $title;
+
+	/** @var int */
+	public $campCapacity;
+
+	/** @var bool */
+	public $disableRegistration;
 
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->campCapacity = 45;
 
 		$this->title = 'Nette Camp / 22.—25. srpna 2019';
 
@@ -32,6 +42,9 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 			'content',
 			'title',
 		]);
+
+		$this->disableRegistration = $this->siteLayout->get('disableRegistration', false);
+		$this->campCapacity = $this->siteLayout->get('campCapacity', 50);
 	}
 
 
@@ -41,15 +54,22 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 
 		$this->template->production = !$this->siteLayout->get('develMode');
 		$this->template->version = $this->siteLayout->get('version');
-		$this->template->campCapacity = $this->campCapacity;
 		$this->template->title = $this->title;
-		$this->template->disableRegistration = $this->siteLayout->get('disableRegistration', false);
+		$this->template->disableRegistration = $this->disableRegistration;
+		$this->template->campCapacity = $this->campCapacity;
 	}
 
 
 	public function createComponentPartnersBlock()
 	{
 		$control = $this->partnersBlock;
+		return $control;
+	}
+
+
+	public function createComponentParticipants()
+	{
+		$control = $this->participantsFactory->create($this->campCapacity, $this->disableRegistration);
 		return $control;
 	}
 

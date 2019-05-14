@@ -9,6 +9,7 @@ parameters:
         develMode: false
         version: 2019
         disableRegistration: false
+        campCapacity: 50
 
     partners:
         nms:
@@ -85,4 +86,5 @@ services:
     router: App\RouterFactory::createRouter
     - App\FrontModule\Components\RegistrationFormFactory
     - App\FrontModule\Components\PartnersBlockControl(%partners%)
+    - App\FrontModule\Components\ParticipantsBlockFactory()
     - Aprila\Website\SiteLayout(%site%)

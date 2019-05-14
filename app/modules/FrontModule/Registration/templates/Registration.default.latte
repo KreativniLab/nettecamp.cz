@@ -16,13 +16,7 @@
 
 <div class="row">
 	<div class="column">
-		<h3>S kým se potkáš?</h3>
-		<p>
-			{foreach $participants as $participant}
-				{*<img n:gravatar="$participant[email], 100" /> {$participant[name]}{sep}, {/sep}*}
-				<img src="https://www.gravatar.com/avatar/{php echo md5($participant->email)}?s=80&r=g&d=mm" class="avatar" /> {$participant->name}{sep}, {/sep}
-			{/foreach}
-		</p>
+		{control participants}
 	</div>
 </div>
 

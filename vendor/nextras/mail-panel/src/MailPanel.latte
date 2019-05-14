@@ -1,0 +1,164 @@
+<style>
+	#tracy-debug .tracy-panel.tracy-mode-peek .nextras-mail-panel,
+	#tracy-debug .tracy-panel.tracy-mode-float .nextras-mail-panel {
+		overflow-y: scroll; /* reserve space for scrollbar */
+	}
+
+	#tracy-debug .tracy-panel.tracy-mode-peek .nextras-mail-panel table,
+	#tracy-debug .tracy-panel.tracy-mode-float .nextras-mail-panel table {
+		margin-right: 10px;
+		width: 600px;
+	}
+
+	#tracy-debug .tracy-panel.tracy-mode-window .nextras-mail-panel table {
+		width: 100%;
+	}
+
+	#tracy-debug .tracy-panel .nextras-mail-panel table {
+		margin-bottom: 10px;
+	}
+
+	#tracy-debug .tracy-panel .nextras-mail-panel table:last-child {
+		margin-bottom: 0;
+	}
+
+	#tracy-debug .tracy-panel .nextras-mail-panel th {
+		width: 80px;
+	}
+
+	#tracy-debug .tracy-panel .nextras-mail-panel-actions {
+		float: right;
+	}
+
+	#tracy-debug .tracy-panel .nextras-mail-panel-actions a {
+		margin-left: 7px;
+	}
+
+	#tracy-debug .tracy-panel .nextras-mail-panel-preview-txt td {
+		white-space: pre-wrap;
+	}
+
+	#tracy-debug .tracy-panel .nextras-mail-panel-preview-html td {
+		padding: 0;
+	}
+
+	#tracy-debug .tracy-panel .nextras-mail-panel-preview-html iframe {
+		display: block;
+		width: 100%;
+		background: #FFF;
+	}
+</style>
+
+<h1>Sent emails</h1>
+
+{if count($messages) > 0}
+
+	<div class="tracy-inner nextras-mail-panel" id="nextras-mail-panel-{$panelId}">
+		<table>
+			<tr>
+				<th colspan="2">
+					<div class="nextras-mail-panel-actions">
+						<a href="{link delete-all}">Delete all</a>
+					</div>
+				</th>
+			</tr>
+		</table>
+
+		{foreach $messages as $messageId => $message}
+			<table class="nextras-mail-message">
+				<tr>
+					<th colspan="2">
+						<div class="nextras-mail-panel-actions">
+							<a class="tracy-toggle tracy-collapsed" data-tracy-ref="^table .nextras-mail-panel-preview-txt">Preview TXT</a>
+							<a class="tracy-toggle tracy-collapsed" data-tracy-ref="^table .nextras-mail-panel-preview-html">Preview HTML</a>
+							<a target="_blank" href="{link detail, message-id => $messageId}">Open</a>
+							<a target="_blank" href="{link source, message-id => $messageId}">Source</a>
+							<a href="{link delete-one, message-id => $messageId}">Delete</a>
+						</div>
+						<div class="nextras-mail-panel-subject" title="Sent at {$message->getHeader('Date')}">{$message->subject}</div>
+					</th>
+				</tr>
+
+				{foreach [From, To, Cc, Bcc] as $headerName}
+					{var $header = $message->getHeader($headerName)}
+					<tr n:ifset="$header">
+						<th>{$headerName}</th>
+						<td>
+							{foreach $header as $email => $name}
+								<a href="mailto:{$email}">{$name ?: $email}</a>{sep}, {/sep}
+							{/foreach}
+						</td>
+					</tr>
+				{/foreach}
+
+				{var $attachments = $message->getAttachments()}
+				<tr n:if="$attachments">
+					<th>Attachments</th>
+					<td>
+						{foreach $attachments as $attachmentId => $attachment}
+							<a target="_blank" href="{link attachment, message-id => $messageId, attachment-id => $attachmentId}">{$attachment|attachmentLabel}</a>
+							{sep}<br>{/sep}
+						{/foreach}
+					</td>
+				</tr>
+
+
+				<tr class="nextras-mail-panel-preview-txt tracy-collapsed">
+					<td colspan="2">{$message|plainText}</td>
+				</tr>
+
+				<tr class="nextras-mail-panel-preview-html tracy-collapsed">
+					{capture $htmlPreview}{include MailPanel.body.latte, message => $message}{/capture}
+					<td colspan="2" data-content="{$htmlPreview}"></td>
+				</tr>
+			</table>
+		{/foreach}
+
+		<script>
+			(function () {
+
+				var panel = document.getElementById('nextras-mail-panel-' + {$panelId});
+				var messages = panel.querySelectorAll('table.nextras-mail-message');
+
+				for (var i = 0; i < messages.length; i++) {
+					(function (message) {
+
+						var actions = message.querySelector('.nextras-mail-panel-actions');
+						var preview = message.querySelector('.nextras-mail-panel-preview-html td');
+
+						var initHtmlPreview = function () {
+							var iframe = document.createElement('iframe');
+							preview.appendChild(iframe);
+
+							iframe.contentWindow.document.write(preview.dataset.content);
+							iframe.contentWindow.document.close();
+							delete preview.dataset.content;
+
+							var baseTag = iframe.contentWindow.document.createElement('base');
+							baseTag.target = '_parent';
+							iframe.contentWindow.document.body.appendChild(baseTag);
+
+							var fixHeight = function (ev) {
+								iframe.style.height = 0;
+								iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+								iframe.contentWindow.removeEventListener(ev.type, fixHeight);
+							};
+
+							iframe.contentWindow.addEventListener('load', fixHeight);
+							iframe.contentWindow.addEventListener('resize', fixHeight);
+							actions.removeEventListener('tracy-toggle', initHtmlPreview);
+							actions.removeEventListener('click', initHtmlPreview);
+						};
+
+						actions.addEventListener('tracy-toggle', initHtmlPreview);
+						actions.addEventListener('click', initHtmlPreview);
+
+					})(messages.item(i));
+				}
+
+			})();
+		</script>
+	</div>
+{else}
+	<p>No emails.</p>
+{/if}

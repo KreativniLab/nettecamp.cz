@@ -1,0 +1,23 @@
+{
+    "name": "nittro/nette-bridges",
+    "type": "library",
+    "description": "Nittro PHP bridges",
+    "homepage": "https://www.nittro.org/",
+    "license": "MIT",
+    "authors": [
+        {"name": "Dan Kadera", "email": "me@subsonic.cz"}
+    ],
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "require": {
+        "php": ">=7.1"
+    },
+    "require-dev": {
+        "nette/application": "^3.0",
+        "nette/di": "^3.0",
+        "latte/latte": "^3.0"
+    },
+    "minimum-stability": "RC",
+    "prefer-stable": true
+}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0f4337440463f0966fa19b6bea4a452a",
+    "content-hash": "3d68de4bdf35c0e58f353aa21fe67801",
     "packages": [
         {
             "name": "contributte/console",
@@ -65,6 +65,52 @@
                 "symfony"
             ],
             "time": "2018-06-21T18:48:21+00:00"
+        },
+        {
+            "name": "dg/composer-cleaner",
+            "version": "v0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dg/composer-cleaner.git",
+                "reference": "38b86e3246c563a1fea63a0d4b89584f24830e3c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dg/composer-cleaner/zipball/38b86e3246c563a1fea63a0d4b89584f24830e3c",
+                "reference": "38b86e3246c563a1fea63a0d4b89584f24830e3c",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "nette/tester": "^1.7"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "DG\\ComposerCleaner\\Plugin"
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                }
+            ],
+            "description": "Victor The Cleaner: removes unnecessary files from vendor directory.",
+            "keywords": [
+                "composer"
+            ],
+            "time": "2017-03-21T02:22:09+00:00"
         },
         {
             "name": "latte/latte",

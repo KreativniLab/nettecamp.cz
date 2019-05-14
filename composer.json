@@ -27,7 +27,8 @@
 		"texy/texy": "~2.9.0",
 		"nittro/nette-bridges": "^2.0",
 		"ublaboo/mailing": "^1.2",
-		"nextras/orm": "^3.1"
+		"nextras/orm": "^3.1",
+		"dg/composer-cleaner": "^0.5.0"
 	},
 	"config": {
 		"discard-changes": true

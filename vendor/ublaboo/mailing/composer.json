@@ -1,0 +1,40 @@
+{
+	"name": "ublaboo/mailing",
+	"type": "library",
+	"description": "Extension for Nette Framework: Easy & object-oriented way of sending & logging mails",
+	"keywords": ["mail", "mailing", "log", "nette", "extension"],
+	"homepage": "https://ublaboo.org/mailing",
+	"license": ["MIT"],
+	"support": {
+		"issues": "https://github.com/ublaboo/mailing/issues"
+	},
+	"authors": [
+		{
+			"name": "Pavel Janda",
+			"homepage": "http://paveljanda.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Ublaboo\\Mailing\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Ublaboo\\Mailing\\Tests\\": "tests/"
+		}
+	},
+	"require": {
+		"php": ">= 7.1",
+		"nette/utils": "~2.4 || ~3.0",
+		"nette/di": "~2.4 || ~3.0",
+		"nette/application": "~2.4 || ~3.0",
+		"nette/mail": "~2.4 || ~3.0",
+		"latte/latte": "~2.4 || ~3.0"
+	},
+	"require-dev": {
+		"nette/tester": "~2.0",
+		"mockery/mockery": "~1.0",
+		"tracy/tracy": "^2.4"
+	}
+}

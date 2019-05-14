@@ -1,6 +1,8 @@
-window.Nette = {
-    noInit: true
-};
+if (typeof module !== 'object' || typeof module.exports !== 'object') {
+    window.Nette = {
+        noInit: true
+    };
+}
 
 (function () {
   global = this
@@ -337,6 +339,7 @@ var _context = (function() {
         promise = Promise,
         resolver = null,
         nsStack = [],
+        nonce = null,
         map = {
             names: [],
             classes: []
@@ -462,55 +465,68 @@ var _context = (function() {
         });
     }
 
+    function resolveNonce() {
+        if (nonce !== null) {
+            return nonce;
+        }
+
+        var elems = document.getElementsByTagName('script'),
+            i, n, elem;
+
+        for (i = 0, n = elems.length; i < n; i++) {
+            elem = elems.item(i);
+
+            if (/^((application|text)\/javascript)?$/i.test(elem.type) && elem.nonce) {
+                return nonce = elem.nonce;
+            }
+        }
+
+        return nonce = false;
+    }
+
     function exec(s, t, u) {
-        var e;
+        var e, o = resolveNonce();
 
         if (!t) {
             if (u.match(/\.(?:less|css)/i)) {
                 t = 'text/css';
-
             } else  {
-                t = 'text/javascript';
-
+                t = 'application/javascript';
             }
         } else {
             t = t.replace(/\s*;.*$/, '').toLowerCase();
-
         }
 
         if (t === 'text/css') {
             e = elem('style');
             e.type = t;
+            o && e.setAttribute('nonce', o);
 
             u = u.replace(/[^\/]+$/, '');
-            s = s.replace(/url\s*\(('|")?(?:\.\/)?(.+?)\1\)/, function (m, q, n) {
+            s = s.replace(/url\s*\((['"])?(?:\.\/)?(.+?)\1\)/, function (m, q, n) {
                 q || (q = '"');
 
                 if (n.match(/^(?:(?:https?:)?\/)?\//)) {
                     return 'url(' + q + n + q + ')';
-
                 } else {
                     return 'url(' + q + resolveUrl(u + n) + q + ')';
-
                 }
             });
 
             if (e.styleSheet) {
                 e.styleSheet.cssText = s;
-
             } else {
                 e.appendChild(doc.createTextNode(s));
-
             }
 
             doc.head.appendChild(e);
 
         } else {
             e = elem('script');
-            e.type = 'text/javascript';
+            e.type = t;
             e.text = s;
+            o && e.setAttribute('nonce', o);
             doc.head.appendChild(e).parentNode.removeChild(e);
-
         }
     }
 
@@ -770,7 +786,7 @@ var _context = (function() {
 
         if (source.hasOwnProperty('STATIC') && source.STATIC) {
             merge(target, source.STATIC);
-            
+
         }
 
         copyProps(target.prototype, source, map);
@@ -1619,6 +1635,28 @@ _context.invoke('Utils', function (Arrays, undefined) {
 
         },
 
+        remove: function (key, strict) {
+            var index = this._.keys.indexOf(key);
+
+            if (index > -1) {
+                this._.keys.splice(index, 1);
+                this._.values.slice(index, 1);
+                this.length--;
+
+                if (typeof key === 'number') {
+                    if (key + 1 === this._.nextNumeric) {
+                        this._.nextNumeric--;
+                    }
+                } else {
+                    this._.nonNumeric--;
+                }
+            } else if (strict) {
+                throw new RangeError('Key ' + key + ' not present in HashMap');
+            }
+
+            return this;
+        },
+
         forEach: function (callback, thisArg) {
             for (var i = 0; i < this.length; i++) {
                 callback.call(thisArg || null, this._.values[i], this._.keys[i], this);
@@ -1757,31 +1795,72 @@ _context.invoke('Utils', function(Strings, undefined) {
     var location = window.history.location || window.location; // support for HTML5 history polyfill
 
     var Url = function(s) {
-        var cur = location.href.match(Url.PARSER_REGEXP),
-			src = s === null || s === '' || s === undefined ? cur : s.match(Url.PARSER_REGEXP),
-            noHost = !src[4],
-            path = src[6] || '';
+        if (s === null || s === '' || s === undefined) {
+            this._ = {
+                protocol: location.protocol,
+                hostname: location.hostname,
+                port: location.port,
+                path: location.pathname,
+                params: Url.parseQuery(location.search),
+                hash: location.hash
+            };
 
-        if (noHost && path.charAt(0) !== '/') {
-            if (path.length) {
-                path = Url.getDirName(cur[6] || '') + '/' + path.replace(/^\.\//, '');
+            extractAuthInfo(location.href, this._);
+        } else {
+            s += '';
 
+            var proto = Url.RE_PROTOCOL.exec(s),
+                auth,
+                i;
+
+            this._ = {
+                protocol: proto ? proto[1] || location.protocol : location.protocol
+            };
+
+            if (proto) {
+                if (proto[2] && proto[3] || proto[4]) {
+                    s = s.substr(proto[0].length);
+                    auth = Url.RE_AUTHORITY.exec(s) || [''];
+                    s = s.substr(auth[0].length);
+                    this._.username = auth[1] || '';
+                    this._.password = auth[2] || '';
+                    this._.hostname = auth[3] || '';
+                    this._.port = auth[4] || '';
+                } else {
+                    this._.username
+                        = this._.password
+                        = this._.hostname
+                        = this._.port
+                        = this._.path
+                        = this._.hash
+                        = '';
+
+                    this._.params = {};
+                    return;
+                }
             } else {
-                path = cur[6];
-
+                this._.username = '';
+                this._.password = '';
+                this._.hostname = location.hostname;
+                this._.port = location.port;
             }
-        }
 
-        this._ = {
-            protocol: src[1] || cur[1] || '',
-            username: (noHost ? src[2] || cur[2] : src[2]) || '',
-            password: (noHost ? src[3] || cur[3] : src[3]) || '',
-            hostname: src[4] || cur[4] || '',
-            port: (noHost ? src[5] || cur[5] : src[5]) || '',
-            path: path,
-            params: Url.parseQuery((noHost && !src[6] ? src[7] || cur[7] : src[7]) || ''),
-            hash: (noHost && !src[6] && !src[7] ? src[8] || cur[8] : src[8]) || ''
-        };
+            if ((i = s.indexOf('#')) > -1) {
+                this._.hash = s.substr(i);
+                s = s.substr(0, i);
+            } else {
+                this._.hash = '';
+            }
+
+            if ((i = s.indexOf('?')) > -1) {
+                this._.params = Url.parseQuery(s.substr(i + 1));
+                s = s.substr(0, i);
+            } else {
+                this._.params = {};
+            }
+
+            this._.path = s || '/';
+        }
     };
 
     Url.prototype.getProtocol = function() {
@@ -2026,18 +2105,9 @@ _context.invoke('Utils', function(Strings, undefined) {
 
     };
 
-    /**
-     * 1: protocol
-     * 2: user
-     * 3: pass
-     * 4: host
-     * 5: port
-     * 6: path
-     * 7: query
-     * 8: hash
-     * @type {RegExp}
-     */
-    Url.PARSER_REGEXP = /^(?:([^:/]+:)?\/\/(?:([^\/@]+?)(?::([^\/@]+))?@)?(?:([^/]+?)(?::(\d+))?(?=\/|$))?)?(.*?)(\?.*?)?(#.*)?$/;
+    Url.RE_PROTOCOL = /^((?:(https?)|[a-z][a-z0-9.+-]*):)(\/\/)?|^(\/\/)/i;
+    Url.RE_AUTHORITY = /^(?:([^@:]+?)(?::([^@]+))?@)?([^:\/]+)(?::(\d+))?/;
+
     Url.PART = {
         PROTOCOL: 128,
         USERNAME: 64,
@@ -2050,13 +2120,11 @@ _context.invoke('Utils', function(Strings, undefined) {
     };
 
     Url.from = function(s) {
-        return s instanceof Url ? new Url(s.toAbsolute()) : new Url(typeof s === 'string' || s === null || s === undefined ? s : Strings.toString(s));
-
+        return s instanceof Url ? new Url(s.toAbsolute()) : new Url(s);
     };
 
     Url.fromCurrent = function() {
         return new Url();
-
     };
 
     Url.getDirName = function (path) {
@@ -2248,6 +2316,21 @@ _context.invoke('Utils', function(Strings, undefined) {
 
     };
 
+
+    function extractAuthInfo(url, onto) {
+        url = url.replace(Url.RE_PROTOCOL, '');
+
+        var tmp = url.indexOf('@');
+
+        if (tmp > -1) {
+            tmp = url.substr(0, tmp).split(':', 2);
+            onto.username = tmp[0];
+            onto.password = tmp[1] || '';
+        } else {
+            onto.username = onto.password = '';
+        }
+    }
+
     _context.register(Url, 'Url');
 
 });
@@ -2300,7 +2383,7 @@ _context.invoke('Utils', function (Arrays, Strings, undefined) {
     function getPrefixed(elem, prop) {
         elem = getElem(elem);
 
-        if (prop in elem.style) {
+        if (!elem || prop in elem.style) {
             return prop;
 
         }
@@ -2436,7 +2519,7 @@ _context.invoke('Utils', function (Arrays, Strings, undefined) {
         thead: 'table',
         tbody: 'table',
         tfoot: 'table',
-        tr: 'table',
+        tr: 'tbody',
         th: 'tr',
         td: 'tr',
         li: 'ul',
@@ -2714,6 +2797,18 @@ _context.invoke('Utils', function (Arrays, Strings, undefined) {
             });
         },
 
+        text: function (str) {
+            if (arguments.length > 1) {
+                if (Array.isArray(arguments[1])) {
+                    str = Strings.vsprintf(str, arguments[1]);
+                } else {
+                    str = Arrays.createFrom(arguments).join(' ');
+                }
+            }
+
+            return document.createTextNode(str);
+        },
+
         empty: function(elem) {
             return map(arguments, function (elem) {
                 while (elem.firstChild) {
@@ -2965,7 +3060,7 @@ _context.invoke('Utils', function (Arrays, Strings, undefined) {
 
                 return map([elem], function (elem) {
                     classes.forEach(function (c) {
-                        if (value === undefined || value === elem.classList.contains(c)) {
+                        if (value === undefined || !value === elem.classList.contains(c)) {
                             elem.classList.toggle(c);
 
                         }
@@ -3008,7 +3103,7 @@ _context.invoke('Utils', function (Arrays, Strings, undefined) {
             return map([elem], function (elem) {
                 if (!elem.className) return elem;
 
-                elem.className = elem.className.replace(new RegExp('(?:^|\s+)(?:' + classes.join('|') + '(?:\s+|$)', 'g'), ' ').trim();
+                elem.className = elem.className.replace(new RegExp('(?:(?:^|\\s+)(?:' + classes.join('|') + '))+(?=\\s+|$)', 'g'), ' ').trim().replace(/\s\s+/g, ' ');
                 return elem;
 
             });
@@ -3333,7 +3428,6 @@ _context.invoke('Nittro', function () {
     function add (emitter, evt, ns, dflt, handler, mode) {
         if (!evt) {
             throw new TypeError('No event specified');
-
         }
 
         if (dflt) {
@@ -3439,7 +3533,7 @@ _context.invoke('Nittro', function () {
         if (e.isAsync()) {
             e.then(function () {
                 triggerDefault(self, _, evt, e);
-            });
+            }, function() { /* no default handler on async reject */ });
         } else {
             triggerDefault(self, _, evt, e);
         }
@@ -3491,50 +3585,49 @@ _context.invoke('Nittro', function () {
         }
     };
 
-    function returnTrue() {
-        return true;
-    }
-
-    function returnFalse() {
-        return false;
-    }
-
     var NittroEvent = _context.extend(function (target, type, data) {
         this.target = target;
         this.type = type;
         this.data = data || {};
 
-        this._queue = null;
-        this._promise = null;
-
+        this._ = {
+            defaultPrevented: false,
+            async: false,
+            queue: null,
+            promise: null
+        };
     }, {
         preventDefault: function () {
-            this.isDefaultPrevented = returnTrue;
-
+            this._.defaultPrevented = true;
+            return this;
         },
 
-        isDefaultPrevented: returnFalse,
+        isDefaultPrevented: function () {
+            return this._.defaultPrevented;
+        },
 
         waitFor: function (promise) {
-            if (this._promise) {
+            if (this._.promise) {
                 throw new Error('The event\'s queue has already been frozen');
             }
 
-            this._queue || (this._queue = []);
-            this._queue.push(promise);
+            this._.queue || (this._.queue = []);
+            this._.queue.push(promise);
+            this._.async = true;
             return this;
         },
 
         isAsync: function () {
-            return !!this._queue;
+            return this._.async;
         },
 
         then: function (onfulfilled, onrejected) {
-            if (!this._promise) {
-                this._promise = this._queue ? Promise.all(this._queue) : Promise.resolve();
+            if (!this._.promise) {
+                this._.promise = this._.queue ? Promise.all(this._.queue) : Promise.resolve();
+                this._.queue = null;
             }
 
-            return this._promise.then(onfulfilled, onrejected);
+            return this._.promise.then(onfulfilled, onrejected);
         }
     });
 
@@ -5608,70 +5701,62 @@ _context.invoke('Nittro.Ajax', function (Nittro, Url, undefined) {
             data: data || {},
             headers: {},
             normalized: false,
-            promise: {
+            dispatched: false,
+            deferred: {
                 fulfill: null,
                 reject: null,
-                wrapper: null
+                promise: null
             },
             abort: null,
             aborted: false,
             response: null
         };
 
-        this._.promise.wrapper = new Promise(function (fulfill, reject) {
-            this._.promise.fulfill = fulfill;
-            this._.promise.reject = reject;
+        this._.deferred.promise = new Promise(function (fulfill, reject) {
+            this._.deferred.fulfill = fulfill;
+            this._.deferred.reject = reject;
         }.bind(this));
     }, {
         getUrl: function () {
             this._normalize();
             return this._.url;
-
         },
 
         getMethod: function () {
             return this._.method;
-
         },
 
         isGet: function () {
             return this._.method === 'GET';
-
         },
 
         isPost: function () {
             return this._.method === 'POST';
-
         },
 
         isMethod: function (method) {
             return method.toUpperCase() === this._.method;
-
         },
 
         getData: function () {
             this._normalize();
             return this._.data;
-
         },
 
         getHeaders: function () {
             return this._.headers;
-
         },
 
         setUrl: function (url) {
             this._updating('url');
             this._.url = Url.from(url);
             return this;
-
         },
 
         setMethod: function (method) {
             this._updating('method');
             this._.method = method.toLowerCase();
             return this;
-
         },
 
         setData: function (k, v) {
@@ -5693,14 +5778,12 @@ _context.invoke('Nittro.Ajax', function (Nittro, Url, undefined) {
             }
 
             return this;
-
         },
 
         setHeader: function (header, value) {
             this._updating('headers');
             this._.headers[header] = value;
             return this;
-
         },
 
         setHeaders: function (headers) {
@@ -5714,40 +5797,45 @@ _context.invoke('Nittro.Ajax', function (Nittro, Url, undefined) {
             }
 
             return this;
-
         },
 
-        setDispatched: function(promise, abort) {
-            if (!(promise instanceof Promise)) {
-                throw new Error('"promise" must be an instance of Promise');
-
-            }
-
-            if (typeof abort !== 'function') {
+        setDispatched: function(abort) {
+            if (this._.dispatched) {
+                throw new Error('Request has already been dispatched');
+            } else if (typeof abort !== 'function') {
                 throw new Error('"abort" must be a function');
-
             }
 
-            promise.then(this._.promise.fulfill, this._.promise.reject);
+            this._.dispatched = true;
             this._.abort = abort;
             return this;
-
         },
 
         isDispatched: function () {
-            return !!this._.promise;
+            return this._.dispatched;
+        },
 
+        setFulfilled: function (response) {
+            if (response) {
+                this.setResponse(response);
+            }
+
+            this._.deferred.fulfill(this.getResponse());
+            return this;
+        },
+
+        setRejected: function (reason) {
+            this._.deferred.reject(reason);
+            return this;
         },
 
         then: function (onfulfilled, onrejected) {
-            return this._.promise.wrapper.then(onfulfilled, onrejected);
-
+            return this._.deferred.promise.then(onfulfilled, onrejected);
         },
 
         abort: function () {
             if (this._.abort && !this._.aborted) {
                 this._.abort();
-
             }
 
             this._.aborted = true;
@@ -5757,7 +5845,6 @@ _context.invoke('Nittro.Ajax', function (Nittro, Url, undefined) {
 
         isAborted: function () {
             return this._.aborted;
-
         },
 
         setResponse: function(response) {
@@ -5772,7 +5859,6 @@ _context.invoke('Nittro.Ajax', function (Nittro, Url, undefined) {
         _normalize: function() {
             if (this._.normalized || !this.isFrozen()) {
                 return;
-
             }
 
             this._.normalized = true;
@@ -5780,7 +5866,6 @@ _context.invoke('Nittro.Ajax', function (Nittro, Url, undefined) {
             if (this._.method === 'GET' || this._.method === 'HEAD') {
                 this._.url.addParams(Nittro.Forms && Nittro.Forms.FormData && this._.data instanceof Nittro.Forms.FormData ? this._.data.exportData(true) : this._.data);
                 this._.data = {};
-
             }
         }
     });
@@ -5826,54 +5911,77 @@ _context.invoke('Nittro.Ajax', function () {
 
 });
 
-_context.invoke('Nittro.Ajax', function (Request) {
+_context.invoke('Nittro.Ajax', function (Request, Arrays, Url) {
 
-    var Service = _context.extend('Nittro.Object', function () {
+    var Service = _context.extend('Nittro.Object', function (options) {
         Service.Super.call(this);
 
-        this._.transports = [];
+        this._.options = Arrays.mergeTree({}, Service.defaults, options);
+        this._.transport = null;
 
+        if (!this._.options.allowOrigins) {
+            this._.options.allowOrigins = [];
+        } else if (!Array.isArray(this._.options.allowOrigins)) {
+            this._.options.allowOrigins = this._.options.allowOrigins.split(/\s*,\s*/g);
+        }
+
+        this._.options.allowOrigins.push(Url.fromCurrent().getOrigin());
     }, {
-        addTransport: function (transport) {
-            this._.transports.push(transport);
-            return this;
+        STATIC: {
+            defaults: {
+                allowOrigins: null
+            }
+        },
 
+        setTransport: function (transport) {
+            this._.transport = transport;
+            return this;
+        },
+
+        addTransport: function (transport) {
+            console.log('The Nittro.Ajax.Service.addTransport() method is deprecated, please use setTransport instead');
+            return this.setTransport(transport);
+        },
+
+        supports: function (url, method, data) {
+            return this._.transport.supports(url, method, data);
+        },
+
+        isAllowedOrigin: function(url) {
+            return this._.options.allowOrigins.indexOf(Url.from(url).getOrigin()) > -1
         },
 
         'get': function (url, data) {
             return this.dispatch(this.createRequest(url, 'get', data));
-
         },
 
         post: function (url, data) {
             return this.dispatch(this.createRequest(url, 'post', data));
-
         },
 
         createRequest: function (url, method, data) {
+            if (!this.isAllowedOrigin(url)) {
+                throw new Error('The origin of the URL "' + url + '" is not in the list of allowed origins');
+            } else if (!this.supports(url, method, data)) {
+                throw new Error('The request with the specified URL, method and data isn\'t supported by the AJAX transport');
+            }
+
             var request = new Request(url, method, data);
             this.trigger('request-created', {request: request});
             return request;
-
         },
 
         dispatch: function (request) {
             request.freeze();
-
-            for (var i = 0; i < this._.transports.length; i++) {
-                try {
-                    return this._.transports[i].dispatch(request);
-
-                } catch (e) { console.log(e); }
-            }
-
-            throw new Error('No transport is able to dispatch this request');
-
+            return this._.transport.dispatch(request);
         }
     });
 
     _context.register(Service, 'Service');
 
+}, {
+    Arrays: 'Utils.Arrays',
+    Url: 'Utils.Url'
 });
 
 _context.invoke('Nittro.Ajax.Transport', function (Nittro, Response, Url) {
@@ -5885,59 +5993,64 @@ _context.invoke('Nittro.Ajax.Transport', function (Nittro, Response, Url) {
             createXhr: function () {
                 if (window.XMLHttpRequest) {
                     return new XMLHttpRequest();
-
                 } else if (window.ActiveXObject) {
                     try {
                         return new ActiveXObject('Msxml2.XMLHTTP');
-
                     } catch (e) {
                         return new ActiveXObject('Microsoft.XMLHTTP');
-
                     }
                 }
             }
         },
 
+        supports: function (url, method, data) {
+            if (data && Nittro.Forms && data instanceof Nittro.Forms.FormData && data.isUpload() && !window.FormData) {
+                return false;
+            }
+
+            if ((!window.XMLHttpRequest || !('withCredentials' in XMLHttpRequest.prototype)) && Url.fromCurrent().compare(url) >= Url.PART.PORT) {
+                return false;
+            }
+
+            return true;
+        },
+
         dispatch: function (request) {
             var xhr = Native.createXhr(),
-                adv = this.checkSupport(xhr),
+                adv = this._checkSupport(request, xhr),
                 abort = xhr.abort.bind(xhr);
 
-            var promise = new Promise(function (fulfill, reject) {
-                if (request.isAborted()) {
-                    reject(this._createError(request, xhr, {type: 'abort'}));
+            if (request.isAborted()) {
+                request.setRejected(this._createError(request, xhr, {type: 'abort'}));
+                return request;
+            }
 
-                }
+            this._bindEvents(request, xhr, adv);
 
-                this._bindEvents(request, xhr, adv, fulfill, reject);
+            xhr.open(request.getMethod(), request.getUrl().toAbsolute(), true);
 
-                xhr.open(request.getMethod(), request.getUrl().toAbsolute(), true);
+            var data = this._formatData(request, xhr);
+            this._addHeaders(request, xhr);
+            xhr.send(data);
 
-                var data = this._formatData(request, xhr);
-                this._addHeaders(request, xhr);
-                xhr.send(data);
+            request.setDispatched(abort);
 
-            }.bind(this));
-
-            request.setDispatched(promise, abort);
-
-            return promise;
+            return request;
 
         },
 
-        checkSupport: function (xhr) {
+        _checkSupport: function (request, xhr) {
             var adv;
 
             if (!(adv = 'addEventListener' in xhr) && !('onreadystatechange' in xhr)) {
                 throw new Error('Unsupported XHR implementation');
-
             }
 
             return adv;
 
         },
 
-        _bindEvents: function (request, xhr, adv, fulfill, reject) {
+        _bindEvents: function (request, xhr, adv) {
             var self = this,
                 done = false;
 
@@ -5946,12 +6059,9 @@ _context.invoke('Nittro.Ajax.Transport', function (Nittro, Response, Url) {
                 done = true;
 
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    request.setResponse(self._createResponse(xhr));
-                    fulfill(request.getResponse());
-
+                    request.setFulfilled(self._createResponse(xhr));
                 } else {
-                    reject(self._createError(request, xhr, evt));
-
+                    request.setRejected(self._createError(request, xhr, evt));
                 }
             }
 
@@ -5959,8 +6069,7 @@ _context.invoke('Nittro.Ajax.Transport', function (Nittro, Response, Url) {
                 if (done) return;
                 done = true;
 
-                reject(self._createError(request, xhr, evt));
-
+                request.setRejected(self._createError(request, xhr, evt));
             }
 
             function onProgress(evt) {
@@ -5978,34 +6087,28 @@ _context.invoke('Nittro.Ajax.Transport', function (Nittro, Response, Url) {
 
                 if ('upload' in xhr) {
                     xhr.upload.addEventListener('progress', onProgress, false);
-
                 }
             } else {
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4) {
                         if (xhr.status >= 200 && xhr.status < 300) {
                             onLoad();
-
                         } else {
                             onError();
-
                         }
                     }
                 };
 
                 if ('ontimeout' in xhr) {
                     xhr.ontimeout = onError;
-
                 }
 
                 if ('onerror' in xhr) {
                     xhr.onerror = onError;
-
                 }
 
                 if ('onload' in xhr) {
                     xhr.onload = onLoad;
-
                 }
             }
         },
@@ -6017,13 +6120,11 @@ _context.invoke('Nittro.Ajax.Transport', function (Nittro, Response, Url) {
             for (h in headers) {
                 if (headers.hasOwnProperty(h)) {
                     xhr.setRequestHeader(h, headers[h]);
-
                 }
             }
 
             if (!headers.hasOwnProperty('X-Requested-With')) {
                 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
             }
         },
 
@@ -6033,19 +6134,16 @@ _context.invoke('Nittro.Ajax.Transport', function (Nittro, Response, Url) {
             if (Nittro.Forms && data instanceof Nittro.Forms.FormData) {
                 data = data.exportData(request.isGet() || request.isMethod('HEAD'));
 
-                if (!(data instanceof window.FormData)) {
+                if (!window.FormData || !(data instanceof window.FormData)) {
                     data = Url.buildQuery(data, true);
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
                 }
             } else {
                 data = Url.buildQuery(data);
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
             }
 
             return data;
-
         },
 
         _createResponse: function (xhr) {
@@ -6053,29 +6151,24 @@ _context.invoke('Nittro.Ajax.Transport', function (Nittro, Response, Url) {
                 headers = {};
 
             (xhr.getAllResponseHeaders() || '').trim().split(/\r\n/g).forEach(function(header) {
-                if (header && !header.match(/^\s+$/)) {
-                    header = header.match(/^\s*([^:]+):\s*(.+)\s*$/);
+                if (header && !header.match(/^\s*$/)) {
+                    header = header.match(/^\s*([^:]+):\s*(.+?)\s*$/);
                     headers[header[1].toLowerCase()] = header[2];
-
                 }
             });
 
             if (headers['content-type'] && headers['content-type'].split(/;/)[0] === 'application/json') {
                 payload = JSON.parse(xhr.responseText || '{}');
-
             } else {
                 payload = xhr.responseText;
-
             }
 
             return new Response(xhr.status, payload, headers);
-
         },
 
         _createError: function (request, xhr, evt) {
             if (xhr.readyState === 4 && xhr.status !== 0) {
                 request.setResponse(this._createResponse(xhr));
-
             }
 
             if (evt && evt.type === 'abort') {
@@ -6141,721 +6234,764 @@ _context.invoke('Nittro.Ajax.Transport', function (Nittro, Response, Url) {
 
 }(typeof window !== 'undefined' ? window : this, function(window) {
 
-'use strict';
+	'use strict';
 
-var Nette = {};
-
-Nette.formErrors = [];
-Nette.version = '2.4';
-
-
-/**
- * Attaches a handler to an event for the element.
- */
-Nette.addEvent = function(element, on, callback) {
-	if (element.addEventListener) {
-		element.addEventListener(on, callback);
-	} else if (on === 'DOMContentLoaded') {
-		element.attachEvent('onreadystatechange', function() {
-			if (element.readyState === 'complete') {
-				callback.call(this);
-			}
-		});
-	} else {
-		element.attachEvent('on' + on, getHandler(callback));
-	}
-};
-
-
-function getHandler(callback) {
-	return function(e) {
-		return callback.call(this, e);
-	};
-}
-
-
-/**
- * Returns the value of form element.
- */
-Nette.getValue = function(elem) {
-	var i;
-	if (!elem) {
-		return null;
-
-	} else if (!elem.tagName) { // RadioNodeList, HTMLCollection, array
-		return elem[0] ? Nette.getValue(elem[0]) : null;
-
-	} else if (elem.type === 'radio') {
-		var elements = elem.form.elements; // prevents problem with name 'item' or 'namedItem'
-		for (i = 0; i < elements.length; i++) {
-			if (elements[i].name === elem.name && elements[i].checked) {
-				return elements[i].value;
-			}
-		}
-		return null;
-
-	} else if (elem.type === 'file') {
-		return elem.files || elem.value;
-
-	} else if (elem.tagName.toLowerCase() === 'select') {
-		var index = elem.selectedIndex,
-			options = elem.options,
-			values = [];
-
-		if (elem.type === 'select-one') {
-			return index < 0 ? null : options[index].value;
-		}
-
-		for (i = 0; i < options.length; i++) {
-			if (options[i].selected) {
-				values.push(options[i].value);
-			}
-		}
-		return values;
-
-	} else if (elem.name && elem.name.match(/\[\]$/)) { // multiple elements []
-		var elements = elem.form.elements[elem.name].tagName ? [elem] : elem.form.elements[elem.name],
-			values = [];
-
-		for (i = 0; i < elements.length; i++) {
-			if (elements[i].type !== 'checkbox' || elements[i].checked) {
-				values.push(elements[i].value);
-			}
-		}
-		return values;
-
-	} else if (elem.type === 'checkbox') {
-		return elem.checked;
-
-	} else if (elem.tagName.toLowerCase() === 'textarea') {
-		return elem.value.replace("\r", '');
-
-	} else {
-		return elem.value.replace("\r", '').replace(/^\s+|\s+$/g, '');
-	}
-};
-
-
-/**
- * Returns the effective value of form element.
- */
-Nette.getEffectiveValue = function(elem) {
-	var val = Nette.getValue(elem);
-	if (elem.getAttribute) {
-		if (val === elem.getAttribute('data-nette-empty-value')) {
-			val = '';
-		}
-	}
-	return val;
-};
-
-
-/**
- * Validates form element against given rules.
- */
-Nette.validateControl = function(elem, rules, onlyCheck, value, emptyOptional) {
-	elem = elem.tagName ? elem : elem[0]; // RadioNodeList
-	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
-	value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
-
-	for (var id = 0, len = rules.length; id < len; id++) {
-		var rule = rules[id],
-			op = rule.op.match(/(~)?([^?]+)/),
-			curElem = rule.control ? elem.form.elements.namedItem(rule.control) : elem;
-
-		rule.neg = op[1];
-		rule.op = op[2];
-		rule.condition = !!rule.rules;
-
-		if (!curElem) {
-			continue;
-		} else if (rule.op === 'optional') {
-			emptyOptional = !Nette.validateRule(elem, ':filled', null, value);
-			continue;
-		} else if (emptyOptional && !rule.condition && rule.op !== ':filled') {
-			continue;
-		}
-
-		curElem = curElem.tagName ? curElem : curElem[0]; // RadioNodeList
-		var curValue = elem === curElem ? value : {value: Nette.getEffectiveValue(curElem)},
-			success = Nette.validateRule(curElem, rule.op, rule.arg, curValue);
-
-		if (success === null) {
-			continue;
-		} else if (rule.neg) {
-			success = !success;
-		}
-
-		if (rule.condition && success) {
-			if (!Nette.validateControl(elem, rule.rules, onlyCheck, value, rule.op === ':blank' ? false : emptyOptional)) {
-				return false;
-			}
-		} else if (!rule.condition && !success) {
-			if (Nette.isDisabled(curElem)) {
-				continue;
-			}
-			if (!onlyCheck) {
-				var arr = Nette.isArray(rule.arg) ? rule.arg : [rule.arg],
-					message = rule.msg.replace(/%(value|\d+)/g, function(foo, m) {
-						return Nette.getValue(m === 'value' ? curElem : elem.form.elements.namedItem(arr[m].control));
-					});
-				Nette.addError(curElem, message);
-			}
-			return false;
-		}
-	}
-
-	if (elem.type === 'number' && !elem.validity.valid) {
-		if (!onlyCheck) {
-			Nette.addError(elem, 'Please enter a valid value.');
-		}
-		return false;
-	}
-
-	return true;
-};
-
-
-/**
- * Validates whole form.
- */
-Nette.validateForm = function(sender, onlyCheck) {
-	var form = sender.form || sender,
-		scope = false;
+	var Nette = {};
 
 	Nette.formErrors = [];
+	Nette.version = '2.4';
 
-	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
-		var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
-		if (scopeArr.length) {
-			scope = new RegExp('^(' + scopeArr.join('-|') + '-)');
+
+	/**
+	 * Attaches a handler to an event for the element.
+	 */
+	Nette.addEvent = function(element, on, callback) {
+		if (on === 'DOMContentLoaded' && element.readyState !== 'loading') {
+			callback.call(this);
+		} else if (element.addEventListener) {
+			element.addEventListener(on, callback);
+		} else if (on === 'DOMContentLoaded') {
+			element.attachEvent('onreadystatechange', function() {
+				if (element.readyState === 'complete') {
+					callback.call(this);
+				}
+			});
 		} else {
-			Nette.showFormErrors(form, []);
-			return true;
+			element.attachEvent('on' + on, getHandler(callback));
 		}
+	};
+
+
+	function getHandler(callback) {
+		return function(e) {
+			return callback.call(this, e);
+		};
 	}
 
-	var radios = {}, i, elem;
 
-	for (i = 0; i < form.elements.length; i++) {
-		elem = form.elements[i];
+	/**
+	 * Returns the value of form element.
+	 */
+	Nette.getValue = function(elem) {
+		var i;
+		if (!elem) {
+			return null;
 
-		if (elem.tagName && !(elem.tagName.toLowerCase() in {input: 1, select: 1, textarea: 1, button: 1})) {
-			continue;
+		} else if (!elem.tagName) { // RadioNodeList, HTMLCollection, array
+			return elem[0] ? Nette.getValue(elem[0]) : null;
 
 		} else if (elem.type === 'radio') {
-			if (radios[elem.name]) {
+			var elements = elem.form.elements; // prevents problem with name 'item' or 'namedItem'
+			for (i = 0; i < elements.length; i++) {
+				if (elements[i].name === elem.name && elements[i].checked) {
+					return elements[i].value;
+				}
+			}
+			return null;
+
+		} else if (elem.type === 'file') {
+			return elem.files || elem.value;
+
+		} else if (elem.tagName.toLowerCase() === 'select') {
+			var index = elem.selectedIndex,
+				options = elem.options,
+				values = [];
+
+			if (elem.type === 'select-one') {
+				return index < 0 ? null : options[index].value;
+			}
+
+			for (i = 0; i < options.length; i++) {
+				if (options[i].selected) {
+					values.push(options[i].value);
+				}
+			}
+			return values;
+
+		} else if (elem.name && elem.name.match(/\[\]$/)) { // multiple elements []
+			elements = elem.form.elements[elem.name].tagName ? [elem] : elem.form.elements[elem.name];
+			values = [];
+
+			for (i = 0; i < elements.length; i++) {
+				if (elements[i].type !== 'checkbox' || elements[i].checked) {
+					values.push(elements[i].value);
+				}
+			}
+			return values;
+
+		} else if (elem.type === 'checkbox') {
+			return elem.checked;
+
+		} else if (elem.tagName.toLowerCase() === 'textarea') {
+			return elem.value.replace('\r', '');
+
+		} else {
+			return elem.value.replace('\r', '').replace(/^\s+|\s+$/g, '');
+		}
+	};
+
+
+	/**
+	 * Returns the effective value of form element.
+	 */
+	Nette.getEffectiveValue = function(elem) {
+		var val = Nette.getValue(elem);
+		if (elem.getAttribute) {
+			if (val === elem.getAttribute('data-nette-empty-value')) {
+				val = '';
+			}
+		}
+		return val;
+	};
+
+
+	/**
+	 * Validates form element against given rules.
+	 */
+	Nette.validateControl = function(elem, rules, onlyCheck, value, emptyOptional) {
+		elem = elem.tagName ? elem : elem[0]; // RadioNodeList
+		rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
+		value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
+
+		for (var id = 0, len = rules.length; id < len; id++) {
+			var rule = rules[id],
+				op = rule.op.match(/(~)?([^?]+)/),
+				curElem = rule.control ? elem.form.elements.namedItem(rule.control) : elem;
+
+			rule.neg = op[1];
+			rule.op = op[2];
+			rule.condition = !!rule.rules;
+
+			if (!curElem) {
+				continue;
+			} else if (rule.op === 'optional') {
+				emptyOptional = !Nette.validateRule(elem, ':filled', null, value);
+				continue;
+			} else if (emptyOptional && !rule.condition && rule.op !== ':filled') {
 				continue;
 			}
-			radios[elem.name] = true;
-		}
 
-		if ((scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) || Nette.isDisabled(elem)) {
-			continue;
-		}
+			curElem = curElem.tagName ? curElem : curElem[0]; // RadioNodeList
+			var curValue = elem === curElem ? value : {value: Nette.getEffectiveValue(curElem)},
+				success = Nette.validateRule(curElem, rule.op, rule.arg, curValue);
 
-		if (!Nette.validateControl(elem, null, onlyCheck) && !Nette.formErrors.length) {
-			return false;
-		}
-	}
-	var success = !Nette.formErrors.length;
-	Nette.showFormErrors(form, Nette.formErrors);
-	return success;
-};
+			if (success === null) {
+				continue;
+			} else if (rule.neg) {
+				success = !success;
+			}
 
-
-/**
- * Check if input is disabled.
- */
-Nette.isDisabled = function(elem) {
-	if (elem.type === 'radio') {
-		for (var i = 0, elements = elem.form.elements; i < elements.length; i++) {
-			if (elements[i].name === elem.name && !elements[i].disabled) {
+			if (rule.condition && success) {
+				if (!Nette.validateControl(elem, rule.rules, onlyCheck, value, rule.op === ':blank' ? false : emptyOptional)) {
+					return false;
+				}
+			} else if (!rule.condition && !success) {
+				if (Nette.isDisabled(curElem)) {
+					continue;
+				}
+				if (!onlyCheck) {
+					var arr = Nette.isArray(rule.arg) ? rule.arg : [rule.arg],
+						message = rule.msg.replace(/%(value|\d+)/g, function(foo, m) {
+							return Nette.getValue(m === 'value' ? curElem : elem.form.elements.namedItem(arr[m].control));
+						});
+					Nette.addError(curElem, message);
+				}
 				return false;
 			}
 		}
-		return true;
-	}
-	return elem.disabled;
-};
 
-
-/**
- * Adds error message to the queue.
- */
-Nette.addError = function(elem, message) {
-	Nette.formErrors.push({
-		element: elem,
-		message: message
-	});
-};
-
-
-/**
- * Display error messages.
- */
-Nette.showFormErrors = function(form, errors) {
-	var messages = [],
-		focusElem;
-
-	for (var i = 0; i < errors.length; i++) {
-		var elem = errors[i].element,
-			message = errors[i].message;
-
-		if (!Nette.inArray(messages, message)) {
-			messages.push(message);
-
-			if (!focusElem && elem.focus) {
-				focusElem = elem;
+		if (elem.type === 'number' && !elem.validity.valid) {
+			if (!onlyCheck) {
+				Nette.addError(elem, 'Please enter a valid value.');
 			}
-		}
-	}
-
-	if (messages.length) {
-		alert(messages.join('\n'));
-
-		if (focusElem) {
-			focusElem.focus();
-		}
-	}
-};
-
-
-/**
- * Expand rule argument.
- */
-Nette.expandRuleArgument = function(form, arg) {
-	if (arg && arg.control) {
-		var control = form.elements.namedItem(arg.control),
-			value = {value: Nette.getEffectiveValue(control)};
-		Nette.validateControl(control, null, true, value);
-		arg = value.value;
-	}
-	return arg;
-};
-
-
-/**
- * Validates single rule.
- */
-Nette.validateRule = function(elem, op, arg, value) {
-	value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
-
-	if (op.charAt(0) === ':') {
-		op = op.substr(1);
-	}
-	op = op.replace('::', '_');
-	op = op.replace(/\\/g, '');
-
-	var arr = Nette.isArray(arg) ? arg.slice(0) : [arg];
-	for (var i = 0, len = arr.length; i < len; i++) {
-		arr[i] = Nette.expandRuleArgument(elem.form, arr[i]);
-	}
-	return Nette.validators[op]
-		? Nette.validators[op](elem, Nette.isArray(arg) ? arr : arr[0], value.value, value)
-		: null;
-};
-
-
-Nette.validators = {
-	filled: function(elem, arg, val) {
-		if (elem.type === 'number' && elem.validity.badInput) {
-			return true;
-		}
-		return val !== '' && val !== false && val !== null
-			&& (!Nette.isArray(val) || !!val.length)
-			&& (!window.FileList || !(val instanceof window.FileList) || val.length);
-	},
-
-	blank: function(elem, arg, val) {
-		return !Nette.validators.filled(elem, arg, val);
-	},
-
-	valid: function(elem, arg, val) {
-		return Nette.validateControl(elem, null, true);
-	},
-
-	equal: function(elem, arg, val) {
-		if (arg === undefined) {
-			return null;
+			return false;
 		}
 
-		function toString(val) {
-			if (typeof val === 'number' || typeof val === 'string') {
-				return '' + val;
+		return true;
+	};
+
+
+	/**
+	 * Validates whole form.
+	 */
+	Nette.validateForm = function(sender, onlyCheck) {
+		var form = sender.form || sender,
+			scope = false;
+
+		Nette.formErrors = [];
+
+		if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
+			var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
+			if (scopeArr.length) {
+				scope = new RegExp('^(' + scopeArr.join('-|') + '-)');
 			} else {
-				return val === true ? '1' : '';
-			}
-		}
-
-		val = Nette.isArray(val) ? val : [val];
-		arg = Nette.isArray(arg) ? arg : [arg];
-		loop:
-		for (var i1 = 0, len1 = val.length; i1 < len1; i1++) {
-			for (var i2 = 0, len2 = arg.length; i2 < len2; i2++) {
-				if (toString(val[i1]) === toString(arg[i2])) {
-					continue loop;
-				}
-			}
-			return false;
-		}
-		return true;
-	},
-
-	notEqual: function(elem, arg, val) {
-		return arg === undefined ? null : !Nette.validators.equal(elem, arg, val);
-	},
-
-	minLength: function(elem, arg, val) {
-		if (elem.type === 'number') {
-			if (elem.validity.tooShort) {
-				return false
-			} else if (elem.validity.badInput) {
-				return null;
-			}
-		}
-		return val.length >= arg;
-	},
-
-	maxLength: function(elem, arg, val) {
-		if (elem.type === 'number') {
-			if (elem.validity.tooLong) {
-				return false
-			} else if (elem.validity.badInput) {
-				return null;
-			}
-		}
-		return val.length <= arg;
-	},
-
-	length: function(elem, arg, val) {
-		if (elem.type === 'number') {
-			if (elem.validity.tooShort || elem.validity.tooLong) {
-				return false
-			} else if (elem.validity.badInput) {
-				return null;
-			}
-		}
-		arg = Nette.isArray(arg) ? arg : [arg, arg];
-		return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
-	},
-
-	email: function(elem, arg, val) {
-		return (/^("([ !#-[\]-~]|\\[ -~])+"|[-a-z0-9!#$%&'*+\/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+\/=?^_`{|}~]+)*)@([0-9a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,61}[0-9a-z\u00C0-\u02FF\u0370-\u1EFF])?\.)+[a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,17}[a-z\u00C0-\u02FF\u0370-\u1EFF])?$/i).test(val);
-	},
-
-	url: function(elem, arg, val, value) {
-		if (!(/^[a-z\d+.-]+:/).test(val)) {
-			val = 'http://' + val;
-		}
-		if ((/^https?:\/\/((([-_0-9a-z\u00C0-\u02FF\u0370-\u1EFF]+\.)*[0-9a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,61}[0-9a-z\u00C0-\u02FF\u0370-\u1EFF])?\.)?[a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,17}[a-z\u00C0-\u02FF\u0370-\u1EFF])?|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-f:]{3,39}\])(:\d{1,5})?(\/\S*)?$/i).test(val)) {
-			value.value = val;
-			return true;
-		}
-		return false;
-	},
-
-	regexp: function(elem, arg, val) {
-		var parts = typeof arg === 'string' ? arg.match(/^\/(.*)\/([imu]*)$/) : false;
-		try {
-			return parts && (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
-		} catch (e) {}
-	},
-
-	pattern: function(elem, arg, val) {
-		try {
-			return typeof arg === 'string' ? (new RegExp('^(?:' + arg + ')$')).test(val) : null;
-		} catch (e) {}
-	},
-
-	integer: function(elem, arg, val) {
-		if (elem.type === 'number' && elem.validity.badInput) {
-			return false;
-		}
-		return (/^-?[0-9]+$/).test(val);
-	},
-
-	'float': function(elem, arg, val, value) {
-		if (elem.type === 'number' && elem.validity.badInput) {
-			return false;
-		}
-		val = val.replace(' ', '').replace(',', '.');
-		if ((/^-?[0-9]*[.,]?[0-9]+$/).test(val)) {
-			value.value = val;
-			return true;
-		}
-		return false;
-	},
-
-	min: function(elem, arg, val) {
-		if (elem.type === 'number') {
-			if (elem.validity.rangeUnderflow) {
-				return false
-			} else if (elem.validity.badInput) {
-				return null;
-			}
-		}
-		return arg === null || parseFloat(val) >= arg;
-	},
-
-	max: function(elem, arg, val) {
-		if (elem.type === 'number') {
-			if (elem.validity.rangeOverflow) {
-				return false
-			} else if (elem.validity.badInput) {
-				return null;
-			}
-		}
-		return arg === null || parseFloat(val) <= arg;
-	},
-
-	range: function(elem, arg, val) {
-		if (elem.type === 'number') {
-			if (elem.validity.rangeUnderflow || elem.validity.rangeOverflow) {
-				return false
-			} else if (elem.validity.badInput) {
-				return null;
-			}
-		}
-		return Nette.isArray(arg) ?
-			((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
-	},
-
-	submitted: function(elem, arg, val) {
-		return elem.form['nette-submittedBy'] === elem;
-	},
-
-	fileSize: function(elem, arg, val) {
-		if (window.FileList) {
-			for (var i = 0; i < val.length; i++) {
-				if (val[i].size > arg) {
-					return false;
-				}
-			}
-		}
-		return true;
-	},
-
-	image: function (elem, arg, val) {
-		if (window.FileList && val instanceof window.FileList) {
-			for (var i = 0; i < val.length; i++) {
-				var type = val[i].type;
-				if (type && type !== 'image/gif' && type !== 'image/png' && type !== 'image/jpeg') {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-};
-
-
-/**
- * Process all toggles in form.
- */
-Nette.toggleForm = function(form, elem) {
-	var i;
-	Nette.toggles = {};
-	for (i = 0; i < form.elements.length; i++) {
-		if (form.elements[i].tagName.toLowerCase() in {input: 1, select: 1, textarea: 1, button: 1}) {
-			Nette.toggleControl(form.elements[i], null, null, !elem);
-		}
-	}
-
-	for (i in Nette.toggles) {
-		Nette.toggle(i, Nette.toggles[i], elem);
-	}
-};
-
-
-/**
- * Process toggles on form element.
- */
-Nette.toggleControl = function(elem, rules, success, firsttime, value) {
-	rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
-	value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
-
-	var has = false,
-		handled = [],
-		handler = function () {
-			Nette.toggleForm(elem.form, elem);
-		},
-		curSuccess;
-
-	for (var id = 0, len = rules.length; id < len; id++) {
-		var rule = rules[id],
-			op = rule.op.match(/(~)?([^?]+)/),
-			curElem = rule.control ? elem.form.elements.namedItem(rule.control) : elem;
-
-		if (!curElem) {
-			continue;
-		}
-
-		curSuccess = success;
-		if (success !== false) {
-			rule.neg = op[1];
-			rule.op = op[2];
-			var curValue = elem === curElem ? value : {value: Nette.getEffectiveValue(curElem)};
-			curSuccess = Nette.validateRule(curElem, rule.op, rule.arg, curValue);
-			if (curSuccess === null) {
-				continue;
-
-			} else if (rule.neg) {
-				curSuccess = !curSuccess;
-			}
-			if (!rule.rules) {
-				success = curSuccess;
-			}
-		}
-
-		if ((rule.rules && Nette.toggleControl(elem, rule.rules, curSuccess, firsttime, value)) || rule.toggle) {
-			has = true;
-			if (firsttime) {
-				var oldIE = !document.addEventListener, // IE < 9
-					name = curElem.tagName ? curElem.name : curElem[0].name,
-					els = curElem.tagName ? curElem.form.elements : curElem;
-
-				for (var i = 0; i < els.length; i++) {
-					if (els[i].name === name && !Nette.inArray(handled, els[i])) {
-						Nette.addEvent(els[i], oldIE && els[i].type in {checkbox: 1, radio: 1} ? 'click' : 'change', handler);
-						handled.push(els[i]);
-					}
-				}
-			}
-			for (var id2 in rule.toggle || []) {
-				if (Object.prototype.hasOwnProperty.call(rule.toggle, id2)) {
-					Nette.toggles[id2] = Nette.toggles[id2] || (rule.toggle[id2] ? curSuccess : !curSuccess);
-				}
-			}
-		}
-	}
-	return has;
-};
-
-
-Nette.parseJSON = function(s) {
-	return (s || '').substr(0, 3) === '{op'
-		? eval('[' + s + ']') // backward compatibility with Nette 2.0.x
-		: JSON.parse(s || '[]');
-};
-
-
-/**
- * Displays or hides HTML element.
- */
-Nette.toggle = function(id, visible, srcElement) {
-	var elem = document.getElementById(id);
-	if (elem) {
-		elem.style.display = visible ? '' : 'none';
-	}
-};
-
-
-/**
- * Setup handlers.
- */
-Nette.initForm = function(form) {
-	Nette.toggleForm(form);
-
-	if (form.noValidate) {
-		return;
-	}
-
-	form.noValidate = true;
-
-	Nette.addEvent(form, 'submit', function(e) {
-		if (!Nette.validateForm(form)) {
-			if (e && e.stopPropagation) {
-				e.stopPropagation();
-				e.preventDefault();
-			} else if (window.event) {
-				event.cancelBubble = true;
-				event.returnValue = false;
-			}
-		}
-	});
-};
-
-
-/**
- * @private
- */
-Nette.initOnLoad = function() {
-	Nette.addEvent(document, 'DOMContentLoaded', function() {
-		for (var i = 0; i < document.forms.length; i++) {
-			var form = document.forms[i];
-			for (var j = 0; j < form.elements.length; j++) {
-				if (form.elements[j].getAttribute('data-nette-rules')) {
-					Nette.initForm(form);
-					break;
-				}
-			}
-		}
-
-		Nette.addEvent(document.body, 'click', function(e) {
-			var target = e.target || e.srcElement;
-			while (target) {
-				if (target.form && target.type in {submit: 1, image: 1}) {
-					target.form['nette-submittedBy'] = target;
-					break;
-				}
-				target = target.parentNode;
-			}
-		});
-	});
-};
-
-
-/**
- * Determines whether the argument is an array.
- */
-Nette.isArray = function(arg) {
-	return Object.prototype.toString.call(arg) === '[object Array]';
-};
-
-
-/**
- * Search for a specified value within an array.
- */
-Nette.inArray = function(arr, val) {
-	if ([].indexOf) {
-		return arr.indexOf(val) > -1;
-	} else {
-		for (var i = 0; i < arr.length; i++) {
-			if (arr[i] === val) {
+				Nette.showFormErrors(form, []);
 				return true;
 			}
 		}
-		return false;
-	}
-};
+
+		var radios = {}, i, elem;
+
+		for (i = 0; i < form.elements.length; i++) {
+			elem = form.elements[i];
+
+			if (elem.tagName && !(elem.tagName.toLowerCase() in {input: 1, select: 1, textarea: 1, button: 1})) {
+				continue;
+
+			} else if (elem.type === 'radio') {
+				if (radios[elem.name]) {
+					continue;
+				}
+				radios[elem.name] = true;
+			}
+
+			if ((scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) || Nette.isDisabled(elem)) {
+				continue;
+			}
+
+			if (!Nette.validateControl(elem, null, onlyCheck) && !Nette.formErrors.length) {
+				return false;
+			}
+		}
+		var success = !Nette.formErrors.length;
+		Nette.showFormErrors(form, Nette.formErrors);
+		return success;
+	};
 
 
-/**
- * Converts string to web safe characters [a-z0-9-] text.
- */
-Nette.webalize = function(s) {
-	s = s.toLowerCase();
-	var res = '', i, ch;
-	for (i = 0; i < s.length; i++) {
-		ch = Nette.webalizeTable[s.charAt(i)];
-		res += ch ? ch : s.charAt(i);
-	}
-	return res.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-};
+	/**
+	 * Check if input is disabled.
+	 */
+	Nette.isDisabled = function(elem) {
+		if (elem.type === 'radio') {
+			for (var i = 0, elements = elem.form.elements; i < elements.length; i++) {
+				if (elements[i].name === elem.name && !elements[i].disabled) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return elem.disabled;
+	};
 
-Nette.webalizeTable = {\u00e1: 'a', \u00e4: 'a', \u010d: 'c', \u010f: 'd', \u00e9: 'e', \u011b: 'e', \u00ed: 'i', \u013e: 'l', \u0148: 'n', \u00f3: 'o', \u00f4: 'o', \u0159: 'r', \u0161: 's', \u0165: 't', \u00fa: 'u', \u016f: 'u', \u00fd: 'y', \u017e: 'z'};
 
-return Nette;
+	/**
+	 * Adds error message to the queue.
+	 */
+	Nette.addError = function(elem, message) {
+		Nette.formErrors.push({
+			element: elem,
+			message: message
+		});
+	};
+
+
+	/**
+	 * Display error messages.
+	 */
+	Nette.showFormErrors = function(form, errors) {
+		var messages = [],
+			focusElem;
+
+		for (var i = 0; i < errors.length; i++) {
+			var elem = errors[i].element,
+				message = errors[i].message;
+
+			if (!Nette.inArray(messages, message)) {
+				messages.push(message);
+
+				if (!focusElem && elem.focus) {
+					focusElem = elem;
+				}
+			}
+		}
+
+		if (messages.length) {
+			alert(messages.join('\n'));
+
+			if (focusElem) {
+				focusElem.focus();
+			}
+		}
+	};
+
+
+	/**
+	 * Expand rule argument.
+	 */
+	Nette.expandRuleArgument = function(form, arg) {
+		if (arg && arg.control) {
+			var control = form.elements.namedItem(arg.control),
+				value = {value: Nette.getEffectiveValue(control)};
+			Nette.validateControl(control, null, true, value);
+			arg = value.value;
+		}
+		return arg;
+	};
+
+
+	var preventFiltering = false;
+
+	/**
+	 * Validates single rule.
+	 */
+	Nette.validateRule = function(elem, op, arg, value) {
+		value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
+
+		if (op.charAt(0) === ':') {
+			op = op.substr(1);
+		}
+		op = op.replace('::', '_');
+		op = op.replace(/\\/g, '');
+
+		var arr = Nette.isArray(arg) ? arg.slice(0) : [arg];
+		if (!preventFiltering) {
+			preventFiltering = true;
+			for (var i = 0, len = arr.length; i < len; i++) {
+				arr[i] = Nette.expandRuleArgument(elem.form, arr[i]);
+			}
+			preventFiltering = false;
+		}
+		return Nette.validators[op]
+			? Nette.validators[op](elem, Nette.isArray(arg) ? arr : arr[0], value.value, value)
+			: null;
+	};
+
+
+	Nette.validators = {
+		filled: function(elem, arg, val) {
+			if (elem.type === 'number' && elem.validity.badInput) {
+				return true;
+			}
+			return val !== '' && val !== false && val !== null
+				&& (!Nette.isArray(val) || !!val.length)
+				&& (!window.FileList || !(val instanceof window.FileList) || val.length);
+		},
+
+		blank: function(elem, arg, val) {
+			return !Nette.validators.filled(elem, arg, val);
+		},
+
+		valid: function(elem) {
+			return Nette.validateControl(elem, null, true);
+		},
+
+		equal: function(elem, arg, val) {
+			if (arg === undefined) {
+				return null;
+			}
+
+			function toString(val) {
+				if (typeof val === 'number' || typeof val === 'string') {
+					return '' + val;
+				} else {
+					return val === true ? '1' : '';
+				}
+			}
+
+			val = Nette.isArray(val) ? val : [val];
+			arg = Nette.isArray(arg) ? arg : [arg];
+			loop:
+			for (var i1 = 0, len1 = val.length; i1 < len1; i1++) {
+				for (var i2 = 0, len2 = arg.length; i2 < len2; i2++) {
+					if (toString(val[i1]) === toString(arg[i2])) {
+						continue loop;
+					}
+				}
+				return false;
+			}
+			return true;
+		},
+
+		notEqual: function(elem, arg, val) {
+			return arg === undefined ? null : !Nette.validators.equal(elem, arg, val);
+		},
+
+		minLength: function(elem, arg, val) {
+			if (elem.type === 'number') {
+				if (elem.validity.tooShort) {
+					return false;
+				} else if (elem.validity.badInput) {
+					return null;
+				}
+			}
+			return val.length >= arg;
+		},
+
+		maxLength: function(elem, arg, val) {
+			if (elem.type === 'number') {
+				if (elem.validity.tooLong) {
+					return false;
+				} else if (elem.validity.badInput) {
+					return null;
+				}
+			}
+			return val.length <= arg;
+		},
+
+		length: function(elem, arg, val) {
+			if (elem.type === 'number') {
+				if (elem.validity.tooShort || elem.validity.tooLong) {
+					return false;
+				} else if (elem.validity.badInput) {
+					return null;
+				}
+			}
+			arg = Nette.isArray(arg) ? arg : [arg, arg];
+			return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
+		},
+
+		email: function(elem, arg, val) {
+			return (/^("([ !#-[\]-~]|\\[ -~])+"|[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*)@([0-9a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,61}[0-9a-z\u00C0-\u02FF\u0370-\u1EFF])?\.)+[a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,17}[a-z\u00C0-\u02FF\u0370-\u1EFF])?$/i).test(val);
+		},
+
+		url: function(elem, arg, val, value) {
+			if (!(/^[a-z\d+.-]+:/).test(val)) {
+				val = 'http://' + val;
+			}
+			if ((/^https?:\/\/((([-_0-9a-z\u00C0-\u02FF\u0370-\u1EFF]+\.)*[0-9a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,61}[0-9a-z\u00C0-\u02FF\u0370-\u1EFF])?\.)?[a-z\u00C0-\u02FF\u0370-\u1EFF]([-0-9a-z\u00C0-\u02FF\u0370-\u1EFF]{0,17}[a-z\u00C0-\u02FF\u0370-\u1EFF])?|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-f:]{3,39}\])(:\d{1,5})?(\/\S*)?$/i).test(val)) {
+				value.value = val;
+				return true;
+			}
+			return false;
+		},
+
+		regexp: function(elem, arg, val) {
+			var parts = typeof arg === 'string' ? arg.match(/^\/(.*)\/([imu]*)$/) : false;
+			try {
+				return parts && (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
+			} catch (e) {} // eslint-disable-line no-empty
+		},
+
+		pattern: function(elem, arg, val, value, caseInsensitive) {
+			if (typeof arg !== 'string') {
+				return null;
+			}
+
+			try {
+				try {
+					var regExp = new RegExp('^(?:' + arg + ')$', caseInsensitive ? 'ui' : 'u');
+				} catch (e) {
+					regExp = new RegExp('^(?:' + arg + ')$', caseInsensitive ? 'i' : '');
+				}
+
+				if (window.FileList && val instanceof FileList) {
+					for (var i = 0; i < val.length; i++) {
+						if (!regExp.test(val[i].name)) {
+							return false;
+						}
+					}
+
+					return true;
+				}
+
+				return regExp.test(val);
+			} catch (e) {} // eslint-disable-line no-empty
+		},
+
+		patternCaseInsensitive: function(elem, arg, val) {
+			return Nette.validators.pattern(elem, arg, val, null, true);
+		},
+
+		integer: function(elem, arg, val) {
+			if (elem.type === 'number' && elem.validity.badInput) {
+				return false;
+			}
+			return (/^-?[0-9]+$/).test(val);
+		},
+
+		'float': function(elem, arg, val, value) {
+			if (elem.type === 'number' && elem.validity.badInput) {
+				return false;
+			}
+			val = val.replace(/ +/g, '').replace(/,/g, '.');
+			if ((/^-?[0-9]*\.?[0-9]+$/).test(val)) {
+				value.value = val;
+				return true;
+			}
+			return false;
+		},
+
+		min: function(elem, arg, val) {
+			if (elem.type === 'number') {
+				if (elem.validity.rangeUnderflow) {
+					return false;
+				} else if (elem.validity.badInput) {
+					return null;
+				}
+			}
+			return arg === null || parseFloat(val) >= arg;
+		},
+
+		max: function(elem, arg, val) {
+			if (elem.type === 'number') {
+				if (elem.validity.rangeOverflow) {
+					return false;
+				} else if (elem.validity.badInput) {
+					return null;
+				}
+			}
+			return arg === null || parseFloat(val) <= arg;
+		},
+
+		range: function(elem, arg, val) {
+			if (elem.type === 'number') {
+				if (elem.validity.rangeUnderflow || elem.validity.rangeOverflow) {
+					return false;
+				} else if (elem.validity.badInput) {
+					return null;
+				}
+			}
+			return Nette.isArray(arg) ?
+				((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
+		},
+
+		submitted: function(elem) {
+			return elem.form['nette-submittedBy'] === elem;
+		},
+
+		fileSize: function(elem, arg, val) {
+			if (window.FileList) {
+				for (var i = 0; i < val.length; i++) {
+					if (val[i].size > arg) {
+						return false;
+					}
+				}
+			}
+			return true;
+		},
+
+		image: function (elem, arg, val) {
+			if (window.FileList && val instanceof window.FileList) {
+				for (var i = 0; i < val.length; i++) {
+					var type = val[i].type;
+					if (type && type !== 'image/gif' && type !== 'image/png' && type !== 'image/jpeg') {
+						return false;
+					}
+				}
+			}
+			return true;
+		},
+
+		'static': function (elem, arg) {
+			return arg;
+		}
+	};
+
+
+	/**
+	 * Process all toggles in form.
+	 */
+	Nette.toggleForm = function(form, elem) {
+		var i;
+		Nette.toggles = {};
+		for (i = 0; i < form.elements.length; i++) {
+			if (form.elements[i].tagName.toLowerCase() in {input: 1, select: 1, textarea: 1, button: 1}) {
+				Nette.toggleControl(form.elements[i], null, null, !elem);
+			}
+		}
+
+		for (i in Nette.toggles) {
+			Nette.toggle(i, Nette.toggles[i], elem);
+		}
+	};
+
+
+	/**
+	 * Process toggles on form element.
+	 */
+	Nette.toggleControl = function(elem, rules, success, firsttime, value) {
+		rules = rules || Nette.parseJSON(elem.getAttribute('data-nette-rules'));
+		value = value === undefined ? {value: Nette.getEffectiveValue(elem)} : value;
+
+		var has = false,
+			handled = [],
+			handler = function () {
+				Nette.toggleForm(elem.form, elem);
+			},
+			curSuccess;
+
+		for (var id = 0, len = rules.length; id < len; id++) {
+			var rule = rules[id],
+				op = rule.op.match(/(~)?([^?]+)/),
+				curElem = rule.control ? elem.form.elements.namedItem(rule.control) : elem;
+
+			if (!curElem) {
+				continue;
+			}
+
+			curSuccess = success;
+			if (success !== false) {
+				rule.neg = op[1];
+				rule.op = op[2];
+				var curValue = elem === curElem ? value : {value: Nette.getEffectiveValue(curElem)};
+				curSuccess = Nette.validateRule(curElem, rule.op, rule.arg, curValue);
+				if (curSuccess === null) {
+					continue;
+
+				} else if (rule.neg) {
+					curSuccess = !curSuccess;
+				}
+				if (!rule.rules) {
+					success = curSuccess;
+				}
+			}
+
+			if ((rule.rules && Nette.toggleControl(elem, rule.rules, curSuccess, firsttime, value)) || rule.toggle) {
+				has = true;
+				if (firsttime) {
+					var oldIE = !document.addEventListener, // IE < 9
+						name = curElem.tagName ? curElem.name : curElem[0].name,
+						els = curElem.tagName ? curElem.form.elements : curElem;
+
+					for (var i = 0; i < els.length; i++) {
+						if (els[i].name === name && !Nette.inArray(handled, els[i])) {
+							Nette.addEvent(els[i], oldIE && els[i].type in {checkbox: 1, radio: 1} ? 'click' : 'change', handler);
+							handled.push(els[i]);
+						}
+					}
+				}
+				for (var id2 in rule.toggle || []) {
+					if (Object.prototype.hasOwnProperty.call(rule.toggle, id2)) {
+						Nette.toggles[id2] = Nette.toggles[id2] || (rule.toggle[id2] ? curSuccess : !curSuccess);
+					}
+				}
+			}
+		}
+		return has;
+	};
+
+
+	Nette.parseJSON = function(s) {
+		return (s || '').substr(0, 3) === '{op'
+			? eval('[' + s + ']') // backward compatibility with Nette 2.0.x
+			: JSON.parse(s || '[]');
+	};
+
+
+	/**
+	 * Displays or hides HTML element.
+	 */
+	Nette.toggle = function(id, visible, srcElement) { // eslint-disable-line no-unused-vars
+		var elem = document.getElementById(id);
+		if (elem) {
+			elem.style.display = visible ? '' : 'none';
+		}
+	};
+
+
+	/**
+	 * Setup handlers.
+	 */
+	Nette.initForm = function(form) {
+		Nette.toggleForm(form);
+
+		if (form.noValidate) {
+			return;
+		}
+
+		form.noValidate = true;
+
+		Nette.addEvent(form, 'submit', function(e) {
+			if (!Nette.validateForm(form)) {
+				if (e && e.stopPropagation) {
+					e.stopPropagation();
+					e.preventDefault();
+				} else if (window.event) {
+					event.cancelBubble = true;
+					event.returnValue = false;
+				}
+			}
+		});
+	};
+
+
+	/**
+	 * @private
+	 */
+	Nette.initOnLoad = function() {
+		Nette.addEvent(document, 'DOMContentLoaded', function() {
+			for (var i = 0; i < document.forms.length; i++) {
+				var form = document.forms[i];
+				for (var j = 0; j < form.elements.length; j++) {
+					if (form.elements[j].getAttribute('data-nette-rules')) {
+						Nette.initForm(form);
+						break;
+					}
+				}
+			}
+
+			Nette.addEvent(document.body, 'click', function(e) {
+				var target = e.target || e.srcElement;
+				while (target) {
+					if (target.form && target.type in {submit: 1, image: 1}) {
+						target.form['nette-submittedBy'] = target;
+						break;
+					}
+					target = target.parentNode;
+				}
+			});
+		});
+	};
+
+
+	/**
+	 * Determines whether the argument is an array.
+	 */
+	Nette.isArray = function(arg) {
+		return Object.prototype.toString.call(arg) === '[object Array]';
+	};
+
+
+	/**
+	 * Search for a specified value within an array.
+	 */
+	Nette.inArray = function(arr, val) {
+		if ([].indexOf) {
+			return arr.indexOf(val) > -1;
+		} else {
+			for (var i = 0; i < arr.length; i++) {
+				if (arr[i] === val) {
+					return true;
+				}
+			}
+			return false;
+		}
+	};
+
+
+	/**
+	 * Converts string to web safe characters [a-z0-9-] text.
+	 */
+	Nette.webalize = function(s) {
+		s = s.toLowerCase();
+		var res = '', i, ch;
+		for (i = 0; i < s.length; i++) {
+			ch = Nette.webalizeTable[s.charAt(i)];
+			res += ch ? ch : s.charAt(i);
+		}
+		return res.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+	};
+
+	Nette.webalizeTable = {\u00e1: 'a', \u00e4: 'a', \u010d: 'c', \u010f: 'd', \u00e9: 'e', \u011b: 'e', \u00ed: 'i', \u013e: 'l', \u0148: 'n', \u00f3: 'o', \u00f4: 'o', \u0159: 'r', \u0161: 's', \u0165: 't', \u00fa: 'u', \u016f: 'u', \u00fd: 'y', \u017e: 'z'};
+
+	return Nette;
 }));
 
 _context.invoke('Nittro.Forms', function () {
+    var Nette;
 
-    if (!window.Nette || !window.Nette.validators) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        Nette = require('nette-forms');
+    } else {
+        Nette = window.Nette;
+    }
+
+    if (!Nette || !Nette.validators) {
         throw new Error('netteForms.js asset from Nette/Forms has not been loaded');
     }
 
-    _context.register(window.Nette, 'Vendor');
+    _context.register(Nette, 'Vendor');
 
 });
 
@@ -6941,11 +7077,14 @@ _context.invoke('Nittro.Forms', function(undefined) {
 
 _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendor, undefined) {
 
+    var FileList = window.FileList || function() {};
+
     var Form = _context.extend('Nittro.Object', function (form) {
         Form.Super.call(this);
 
         this._.submittedBy = null;
         this._.inLiveValidation = false;
+        this._.errorRenderer = null;
         this._handleSubmit = this._handleSubmit.bind(this);
         this._handleReset = this._handleReset.bind(this);
 
@@ -6955,15 +7094,17 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         this.on('blur:default', this._handleBlur.bind(this));
 
     }, {
+        setErrorRenderer: function (renderer) {
+            this._.errorRenderer = renderer;
+        },
+
         setElement: function (form) {
             if (typeof form === 'string') {
                 form = DOM.getById(form);
-
             }
 
             if (!form || !(form instanceof HTMLFormElement)) {
                 throw new TypeError('Invalid argument, must be a HTMLFormElement');
-
             }
 
             this._.form = form;
@@ -6982,12 +7123,10 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
         getElement: function (name) {
             return name ? this._.form.elements.namedItem(name) : this._.form;
-
         },
 
         getElements: function () {
             return this._.form.elements;
-
         },
 
         setSubmittedBy: function (value) {
@@ -6999,25 +7138,15 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
             }
 
             return this;
-
         },
 
         validate: function (sender) {
-            var container;
-
-            for (var i = 0, names = this._getFieldNames(); i < names.length; i++) {
-                container = this._getErrorContainer(this.getElement(names[i]));
-
-                if (container) {
-                    DOM.getByClassName('error', container).forEach(function(elem) {
-                        elem.parentNode.removeChild(elem);
-                    });
-                }
+            if (this._.errorRenderer) {
+                this._.errorRenderer.cleanupErrors(this._.form);
             }
 
             if (!Vendor.validateForm(sender || this._.form)) {
                 return false;
-
             }
 
             var evt = this.trigger('validate', {
@@ -7025,7 +7154,6 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
             });
 
             return !evt.isDefaultPrevented();
-
         },
 
         setValues: function (values, reset) {
@@ -7044,41 +7172,33 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
                     name.replace(/]/g, '').split(/\[/g).some(function (key) {
                         if (key === '') {
                             return true;
-
                         } else if (!(key in value)) {
                             value = undefined;
                             return true;
-
                         } else {
                             value = value[key];
                             return false;
-
                         }
                     });
                 } else if (name in values) {
                     value = values[name];
-
                 }
 
                 if (value === undefined) {
                     if (reset) {
                         value = null;
-
                     } else {
                         continue;
-
                     }
                 }
 
                 this.setValue(name, value);
-
             }
         },
 
         setValue: function (elem, value) {
             if (typeof elem === 'string') {
                 elem = this._.form.elements.namedItem(elem);
-
             }
 
             var i,
@@ -7086,22 +7206,18 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
             if (!elem) {
                 throw new TypeError('Invalid argument to setValue(), must be (the name of) an existing form element');
-
             } else if (!elem.tagName) {
                 if ('length' in elem) {
                     for (i = 0; i < elem.length; i++) {
                         this.setValue(elem[i], value);
-
                     }
                 }
             } else if (elem.type === 'radio') {
                 elem.checked = value !== null && elem.value === toStr(value);
-
             } else if (elem.type === 'file') {
                 if (value === null) {
                     value = elem.parentNode.innerHTML;
                     DOM.html(elem.parentNode, value);
-
                 }
             } else if (elem.tagName.toLowerCase() === 'select') {
                 var single = elem.type === 'select-one',
@@ -7110,10 +7226,8 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
                 if (arr) {
                     value = value.map(toStr);
-
                 } else {
                     value = toStr(value);
-
                 }
 
                 for (i = 0; i < elem.options.length; i++) {
@@ -7122,25 +7236,19 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
                     if (v && single) {
                         break;
-
                     }
                 }
             } else if (elem.type === 'checkbox') {
                 elem.checked = Array.isArray(value) ? value.map(toStr).indexOf(elem.value) > -1 : !!value;
-
             } else if (elem.type === 'date') {
                 elem.value = value ? DateTime.from(value).format('Y-m-d') : '';
-
             } else if (elem.type === 'datetime-local' || elem.type === 'datetime') {
                 elem.value = value ? DateTime.from(value).format('Y-m-d\\TH:i:s') : '';
-
             } else {
                 elem.value = value !== null ? toStr(value) : '';
-
             }
 
             return this;
-
         },
 
         getValue: function (name) {
@@ -7164,18 +7272,15 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
                 if (Array.isArray(value) || value instanceof FileList) {
                     for (var j = 0; j < value.length; j++) {
                         data.append(names[i], value[j]);
-
                     }
                 } else {
                     data.append(names[i], value);
-
                 }
             }
 
             this.trigger('serialize', data);
 
             return data;
-
         },
 
         submit: function (by) {
@@ -7184,24 +7289,19 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
                 if (btn && btn.type === 'submit') {
                     DOM.trigger(btn, 'click');
-
                 } else {
                     throw new TypeError('Unknown element or not a submit button: ' + by);
-
                 }
             } else {
                 DOM.trigger(this._.form, 'submit');
-
             }
 
             return this;
-
         },
 
         reset: function () {
             this._.form.reset();
             return this;
-
         },
 
         destroy: function () {
@@ -7216,21 +7316,18 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
             if (this.trigger('submit').isDefaultPrevented()) {
                 evt.preventDefault();
                 return;
-
             }
 
             var sender = this._.submittedBy ? this.getElement(this._.submittedBy) : null;
 
             if (!this.validate(sender)) {
                 evt.preventDefault();
-
             }
         },
 
         _handleReset: function (evt) {
             if (evt.target !== this._.form) {
                 return;
-
             }
 
             var elem, i;
@@ -7240,47 +7337,29 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
                 if (elem.type === 'hidden' && elem.hasAttribute('data-default-value')) {
                     this.setValue(elem, DOM.getData(elem, 'default-value'));
-
                 } else if (elem.type === 'file') {
                     this.setValue(elem, null);
-
                 }
             }
 
             this._.submittedBy = this._.form['nette-submittedBy'] = null;
 
             this.trigger('reset');
-
         },
 
         _handleError: function (evt) {
-            var container = this._getErrorContainer(evt.data.element),
-                elem;
+            if (this._.errorRenderer) {
+                this._.errorRenderer.addError(this._.form, evt.data.element, evt.data.message);
+            }
 
             if (!this._.inLiveValidation && evt.data.element && typeof evt.data.element.focus === 'function') {
                 evt.data.element.focus();
             }
-
-            if (container) {
-                if (evt.data.element && evt.data.element.parentNode === container) {
-                    elem = DOM.create('span', {'class': 'error'});
-                } else {
-                    elem = DOM.create(container.tagName.match(/^(ul|ol)$/i) ? 'li' : 'p', {'class': 'error'});
-                }
-
-                elem.textContent = evt.data.message;
-                container.appendChild(elem);
-            }
         },
 
         _handleBlur: function (evt) {
-            var container = this._getErrorContainer(evt.data.element);
-
-            if (container) {
-                DOM.getByClassName('error', container)
-                    .forEach(function (elem) {
-                        elem.parentNode.removeChild(elem);
-                    });
+            if (this._.errorRenderer) {
+                this._.errorRenderer.cleanupErrors(this._.form, evt.data.element);
             }
 
             if (DOM.getData(evt.data.element, 'validation-mode', this._.validationMode) === 'live') {
@@ -7299,16 +7378,10 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
                 if (elem.name && (!enabledOnly || !elem.disabled) && names.indexOf(elem.name) === -1 && !(elem.type in {submit: 1, button: 1, reset: 1})) {
                     names.push(elem.name);
-
                 }
             }
 
             return names;
-        },
-
-        _getErrorContainer: function (elem) {
-            var container = elem && elem.id ? DOM.getById(elem.id + '-errors') : null;
-            return container || DOM.getById(this._.form.id + '-errors') || (elem ? elem.parentNode : null);
         }
     });
 
@@ -7322,10 +7395,12 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
 _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
 
-    var Locator = _context.extend('Nittro.Object', function () {
+    var anonId = 0;
+
+    var Locator = _context.extend('Nittro.Object', function (formErrorRenderer) {
         this._ = {
-            registry: {},
-            anonId: 0
+            errorRenderer: formErrorRenderer || null,
+            registry: {}
         };
 
         Vendor.addError = this._forwardError.bind(this);
@@ -7339,8 +7414,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
                 elem = id;
 
                 if (!elem.getAttribute('id')) {
-                    elem.setAttribute('id', 'frm-anonymous' + (++this._.anonId));
-
+                    elem.setAttribute('id', 'frm-anonymous' + (++anonId));
                 }
 
                 id = elem.getAttribute('id');
@@ -7349,6 +7423,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
 
             if (!(id in this._.registry)) {
                 this._.registry[id] = new Form(elem || id);
+                this._.registry[id].setErrorRenderer(this._.errorRenderer);
                 this.trigger('form-added', { form: this._.registry[id] });
             }
 
@@ -7359,14 +7434,12 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
         removeForm: function (id) {
             if (typeof id !== 'string') {
                 id = id.getAttribute('id');
-
             }
 
             if (id in this._.registry) {
                 this.trigger('form-removed', { form: this._.registry[id] });
                 this._.registry[id].destroy();
                 delete this._.registry[id];
-
             }
         },
 
@@ -7386,6 +7459,9 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
                     }
                 }
             }
+
+            Arrays.createFrom(document.getElementsByTagName('form'))
+                .forEach(this.getForm.bind(this));
         },
 
         _forwardError: function (elem, msg) {
@@ -7404,6 +7480,50 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
 }, {
     DOM: 'Utils.DOM',
     Arrays: 'Utils.Arrays'
+});
+
+_context.invoke('Nittro.Forms', function (DOM) {
+
+    var DefaultErrorRenderer = _context.extend(function () {
+
+    }, {
+        addError: function (form, element, message) {
+            var container = this._getErrorContainer(form, element),
+                elem;
+
+            if (container) {
+                if (element && element.parentNode === container) {
+                    elem = DOM.create('span', {'class': 'error'});
+                } else {
+                    elem = DOM.create(container.tagName.match(/^(ul|ol)$/i) ? 'li' : 'p', {'class': 'error'});
+                }
+
+                elem.textContent = message;
+                container.appendChild(elem);
+            }
+        },
+
+        cleanupErrors: function (form, element) {
+            var container = element ? this._getErrorContainer(form, element) : form;
+
+            if (container) {
+                DOM.getByClassName('error', container)
+                    .forEach(function (elem) {
+                        elem.parentNode.removeChild(elem);
+                    });
+            }
+        },
+
+        _getErrorContainer: function (form, elem) {
+            var container = elem && elem.id ? DOM.getById(elem.id + '-errors') : null;
+            return container || DOM.getById(form.id + '-errors') || (elem ? elem.parentNode : null);
+        }
+    });
+
+    _context.register(DefaultErrorRenderer, 'DefaultErrorRenderer');
+
+}, {
+    DOM: 'Utils.DOM'
 });
 
 _context.invoke('Nittro.Page', function (DOM, undefined) {
@@ -7906,7 +8026,7 @@ _context.invoke('Nittro.Page', function (Helpers, Snippet, DOM, Arrays, undefine
         },
 
         _resolveUpdates: function(snippets, changeset) {
-            var id, elem;
+            var id, elem, params;
 
             for (id in snippets) {
                 if (snippets.hasOwnProperty(id)) {
@@ -7915,15 +8035,15 @@ _context.invoke('Nittro.Page', function (Helpers, Snippet, DOM, Arrays, undefine
                     if (elem) {
                         this.cleanupDescendants(elem, changeset);
 
-                        if (id in changeset.remove) {
-                            changeset.add[id] = this._resolveAddition(id, snippets[id]);
+                        if (id in changeset.remove && (params = this._resolveAddition(id, snippets[id]))) {
+                            changeset.add[id] = params;
 
                         } else {
                             changeset.update[id] = this._resolveUpdate(elem, snippets[id]);
 
                         }
-                    } else {
-                        changeset.add[id] = this._resolveAddition(id, snippets[id]);
+                    } else if (params = this._resolveAddition(id, snippets[id])) {
+                        changeset.add[id] = params;
 
                     }
                 }
@@ -7968,8 +8088,13 @@ _context.invoke('Nittro.Page', function (Helpers, Snippet, DOM, Arrays, undefine
 
         _resolveAddition: function(id, content) {
             var params = this._getDynamicContainerParamsForId(id),
-                elem = Helpers.buildContent(params.element, content);
+                elem;
 
+            if (!params) {
+                return null;
+            }
+
+            elem = Helpers.buildContent(params.element, content);
             elem.id = id;
 
             return {
@@ -8002,14 +8127,12 @@ _context.invoke('Nittro.Page', function (Helpers, Snippet, DOM, Arrays, undefine
         _applyRemove: function(snippets) {
             for (var id in snippets) {
                 if (snippets.hasOwnProperty(id)) {
-                    if (!snippets[id].isDescendant) {
+                    if (!snippets[id].isDescendant && snippets[id].element.parentNode) {
                         snippets[id].element.parentNode.removeChild(snippets[id].element);
-
                     }
 
                     if (id in this._.snippets) {
                         delete this._.snippets[id];
-
                     }
                 }
             }
@@ -8066,14 +8189,13 @@ _context.invoke('Nittro.Page', function (Helpers, Snippet, DOM, Arrays, undefine
         },
 
         _getDynamicContainerParams: function (id) {
-            var container = this.getSnippet(id);
+            var container = this.getSnippet(id),
+                params = container.isContainer() ? container.getData('_snippet_container') : null;
 
-            if (!container.isContainer()) {
+            if (!params || params.sortCache === false) {
                 return Helpers.prepareDynamicContainer(container);
-
             } else {
-                return container.getData('_snippet_container');
-
+                return params;
             }
         },
 
@@ -8090,8 +8212,11 @@ _context.invoke('Nittro.Page', function (Helpers, Snippet, DOM, Arrays, undefine
                 }
             }
 
-            throw new Error('Dynamic snippet #' + id + ' has no container');
+            if (window.console) {
+                console.error('Dynamic snippet #' + id + ' has no container');
+            }
 
+            return null;
         }
     });
 
@@ -8105,17 +8230,22 @@ _context.invoke('Nittro.Page', function (Helpers, Snippet, DOM, Arrays, undefine
 
 _context.invoke('Nittro.Page', function() {
 
-    var SnippetAgent = _context.extend(function(snippetManager) {
+    var SnippetAgent = _context.extend(function(page, snippetManager) {
         this._ = {
+            page: page,
             snippetManager: snippetManager
         };
+
+        this._.page.on('transaction-created', this._initTransaction.bind(this));
     }, {
-        initTransaction: function(transaction, context) {
+        _initTransaction: function(evt) {
             var data = {
-                removeTargets: context.element ? this._.snippetManager.getRemoveTargets(context.element) : []
+                removeTargets: 'remove' in evt.data.context
+                    ? evt.data.context.remove || []
+                    : (evt.data.context.element ? this._.snippetManager.getRemoveTargets(evt.data.context.element) : [])
             };
 
-            transaction.on('ajax-response', this._handleResponse.bind(this, data));
+            evt.data.transaction.on('ajax-response', this._handleResponse.bind(this, data));
         },
 
         _handleResponse: function(data, evt) {
@@ -8129,9 +8259,13 @@ _context.invoke('Nittro.Page', function() {
         },
 
         _applyChangeset: function (transaction, changeset) {
+            return Promise.resolve().then(this._doApplyChangeset.bind(this, transaction, changeset));
+        },
+
+        _doApplyChangeset: function (transaction, changeset) {
             return transaction.trigger('snippets-apply', { changeset: changeset })
                 .then(function() {
-                    this._.snippetManager.applyChanges(changeset);
+                    this._.snippetManager.applyChanges(changeset)
                 }.bind(this));
         }
     });
@@ -8140,63 +8274,44 @@ _context.invoke('Nittro.Page', function() {
 
 });
 
-_context.invoke('Nittro.Page', function(Arrays, Url) {
+_context.invoke('Nittro.Page', function(Arrays) {
 
-    var AjaxAgent = _context.extend(function(ajax, options) {
+    var AjaxAgent = _context.extend(function(page, ajax, options) {
         this._ = {
+            page: page,
             ajax: ajax,
             options: Arrays.mergeTree({}, AjaxAgent.defaults, options)
         };
 
-        if (!this._.options.allowOrigins) {
-            this._.options.allowOrigins = [];
-        } else if (!Array.isArray(this._.options.allowOrigins)) {
-            this._.options.allowOrigins = this._.options.allowOrigins.split(/\s*,\s*/g);
-        }
-
-        this._.options.allowOrigins.push(Url.fromCurrent().getOrigin());
-
+        this._.page.on('before-transaction', this._checkTransaction.bind(this));
+        this._.page.on('transaction-created', this._initTransaction.bind(this));
     }, {
         STATIC: {
             defaults: {
-                whitelistRedirects: false,
-                allowOrigins: null
+                whitelistRedirects: false
             }
         },
 
-        checkUrl: function(url, current, ignoreHash) {
-            if ((url + '').match(/^(?!https?)[^:\/?#]+:/i)) {
-                return false;
+        _checkTransaction: function (evt) {
+            if (!this._.ajax.isAllowedOrigin(evt.data.url) || !this._.ajax.supports(evt.data.url, evt.data.context.method, evt.data.context.data)) {
+                evt.preventDefault();
             }
-
-            var u = url ? Url.from(url) : Url.fromCurrent(),
-                c, d;
-
-            if (this._.options.allowOrigins.indexOf(u.getOrigin()) === -1) {
-                return false;
-            }
-
-            if (ignoreHash) {
-                return true;
-            }
-
-            c = current ? Url.from(current) : Url.fromCurrent();
-            d = u.compare(c);
-
-            return d !== Url.PART.HASH;
-
         },
 
-        initTransaction: function(transaction, context) {
+        _initTransaction: function(evt) {
             var data = {
-                request: this._.ajax.createRequest(transaction.getUrl(), context.method, context.data)
+                request: this._.ajax.createRequest(evt.data.transaction.getUrl(), evt.data.context.method, evt.data.context.data)
             };
 
-            transaction.on('dispatch', function(evt) { evt.waitFor(this._dispatch(transaction, data)); }.bind(this));
-            transaction.on('abort', this._abort.bind(this, data));
+            evt.data.transaction.on('dispatch', this._dispatch.bind(this, data));
+            evt.data.transaction.on('abort', this._abort.bind(this, data));
         },
 
-        _dispatch: function(transaction, data) {
+        _dispatch: function(data, evt) {
+            evt.waitFor(Promise.resolve().then(this._doDispatch.bind(this, evt.target, data)));
+        },
+
+        _doDispatch: function (transaction, data) {
             return transaction.trigger('ajax-request', { request: data.request })
                 .then(this._.ajax.dispatch.bind(this._.ajax, data.request))
                 .then(this._handleResponse.bind(this, transaction, data));
@@ -8206,7 +8321,11 @@ _context.invoke('Nittro.Page', function(Arrays, Url) {
             data.request.abort();
         },
 
-        _handleResponse: function(transaction, data, response) {
+        _handleResponse: function (transaction, data, response) {
+            return Promise.resolve().then(this._doHandleResponse.bind(this, transaction, data, response));
+        },
+
+        _doHandleResponse: function(transaction, data, response) {
             return transaction.trigger('ajax-response', { response: response })
                 .then(function() {
                     var payload = response.getPayload();
@@ -8216,13 +8335,14 @@ _context.invoke('Nittro.Page', function(Arrays, Url) {
                     }
 
                     if ('redirect' in payload) {
-                        if ((!this._.options.whitelistRedirects ? payload.allowAjax !== false : payload.allowAjax) && this.checkUrl(payload.redirect)) {
+                        if ((!this._.options.whitelistRedirects ? payload.allowAjax !== false : payload.allowAjax) && this._.ajax.isAllowedOrigin(payload.redirect)) {
                             transaction.setUrl(payload.redirect);
                             data.request = this._.ajax.createRequest(payload.redirect);
-                            return this._dispatch(transaction, data);
+                            return this._doDispatch(transaction, data);
 
                         } else {
                             document.location.href = payload.redirect;
+                            return new Promise(function() {});
                         }
                     } else {
                         return data.request;
@@ -8234,17 +8354,19 @@ _context.invoke('Nittro.Page', function(Arrays, Url) {
     _context.register(AjaxAgent, 'AjaxAgent');
 
 }, {
-    Arrays: 'Utils.Arrays',
-    Url: 'Utils.Url'
+    Arrays: 'Utils.Arrays'
 });
 
 _context.invoke('Nittro.Page', function(Arrays, DOM, Url) {
 
-    var HistoryAgent = _context.extend(function(history, options) {
+    var HistoryAgent = _context.extend(function(page, history, options) {
         this._ = {
+            page: page,
             history: history,
             options: Arrays.mergeTree({}, HistoryAgent.defaults, options)
         };
+
+        this._.page.on('transaction-created', this._initTransaction.bind(this));
     }, {
         STATIC: {
             defaults: {
@@ -8252,25 +8374,27 @@ _context.invoke('Nittro.Page', function(Arrays, DOM, Url) {
             }
         },
 
-        initTransaction: function (transaction, context) {
-            if ('history' in context) {
-                transaction.setIsHistoryState(context.history);
-            } else if (context.element) {
-                transaction.setIsHistoryState(DOM.getData(context.element, 'history', !this._.options.whitelistHistory));
+        _initTransaction: function (evt) {
+            if (evt.data.context.fromHistory) {
+                evt.data.transaction.setIsFromHistory();
+            } else if ('history' in evt.data.context) {
+                evt.data.transaction.setIsHistoryState(evt.data.context.history);
+            } else if (evt.data.context.element) {
+                evt.data.transaction.setIsHistoryState(DOM.getData(evt.data.context.element, 'history', !this._.options.whitelistHistory));
             } else {
-                transaction.setIsHistoryState(!this._.options.whitelistHistory);
+                evt.data.transaction.setIsHistoryState(!this._.options.whitelistHistory);
             }
 
             var data = {
                 title: document.title
             };
 
-            transaction.on('dispatch', this._dispatch.bind(this, data));
-            transaction.on('ajax-response', this._handleResponse.bind(this, data));
+            evt.data.transaction.on('dispatch', this._dispatch.bind(this, data));
+            evt.data.transaction.on('ajax-response', this._handleResponse.bind(this, data));
         },
 
         _dispatch: function (data, evt) {
-            evt.target.then(this._saveState.bind(this, evt.target, data));
+            evt.target.then(this._saveState.bind(this, evt.target, data), function () { /* noop on transaction error */ });
         },
 
         _handleResponse: function (data, evt) {
@@ -8284,10 +8408,12 @@ _context.invoke('Nittro.Page', function(Arrays, DOM, Url) {
         _saveState: function (transaction, data) {
             if (transaction.getUrl().getOrigin() !== Url.fromCurrent().getOrigin() || transaction.isBackground()) {
                 transaction.setIsHistoryState(false);
-
             } else if (transaction.isHistoryState()) {
-                this._.history.push(transaction.getUrl().toAbsolute(), data.title);
+                data.state = {};
 
+                if (!transaction.trigger('history-save', data).isDefaultPrevented()) {
+                    this._.history.push(transaction.getUrl().toAbsolute(), data.title, data.state);
+                }
             }
 
             if (data.title) {
@@ -8304,44 +8430,74 @@ _context.invoke('Nittro.Page', function(Arrays, DOM, Url) {
     Url: 'Utils.Url'
 });
 
-_context.invoke('Nittro.Page', function (DOM) {
+_context.invoke('Nittro.Page', function (DOM, Arrays) {
 
     var location = window.history.location || window.location; // support for HTML5 history polyfill
 
     var History = _context.extend('Nittro.Object', function () {
         History.Super.call(this);
+        this._.state = null;
         DOM.addListener(window, 'popstate', this._handleState.bind(this));
-
     }, {
-        push: function (url, title) {
-            window.history.pushState({_nittro: true}, title || document.title, url);
-            title && (document.title = title);
-
-            this.trigger('savestate', {
-                title: title,
-                url: url
-            });
+        init: function () {
+            if (window.history.state && window.history.state._nittro) {
+                this._.state = window.history.state.data;
+            } else {
+                this._.state = {};
+                this.update();
+            }
         },
 
-        replace: function (url, title) {
-            window.history.replaceState({_nittro: true}, title || document.title, url);
+        push: function (url, title, data) {
+            this._saveState(url, title, data, false);
+        },
+
+        replace: function (url, title, data) {
+            this._saveState(url, title, data, true);
+        },
+
+        update: function (data) {
+            Arrays.mergeTree(this._.state, data);
+            window.history.replaceState({_nittro: true, data: this._.state}, document.title, location.href);
+        },
+
+        getState: function () {
+            return this._.state;
+        },
+
+        _saveState: function (url, title, data, replace) {
+            data = data || {};
+            this.trigger('before-savestate', data);
+
+            this._.state = data;
+
+            if (replace) {
+                window.history.replaceState({_nittro: true, data: data}, title || document.title, url);
+            } else {
+                window.history.pushState({_nittro: true, data: data}, title || document.title, url);
+            }
+
             title && (document.title = title);
 
             this.trigger('savestate', {
                 title: title,
                 url: url,
-                replace: true
+                data: data,
+                replace: replace
             });
         },
 
         _handleState: function (evt) {
-            if (evt.state === null) {
+            if (!evt.state || !evt.state._nittro) {
                 return;
             }
 
+            this._.state = evt.state.data;
+
             this.trigger('popstate', {
                 title: document.title,
-                url: location.href
+                url: location.href,
+                data: evt.state.data
             });
         }
     });
@@ -8349,18 +8505,19 @@ _context.invoke('Nittro.Page', function (DOM) {
     _context.register(History, 'History');
 
 }, {
-    DOM: 'Utils.DOM'
+    DOM: 'Utils.DOM',
+    Arrays: 'Utils.Arrays'
 });
 
 _context.invoke('Nittro.Page', function (DOM, Arrays, CSSTransitions, undefined) {
 
-    var TransitionAgent = _context.extend('Nittro.Object', function(options) {
+    var TransitionAgent = _context.extend('Nittro.Object', function(page, options) {
         TransitionAgent.Super.call(this);
 
-        this._.ready = true;
-        this._.queue = [];
+        this._.page = page;
         this._.options = Arrays.mergeTree({}, TransitionAgent.defaults, options);
 
+        this._.page.on('transaction-created', this._initTransaction.bind(this));
     }, {
         STATIC: {
             defaults: {
@@ -8368,18 +8525,19 @@ _context.invoke('Nittro.Page', function (DOM, Arrays, CSSTransitions, undefined)
             }
         },
 
-        initTransaction: function(transaction, context) {
+        _initTransaction: function(evt) {
             var data = {
-                elements: this._getTransitionTargets(context),
-                removeTargets: this._getRemoveTargets(context)
+                elements: this._getTransitionTargets(evt.data.context),
+                removeTargets: this._getRemoveTargets(evt.data.context)
             };
 
-            transaction.on('dispatch', this._dispatch.bind(this, data));
-            transaction.on('abort', this._abort.bind(this, data));
-            transaction.on('snippets-apply', this._handleSnippets.bind(this, data));
+            evt.data.transaction.on('dispatch', this._dispatch.bind(this, data));
+            evt.data.transaction.on('abort', this._abort.bind(this, data));
+            evt.data.transaction.on('snippets-apply', this._handleSnippets.bind(this, data));
         },
 
         _dispatch: function(data, evt) {
+            evt.target.on('error', this._handleError.bind(this, data));
             evt.target.then(this._transitionIn.bind(this, data, false), this._transitionIn.bind(this, data, true));
 
             if (data.elements.length || data.removeTargets.length) {
@@ -8403,7 +8561,6 @@ _context.invoke('Nittro.Page', function (DOM, Arrays, CSSTransitions, undefined)
                 if (changeset.add.hasOwnProperty(id)) {
                     DOM.addClass(changeset.add[id].content, 'nittro-dynamic-add', 'nittro-transition-middle');
                     data.elements.push(changeset.add[id].content);
-
                 }
             }
 
@@ -8412,16 +8569,21 @@ _context.invoke('Nittro.Page', function (DOM, Arrays, CSSTransitions, undefined)
             }
         },
 
-        _transitionOut: function (data) {
-            return this._enqueue(data.elements.concat(data.removeTargets), 'out');
+        _handleError: function (data, evt) {
+            if (data.transitionOut) {
+                evt.waitFor(data.transitionOut);
+            }
+        },
 
+        _transitionOut: function (data) {
+            return this._transition(data.elements.concat(data.removeTargets), 'out');
         },
 
         _transitionIn: function (data, aborting) {
             var elements = aborting ? data.elements.concat(data.removeTargets) : data.elements;
 
             if (elements.length) {
-                return this._enqueue(elements, 'in')
+                return this._transition(elements, 'in')
                     .then(function () {
                         DOM.removeClass(elements, 'nittro-dynamic-add', 'nittro-dynamic-remove');
                     });
@@ -8429,38 +8591,12 @@ _context.invoke('Nittro.Page', function (DOM, Arrays, CSSTransitions, undefined)
             }
         },
 
-        _enqueue: function (elements, dir) {
-            if (!this._.ready) {
-                return new Promise(function (fulfill) {
-                    this._.queue.push([elements, dir, fulfill]);
-
-                }.bind(this));
-            }
-
-            this._.ready = false;
-            return this._transition(elements, dir);
-
-        },
-
         _transition: function(elements, dir) {
             return CSSTransitions.run(elements, {
                     add: 'nittro-transition-active nittro-transition-' + dir,
                     remove: 'nittro-transition-middle',
                     after: dir === 'out' ? 'nittro-transition-middle' : null
-                }, dir === 'in')
-                .then(function () {
-                    if (this._.queue.length) {
-                        var q = this._.queue.shift();
-
-                        this._transition(q[0], q[1]).then(function () {
-                            q[2](q[0]);
-
-                        });
-                    } else {
-                        this._.ready = true;
-
-                    }
-                }.bind(this));
+                }, dir === 'in');
         },
 
         _getTransitionTargets: function(context) {
@@ -8514,6 +8650,229 @@ _context.invoke('Nittro.Page', function (DOM, Arrays, CSSTransitions, undefined)
     CSSTransitions: 'Utils.CSSTransitions'
 });
 
+_context.invoke('Nittro.Page', function (DOM, Arrays) {
+
+    var location = window.history.location || window.location; // support for HTML5 history polyfill
+
+    var ScrollAgent = _context.extend(function (page, history, options) {
+        this._ = {
+            page: page,
+            history: history,
+            anchor: DOM.create('div'),
+            options: Arrays.mergeTree({}, ScrollAgent.defaults, options)
+        };
+
+        this._.anchor.style.position = 'absolute';
+        this._.anchor.style.left = 0;
+        this._.anchor.style.top = 0;
+        this._.anchor.style.width = '100%';
+        this._.anchor.style.height = '1px';
+        this._.anchor.style.marginTop = '-1px';
+
+        window.history.scrollRestoration = 'manual';
+        this._.page.on('ready', this._init.bind(this));
+        this._.page.on('transaction-created', this._initTransaction.bind(this));
+    }, {
+        STATIC: {
+            defaults: {
+                target: null,
+                margin: 30,
+                scrollDown: false,
+                duration: 400
+            }
+        },
+
+        _init: function () {
+            var state = this._.history.getState(),
+                target;
+
+            if ('scrollAgent' in state) {
+                target = state.scrollAgent.target;
+            } else if (location.hash.match(/^#[^\s\[>+:.]+$/i)) {
+                target = this._resolveSingleTarget(location.hash);
+            }
+
+            if (typeof target === 'number') {
+                this._scrollTo(target, true, true);
+            }
+        },
+
+        _initTransaction: function (evt) {
+            if (evt.data.transaction.isBackground()) {
+                return;
+            }
+
+            var rect = document.body.getBoundingClientRect(),
+                data = {
+                    previous: window.pageYOffset,
+                    target: this._.options.target
+                };
+
+            this._.anchor.style.top = data.previous + rect.bottom + 'px';
+            document.body.appendChild(this._.anchor);
+            evt.data.transaction.on('dispatch', this._dispatch.bind(this, data));
+            evt.data.transaction.on('abort error', this._cleanup.bind(this));
+            evt.data.transaction.on('ajax-response', this._handleResponse.bind(this, data));
+            evt.data.transaction.on('snippets-apply', this._handleSnippets.bind(this, data));
+            evt.data.transaction.on('history-save', this._handleHistory.bind(this, data));
+
+            if ('scrollTo' in evt.data.context) {
+                data.target = evt.data.context.scrollTo;
+            } else if (evt.data.context.element && evt.data.context.element.hasAttribute('data-scroll-to')) {
+                data.target = DOM.getData(evt.data.context.element, 'scroll-to', null);
+            }
+        },
+
+        _dispatch: function (data, evt) {
+            var state = this._.history.getState();
+
+            if (data.target === null && evt.target.isFromHistory() && state && 'scrollAgent' in state) {
+                data.target = state.scrollAgent.target;
+            }
+
+            evt.target.then(this._apply.bind(this, data, evt.target), this._cleanup.bind(this));
+        },
+
+        _cleanup: function () {
+            if (this._.anchor.parentNode) {
+                this._.anchor.parentNode.removeChild(this._.anchor);
+                this._.anchor.style.top = 0;
+            }
+        },
+
+        _handleResponse: function (data, evt) {
+            var payload = evt.data.response.getPayload();
+
+            if ('scrollTo' in payload) {
+                data.target = payload.scrollTo;
+            }
+        },
+
+        _handleSnippets: function (data, evt) {
+            if (data.target === null) {
+                data.target = [];
+
+                var id, params;
+
+                for (id in evt.data.changeset.add) if (evt.data.changeset.add.hasOwnProperty(id)) {
+                    params = evt.data.changeset.add[id];
+
+                    if (!DOM.getData(params.container, 'scroll-ignore')) {
+                        data.target.push('#' + id);
+                    }
+                }
+
+                for (id in evt.data.changeset.update) if (evt.data.changeset.update.hasOwnProperty(id)) {
+                    if (!DOM.getData(id, 'scroll-ignore')) {
+                        data.target.push('#' + id);
+                    }
+                }
+            }
+        },
+
+        _apply: function (data, transaction) {
+            if (this._resolveTarget(data)) {
+                this._scrollTo(data.target, transaction.isFromHistory());
+            } else {
+                this._cleanup();
+            }
+        },
+
+        _scrollTo: function (to, force, instant) {
+            var y0 = window.pageYOffset,
+                dy = to - y0,
+                t0 = Date.now(),
+                dt = this._.options.duration,
+                a = this._.anchor;
+
+            if (force || this._.options.scrollDown || dy < 0) {
+                if (instant) {
+                    window.scrollTo(null, to);
+                } else {
+                    window.requestAnimationFrame(step);
+                }
+            } else {
+                this._cleanup();
+            }
+
+            function step() {
+                var x = (Date.now() - t0) / dt,
+                    y;
+
+                if (x <= 1) {
+                    window.requestAnimationFrame(step);
+
+                    y = y0 + dy * (-0.5 * Math.cos(Math.PI * x) + 0.5);
+                    window.scrollTo(null, y);
+                } else if (a.parentNode) {
+                    a.parentNode.removeChild(a);
+                    a.style.top = 0;
+                }
+            }
+        },
+
+        _handleHistory: function (data, evt) {
+            this._.history.update({
+                scrollAgent: {
+                    target: data.previous
+                }
+            });
+
+            this._resolveTarget(data);
+
+            evt.data.state.scrollAgent = {
+                target: data.target
+            };
+        },
+
+        _resolveSingleTarget: function(target) {
+            if (target === false) {
+                return false;
+            } else if (target === null) {
+                return 0;
+            } else if (typeof target === 'string') {
+                if (target = DOM.find(target)[0]) {
+                    return target.getBoundingClientRect().top + window.pageYOffset - this._.options.margin;
+                } else {
+                    return 0;
+                }
+            } else if (typeof target === 'number') {
+                return target;
+            } else {
+                return false;
+            }
+        },
+
+        _resolveTarget: function(data) {
+            if (data.target === false) {
+                return false;
+            } else if (data.target === null) {
+                data.target = 0;
+            } else if (typeof data.target !== 'number') {
+                if (Array.isArray(data.target)) {
+                    data.target = data.target.join(',');
+                }
+
+                data.target = DOM.find(data.target).map(function (elem) {
+                    return elem.getBoundingClientRect().top;
+                });
+
+                data.target = data.target.length
+                    ? Math.min.apply(null, data.target) + window.pageYOffset - this._.options.margin
+                    : 0;
+            }
+
+            return true;
+        }
+    });
+
+    _context.register(ScrollAgent, 'ScrollAgent');
+
+}, {
+    DOM: 'Utils.DOM',
+    Arrays: 'Utils.Arrays'
+});
+
 _context.invoke('Nittro.Page', function(Url) {
 
     var Transaction = _context.extend('Nittro.Object', function (url) {
@@ -8521,14 +8880,22 @@ _context.invoke('Nittro.Page', function(Url) {
 
         this._.url = Url.from(url);
         this._.history = true;
+        this._.fromHistory = false;
         this._.background = false;
 
         this._.promise = new Promise(function(fulfill, reject) {
             this._.fulfill = fulfill;
             this._.reject = reject;
         }.bind(this));
-
     }, {
+        STATIC: {
+            createRejected: function (url, reason) {
+                var self = new Transaction(url);
+                self._.reject(reason);
+                return self;
+            }
+        },
+
         getUrl: function() {
             return this._.url;
         },
@@ -8547,6 +8914,15 @@ _context.invoke('Nittro.Page', function(Url) {
             return this;
         },
 
+        isFromHistory: function() {
+            return this._.fromHistory;
+        },
+
+        setIsFromHistory: function() {
+            this._.fromHistory = true;
+            this._.history = false;
+        },
+
         isBackground: function() {
             return this._.background;
         },
@@ -8558,21 +8934,26 @@ _context.invoke('Nittro.Page', function(Url) {
 
         dispatch: function() {
             this.trigger('dispatch')
-                .then(this._.fulfill.bind(this), this._.reject.bind(this));
+                .then(this._.fulfill, this._handleError.bind(this));
 
             return this;
-
         },
 
         abort: function() {
             this._.reject({type: 'abort'});
             this.trigger('abort');
             return this;
-
         },
 
         then: function(onfulfilled, onrejected) {
             return this._.promise.then(onfulfilled, onrejected);
+        },
+
+        _handleError: function (err) {
+            this.trigger('error')
+                .then(function () {
+                    this._.reject(err);
+                }.bind(this));
         }
     });
 
@@ -8584,50 +8965,41 @@ _context.invoke('Nittro.Page', function(Url) {
 
 _context.invoke('Nittro.Page', function () {
 
-    var CspAgent = _context.extend(function(nonce) {
+    var CspAgent = _context.extend(function(page, nonce) {
         this._ = {
+            page: page,
             nonce: nonce
         };
+
+        this._.page.on('transaction-created', this._initTransaction.bind(this));
     }, {
-        initTransaction: function (transaction) {
+        _initTransaction: function (evt) {
             var data = {
                 nonce: null,
                 pending: null
             };
 
-            transaction.on('ajax-response', this._handleResponse.bind(this, data));
-            transaction.on('snippets-apply', this._handleSnippets.bind(this, data));
+            evt.data.transaction.on('ajax-response', this._handleResponse.bind(this, data));
+            evt.data.transaction.on('snippets-apply', this._handleSnippets.bind(this, data));
         },
 
         _handleResponse: function (data, evt) {
-            var m = /(?:^|;\s*)script-src\s[^;]*'nonce-([^']+)'/.exec(evt.data.response.getHeader('Content-Security-Policy') || evt.data.response.getHeader('Content-Security-Policy-Report-Only') || '');
+            if ('redirect' in evt.data.response.getPayload()) {
+                return;
+            }
+
+            var h = evt.data.response.getHeader('Content-Security-Policy') || evt.data.response.getHeader('Content-Security-Policy-Report-Only') || '',
+                m = /(?:^|;\s*)script-src\s[^;]*'nonce-([^']+)'/.exec(h);
 
             if (m) {
                 data.nonce = m[1];
             } else {
                 data.nonce = false;
             }
-
-            if (data.pending) {
-                data.pending();
-            }
         },
 
         _handleSnippets: function (data, evt) {
-            if (data.nonce !== null) {
-                this._handleChangeset(evt.data.changeset, data.nonce);
-            } else {
-                evt.waitFor(this._scheduleHandleChangeset(evt.data.changeset, data));
-            }
-        },
-
-        _scheduleHandleChangeset: function (changeset, data) {
-            return new Promise(function (fulfill) {
-                data.pending = function () {
-                    this._handleChangeset(changeset, data.nonce);
-                    fulfill();
-                }.bind(this);
-            }.bind(this));
+            this._handleChangeset(evt.data.changeset, data.nonce);
         },
 
         _handleChangeset: function (changeset, nonce) {
@@ -8655,7 +9027,7 @@ _context.invoke('Nittro.Page', function () {
                 i;
 
             for (i = 0; i < scripts.length; i++) {
-                if (scripts.item(i).getAttribute('nonce') === nonce) {
+                if (scripts.item(i).nonce === nonce) {
                     scripts.item(i).setAttribute('nonce', this._.nonce || '');
                 }
             }
@@ -8695,12 +9067,9 @@ _context.invoke('Nittro.Page', function (Url) {
 
 _context.invoke('Nittro.Page', function (Transaction, DOM, Arrays, Url) {
 
-    var Service = _context.extend('Nittro.Object', function (ajaxAgent, snippetAgent, historyAgent, snippetManager, history, options) {
+    var Service = _context.extend('Nittro.Object', function (snippetManager, history, options) {
         Service.Super.call(this);
 
-        this._.ajaxAgent = ajaxAgent;
-        this._.snippetAgent = snippetAgent;
-        this._.historyAgent = historyAgent;
         this._.snippetManager = snippetManager;
         this._.history = history;
         this._.options = Arrays.mergeTree({}, Service.defaults, options);
@@ -8733,21 +9102,20 @@ _context.invoke('Nittro.Page', function (Transaction, DOM, Arrays, Url) {
                 });
 
                 if (evt.isDefaultPrevented()) {
-                    return Promise.reject();
+                    return this._createRejectedTransaction(url, {type: 'abort'});
                 }
 
                 context.event && context.event.preventDefault();
 
                 return evt.then(function () {
                     if (evt.isDefaultPrevented()) {
-                        return Promise.reject();
+                        return this._createRejectedTransaction(url, {type: 'abort'});
                     } else {
                         return this._createTransaction(url, context);
                     }
                 }.bind(this));
             } catch (e) {
-                return Promise.reject(e);
-
+                return this._createRejectedTransaction(url, e);
             }
         },
 
@@ -8760,74 +9128,61 @@ _context.invoke('Nittro.Page', function (Transaction, DOM, Arrays, Url) {
 
         getSnippet: function (id) {
             return this._.snippetManager.getSnippet(id);
-
         },
 
         isSnippet: function (elem) {
             return this._.snippetManager.isSnippet(elem);
-
         },
 
         _handleState: function (evt) {
             if (!this._checkUrl(null, this._.currentUrl)) {
                 return;
-
             }
 
             var url = Url.from(evt.data.url);
             this._.currentUrl = url;
 
-            try {
-                this.open(url, 'get', null, {history: false});
-
-            } catch (e) {
-                document.location.href = url.toAbsolute();
-
-            }
+            this.open(url, 'get', null, {fromHistory: true})
+                .then(null, function () {
+                    document.location.href = url.toAbsolute();
+                });
         },
 
         _checkReady: function () {
             if (document.readyState === 'loading') {
                 DOM.addListener(document, 'readystatechange', this._checkReady.bind(this));
                 return;
-
             }
 
             if (!this._.setup) {
                 this._.setup = true;
 
-                window.setTimeout(function () {
-                    this._.history.replace((window.history.location || window.location).href);
+                Promise.resolve().then(function () {
+                    this._.history.init();
                     this._.snippetManager.setup();
-
-                }.bind(this), 1);
+                    this.trigger('ready');
+                }.bind(this));
             }
         },
 
         _handleLinkClick: function(evt) {
             if (evt.defaultPrevented || evt.ctrlKey || evt.shiftKey || evt.altKey || evt.metaKey || evt.button > 0) {
                 return;
-
             }
 
             var link = DOM.closest(evt.target, 'a');
 
             if (!link || !this._checkLink(link) || !this._checkUrl(link.href)) {
                 return;
-
             }
 
             this.openLink(link, evt);
-
         },
 
         _createTransaction: function(url, context) {
             var transaction = new Transaction(url);
 
             this._initTransaction(transaction, context);
-            this._.ajaxAgent.initTransaction(transaction, context);
-            this._.snippetAgent.initTransaction(transaction, context);
-            this._.historyAgent.initTransaction(transaction, context);
 
             this.trigger('transaction-created', {
                 transaction: transaction,
@@ -8835,7 +9190,11 @@ _context.invoke('Nittro.Page', function (Transaction, DOM, Arrays, Url) {
             });
 
             return this._dispatchTransaction(transaction);
+        },
 
+        _createRejectedTransaction: function (url, reason) {
+            var transaction = Transaction.createRejected(url, reason);
+            return transaction.then(null, this._handleError.bind(this, transaction));
         },
 
         _initTransaction: function (transaction, context) {
@@ -8859,20 +9218,16 @@ _context.invoke('Nittro.Page', function (Transaction, DOM, Arrays, Url) {
                 this._handleSuccess.bind(this, transaction),
                 this._handleError.bind(this, transaction)
             );
-
         },
 
-        _checkUrl: function(url, current, ignoreHash) {
-            return this._.ajaxAgent.checkUrl(url, current, ignoreHash);
+        _checkUrl: function(url, current) {
+            url = url ? Url.from(url) : Url.fromCurrent();
+            current = current ? Url.from(current) : Url.fromCurrent();
+            return url.compare(current) !== Url.PART.HASH;
         },
 
         _checkLink: function (link) {
-            if (link.getAttribute('target')) {
-                return false;
-            }
-
-            return DOM.getData(link, 'ajax', !this._.options.whitelistLinks);
-
+            return !link.hasAttribute('target') && link.hasAttribute('href') && DOM.getData(link, 'ajax', !this._.options.whitelistLinks);
         },
 
         _handleSuccess: function(transaction) {
@@ -8882,7 +9237,6 @@ _context.invoke('Nittro.Page', function (Transaction, DOM, Arrays, Url) {
 
             if (transaction.isHistoryState()) {
                 this._.currentUrl = transaction.getUrl();
-
             }
         },
 
@@ -9018,6 +9372,8 @@ _context.invoke('Nittro.Flashes', function (DOM, Arrays, CSSTransitions, Helpers
 
         if (this._.service === null) {
             this._.elem = content;
+            this._.visible = true;
+            this._normalizeDismissTime();
             this._scheduleDismiss();
             return;
         }
@@ -9028,6 +9384,7 @@ _context.invoke('Nittro.Flashes', function (DOM, Arrays, CSSTransitions, Helpers
         if (target) {
             this._.options.classes === null && (this._.options.classes = DOM.getData(target, 'flash-classes'));
             this._.options.inline === null && (this._.options.inline = DOM.getData(target, 'flash-inline'));
+            this._.options.rich === null && (this._.options.rich = DOM.getData(target, 'flash-rich'));
 
             if (this._.options.inline) {
                 tag = target.tagName.match(/^(?:ul|ol)$/i) ? 'li' : 'p';
@@ -9052,11 +9409,7 @@ _context.invoke('Nittro.Flashes', function (DOM, Arrays, CSSTransitions, Helpers
             this._.elem.textContent = content;
         }
 
-        if (this._.options.dismiss !== false) {
-            if (typeof this._.options.dismiss !== 'number') {
-                this._.options.dismiss = Math.max(5000, Math.round(this._.elem.textContent.split(/\s+/).length / 0.003));
-            }
-        }
+        this._normalizeDismissTime();
     }, {
         STATIC: {
             wrap: function (elem) {
@@ -9068,7 +9421,7 @@ _context.invoke('Nittro.Flashes', function (DOM, Arrays, CSSTransitions, Helpers
                 classes: null,
                 inline: null,
                 placement: null,
-                rich: false,
+                rich: null,
                 dismiss: null
             }
         },
@@ -9142,6 +9495,14 @@ _context.invoke('Nittro.Flashes', function (DOM, Arrays, CSSTransitions, Helpers
                 this._scheduleDismiss();
                 return this;
             }.bind(this));
+        },
+
+        _normalizeDismissTime: function () {
+            if (this._.options.dismiss !== false) {
+                if (typeof this._.options.dismiss !== 'number') {
+                    this._.options.dismiss = Math.max(5000, Math.round(this._.elem.textContent.split(/\s+/).length / 0.003));
+                }
+            }
         },
 
         _scheduleDismiss: function () {
@@ -9335,14 +9696,23 @@ _context.invoke('Nittro.Ajax.Bridges.AjaxDI', function(Nittro) {
     var AjaxExtension = _context.extend('Nittro.DI.BuilderExtension', function(containerBuilder, config) {
         AjaxExtension.Super.call(this, containerBuilder, config);
     }, {
+        STATIC: {
+            defaults: {
+                allowOrigins: null
+            }
+        },
         load: function() {
-            var builder = this._getContainerBuilder();
+            var builder = this._getContainerBuilder(),
+                config = this._getConfig(AjaxExtension.defaults);
 
             builder.addServiceDefinition('ajax', {
                 factory: 'Nittro.Ajax.Service()',
+                args: {
+                    options: config
+                },
                 run: true,
                 setup: [
-                    '::addTransport(Nittro.Ajax.Transport.Native())'
+                    '::setTransport(Nittro.Ajax.Transport.Native())'
                 ]
             });
         }
@@ -9379,7 +9749,10 @@ _context.invoke('Nittro.Forms.Bridges.FormsDI', function(Nittro) {
                     .addSetup(function (formLocator) {
                         this.initForms(formLocator, config);
                     });
+            }
 
+            if (!builder.hasServiceDefinition('formErrorRenderer')) {
+                builder.addServiceDefinition('formErrorRenderer', 'Nittro.Forms.DefaultErrorRenderer()');
             }
         }
     });
@@ -9398,7 +9771,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
 
             DOM.addListener(document, 'submit', this._handleSubmit.bind(this));
             DOM.addListener(document, 'click', this._handleButtonClick.bind(this));
-            this._.snippetManager.on('after-update', this._cleanupForms.bind(this));
+            this._.snippetManager.on('after-update', this._refreshForms.bind(this));
             this.on('transaction-created', this._initFormTransaction.bind(this));
         },
 
@@ -9420,7 +9793,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
                 };
 
                 evt.data.transaction.on('ajax-response', this._handleFormResponse.bind(this, data));
-                evt.data.transaction.then(this._handleFormSuccess.bind(this, data));
+                evt.data.transaction.then(this._handleFormSuccess.bind(this, data), function() { /* noop on transaction error */ });
             }
         },
 
@@ -9439,7 +9812,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
         },
 
         _handleSubmit: function (evt) {
-            if (evt.defaultPrevented || !(evt.target instanceof HTMLFormElement) || !this._checkForm(evt.target) || !this._checkUrl(evt.target.action, null, true)) {
+            if (evt.defaultPrevented || !(evt.target instanceof HTMLFormElement) || !this._checkForm(evt.target)) {
                 return;
             }
 
@@ -9475,7 +9848,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
 
         },
 
-        _cleanupForms: function() {
+        _refreshForms: function() {
             this._.formLocator.refreshForms();
         }
     };
@@ -9501,7 +9874,6 @@ _context.invoke('Nittro.Page.Bridges.PageDI', function (Nittro) {
                 whitelistHistory: false,
                 whitelistLinks: false,
                 whitelistRedirects: false,
-                allowOrigins: null,
                 backgroundErrors: false,
                 csp: null,
                 transitions: {
@@ -9510,6 +9882,12 @@ _context.invoke('Nittro.Page.Bridges.PageDI', function (Nittro) {
                 i18n: {
                     connectionError: 'There was an error connecting to the server. Please check your internet connection and try again.',
                     unknownError: 'There was an error processing your request. Please try again later.'
+                },
+                scroll: {
+                    target: null,
+                    margin: 30,
+                    scrollDown: false,
+                    duration: 500
                 }
             }
         },
@@ -9532,10 +9910,10 @@ _context.invoke('Nittro.Page.Bridges.PageDI', function (Nittro) {
                 factory: 'Nittro.Page.AjaxAgent()',
                 args: {
                     options: {
-                        whitelistRedirects: config.whitelistRedirects,
-                        allowOrigins: config.allowOrigins
+                        whitelistRedirects: config.whitelistRedirects
                     }
-                }
+                },
+                run: true
             });
 
             builder.addServiceDefinition('historyAgent', {
@@ -9544,13 +9922,25 @@ _context.invoke('Nittro.Page.Bridges.PageDI', function (Nittro) {
                     options: {
                         whitelistHistory: config.whitelistHistory
                     }
-                }
+                },
+                run: true
             });
 
-            builder.addServiceDefinition('snippetAgent', 'Nittro.Page.SnippetAgent()');
+            builder.addServiceDefinition('scrollAgent', {
+                factory: 'Nittro.Page.ScrollAgent()',
+                args: {
+                    options: config.scroll
+                },
+                run: true
+            });
+
+            builder.addServiceDefinition('snippetAgent', 'Nittro.Page.SnippetAgent()!');
             builder.addServiceDefinition('snippetManager', 'Nittro.Page.SnippetManager()');
             builder.addServiceDefinition('history', 'Nittro.Page.History()');
-            builder.addServiceDefinition('googleAnalyticsHelper', 'Nittro.Page.GoogleAnalyticsHelper()!');
+
+            if (typeof window.ga === 'function') {
+                builder.addServiceDefinition('googleAnalyticsHelper', 'Nittro.Page.GoogleAnalyticsHelper()!');
+            }
 
             if (config.transitions) {
                 builder.addServiceDefinition('transitionAgent', {
@@ -9559,34 +9949,30 @@ _context.invoke('Nittro.Page.Bridges.PageDI', function (Nittro) {
                         options: {
                             defaultSelector: config.transitions.defaultSelector
                         }
-                    }
+                    },
+                    run: true
                 });
-
-                builder.getServiceDefinition('page')
-                    .addSetup(function(transitionAgent) {
-                        this.on('transaction-created', function(evt) {
-                            transitionAgent.initTransaction(evt.data.transaction, evt.data.context);
-                        });
-                    });
             }
 
             if (config.csp !== false) {
-                var nonce = document.getElementsByTagName('script').item(0).getAttribute('nonce') || null;
+                var scripts = document.getElementsByTagName('script'),
+                    i, n, nonce = null;
+
+                for (i = 0, n = scripts.length; i < n; i++) {
+                    if (/^((text|application)\/javascript)?$/i.test(scripts.item(i).type) && scripts.item(i).nonce) {
+                        nonce = scripts.item(i).nonce;
+                        break;
+                    }
+                }
 
                 if (config.csp || nonce) {
                     builder.addServiceDefinition('cspAgent', {
                         factory: 'Nittro.Page.CspAgent()',
                         args: {
                             nonce: nonce
-                        }
+                        },
+                        run: true
                     });
-
-                    builder.getServiceDefinition('page')
-                        .addSetup(function(cspAgent) {
-                            this.on('transaction-created', function(evt) {
-                                cspAgent.initTransaction(evt.data.transaction);
-                            });
-                        });
                 }
             }
         },
@@ -9596,14 +9982,9 @@ _context.invoke('Nittro.Page.Bridges.PageDI', function (Nittro) {
                 config = this._getConfig();
 
             if (builder.hasServiceDefinition('flashes')) {
-                builder.addServiceDefinition('flashAgent', 'Nittro.Page.Bridges.PageFlashes.FlashAgent()');
+                builder.addServiceDefinition('flashAgent', 'Nittro.Page.Bridges.PageFlashes.FlashAgent()!');
 
                 builder.getServiceDefinition('page')
-                    .addSetup(function(flashAgent) {
-                        this.on('transaction-created', function(evt) {
-                            flashAgent.initTransaction(evt.data.transaction);
-                        });
-                    })
                     .addSetup(function(flashes) {
                         this.on('error:default', function (evt) {
                             if (evt.data.type === 'connection') {
@@ -9625,15 +10006,17 @@ _context.invoke('Nittro.Page.Bridges.PageDI', function (Nittro) {
 
 _context.invoke('Nittro.Page.Bridges.PageFlashes', function () {
 
-    var FlashAgent = _context.extend(function(flashes) {
+    var FlashAgent = _context.extend(function(page, flashes) {
         this._ = {
+            page: page,
             flashes: flashes
         };
 
         this._handleResponse = this._handleResponse.bind(this);
+        this._.page.on('transaction-created', this._initTransaction.bind(this));
     }, {
-        initTransaction: function (transaction) {
-            transaction.on('ajax-response', this._handleResponse);
+        _initTransaction: function (evt) {
+            evt.data.transaction.on('ajax-response', this._handleResponse);
         },
 
         _handleResponse: function (evt) {
@@ -9712,57 +10095,6 @@ _context.invoke('Nittro.Flashes.Bridges.FlashesDI', function(Neon, NeonEntity, H
     HashMap: 'Utils.HashMap'
 });
 
-_context.invoke('App', function() {
-    //
-    function scrollTo(element, to, duration) {
-        var start = element.scrollTop,
-            change = to - start,
-            increment = 20;
-
-        var animateScroll = function(elapsedTime) {
-            elapsedTime += increment;
-            var position = easeInOut(elapsedTime, start, change, duration);
-            element.scrollTop = position;
-            if (elapsedTime < duration) {
-                setTimeout(function() {
-                    animateScroll(elapsedTime);
-                }, increment);
-            }
-        };
-
-        animateScroll(0);
-    }
-
-    function easeInOut(currentTime, start, change, duration) {
-        currentTime /= duration / 2;
-        if (currentTime < 1) {
-            return change / 2 * currentTime * currentTime + start;
-        }
-        currentTime -= 1;
-        return -change / 2 * (currentTime * (currentTime - 2) - 1) + start;
-    }
-
-    var ScrollHelper = _context.extend(function(snippetManager) {
-        this._ = {
-            snippetManager: snippetManager
-        };
-
-        this._.snippetManager.on('after-update', this._handleUpdate.bind(this));
-    }, {
-        _handleUpdate: function(evt) {
-            if (evt.data.update && 'snippet--content' in evt.data.update) {
-                // $('body, html').animate({scrollTop: $('#snippet--content').offset().top}, 300);
-                window.setTimeout(function() {
-                    scrollTo(document.body, 0, 300);
-                }, 200);
-
-            }
-        }
-    });
-
-    _context.register(ScrollHelper, 'ScrollHelper');
-
-});
 _context.invoke(function(Nittro) {
     var builder = new Nittro.DI.ContainerBuilder({
         "params": {},
@@ -9772,9 +10104,7 @@ _context.invoke(function(Nittro) {
             "page": "Nittro.Page.Bridges.PageDI.PageExtension()",
             "flashes": "Nittro.Flashes.Bridges.FlashesDI.FlashesExtension()"
         },
-        "services": {
-            "scrollHelper": "App.ScrollHelper()!"
-        },
+        "services": {},
         "factories": {}
     });
 

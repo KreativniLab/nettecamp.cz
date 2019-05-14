@@ -38,31 +38,18 @@ module.exports = (grunt) ->
           keymap: false,
           storage: false
         libraries:
-          js: [
-            "www/js/ScrollHelper.js"
-          ]
+          js: []
           css: []
         bootstrap:
           params: null,
           extensions: null,
-          services:
-            scrollHelper: "App.ScrollHelper()!"
+          services: null
           factories: null
         stack: true
       js:
         dest: "www/js/nittro-full.js"
       css:
         dest: "www/css/nittro/nittro-full.less"
-
-
-    stylus:
-      compile:
-        options:
-          paths: ['www/css/site']
-          compress: false
-          linenos: true
-        files:
-          'www/css/site/main.css': 'www/css/site/main.styl'
 
     sass:
       dist:
@@ -82,12 +69,6 @@ module.exports = (grunt) ->
           'www/css/nittro/nittro-full.css': 'www/css/nittro/nittro-full.less'
 
     watch:
-      styles:
-        files: 'www/css/**/*.styl'
-        tasks: ['stylus', 'postcss:dev']
-        options:
-          interrupt: true
-
       sass:
         files: ['www/css/foundation/**/*.scss']
         tasks: ['sass']
@@ -115,7 +96,6 @@ module.exports = (grunt) ->
 
   # These plugins provide necessary tasks.
   grunt.loadNpmTasks 'grunt-contrib-watch'
-  grunt.loadNpmTasks 'grunt-contrib-stylus'
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-cssmin'
@@ -124,12 +104,11 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-postcss'
   grunt.loadNpmTasks 'grunt-nittro'
   grunt.loadNpmTasks 'grunt-contrib-less'
-#  grunt.loadNpmTasks 'grunt-sass'
+  grunt.loadNpmTasks 'grunt-sass'
 
   # Default task.
   grunt.registerTask 'default', [
-#    'sass'
-    'stylus'
+    'sass'
     'less'
     'nittro'
     'useminPrepare'

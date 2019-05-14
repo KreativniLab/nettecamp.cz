@@ -3,12 +3,12 @@
 namespace App\FrontModule\Presenters;
 
 use App\FrontModule\Components\RegistrationFormFactory;
-use App\Model\RegistrationManager;
+use App\Model\Model;
 
 class RegistrationPresenter extends BasePresenter
 {
-	/** @var RegistrationManager @inject */
-	public $registrationManager;
+	/** @var Model @inject */
+	public $model;
 
 	/** @var RegistrationFormFactory @inject */
 	public $registrationFormFactory;
@@ -20,17 +20,17 @@ class RegistrationPresenter extends BasePresenter
 
 	public function actionDefault()
 	{
-		$this->campUsersCount = $this->registrationManager->getCampUsersCount();
+		$participants = $this->model->registrations->findLatest();
+		$participantsArray = $participants->fetchAll();
+
+		$this->campUsersCount = $participants->count();
+		$this->template->count = $this->campUsersCount;
+
+		shuffle($participantsArray);
+
+		$this->template->participants = $participantsArray;
 		$this->title = 'Registrace na Nette Camp';
 	}
-
-
-	public function renderDefault()
-	{
-		$this->template->count = $this->campUsersCount;
-		$this->template->users = $this->registrationManager->getCampUsers();
-	}
-
 
 	public function actionSuccess()
 	{
@@ -40,7 +40,7 @@ class RegistrationPresenter extends BasePresenter
 
 	public function actionWaitinglist()
 	{
-		$this->title = 'Zařazen na čekačku';
+		$this->title = 'Zařazen do fronty';
 	}
 
 

@@ -35,6 +35,9 @@ extensions:
     contribute.console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
     nextras.migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
     ublaboo.mailing: Ublaboo\Mailing\DI\MailingExtension
+    nextras.dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
+    nextras.orm: Nextras\Orm\Bridges\NetteDI\OrmExtension
+
 
 contribute.console:
     url: https://www.nettecamp.cz
@@ -42,7 +45,7 @@ contribute.console:
 nextras.migrations:
     dir: %appDir%/../migrations # migrations base directory
     driver: mysql               # pgsql or mysql
-    dbal: nette                 # nextras, nette, doctrine or dibi
+    dbal: nextras               # nextras, nette, doctrine or dibi
 
 ublaboo.mailing:
     do: both # log|send|both
@@ -53,6 +56,17 @@ ublaboo.mailing:
         default_recipient: petra@kreativnilaborator.cz
         copy_recipient: honza@kreativnilaborator.cz
     ]
+
+nextras.dbal:
+	driver: mysqli
+	host: %database.host%
+	username: %database.user%
+	password: %database.password%
+	database: %database.dbname%
+
+
+nextras.orm:
+	model: App\Model\Model
 
 latte:
     macros:
@@ -67,17 +81,8 @@ application:
 session:
     expiration: 14 days
 
-database:
-    dsn: 'mysql:host=%database.host%;dbname=%database.dbname%'
-    user: %database.user%
-    password: %database.password%
-    options: {lazy: yes}
-
-
 services:
     router: App\RouterFactory::createRouter
-    - App\Model\RegistrationManager
-    - App\Model\RegistrationRepository
     - App\FrontModule\Components\RegistrationFormFactory
     - App\FrontModule\Components\PartnersBlockControl(%partners%)
     - Aprila\Website\SiteLayout(%site%)

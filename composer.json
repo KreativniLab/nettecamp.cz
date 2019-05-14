@@ -26,7 +26,8 @@
 		"nextras/mail-panel": "^2.5",
 		"texy/texy": "~2.9.0",
 		"nittro/nette-bridges": "^2.0",
-		"ublaboo/mailing": "^1.2"
+		"ublaboo/mailing": "^1.2",
+		"nextras/orm": "^3.1"
 	},
 	"config": {
 		"discard-changes": true

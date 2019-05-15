@@ -52,14 +52,15 @@ module.exports = (grunt) ->
         dest: "www/css/nittro/nittro-full.less"
 
     sass:
+      options:
+        includePaths: [
+          'node_modules/foundation-sites/scss'
+          'node_modules/motion-ui/src'
+        ]
+        sourceMap: true
       dist:
-        options:
-          includePaths: ['www/css/foundation']
-          sourceMap: true
-
         files:
-          'www/css/foundation/foundation.css': ['www/css/foundation/foundation.scss']
-          'www/css/foundation/normalize.css': 'www/css/foundation/normalize.scss'
+          'www/css/site/main.css': 'www/css/site/main.sass'
 
     less:
       development:
@@ -70,8 +71,8 @@ module.exports = (grunt) ->
 
     watch:
       sass:
-        files: ['www/css/foundation/**/*.scss']
-        tasks: ['sass']
+        files: ['public/css/site/**/*.sass', 'public/css/site/**/*.scss']
+        tasks: ['sass', 'postcss:dev']
 
     postcss:
       options:
@@ -90,10 +91,6 @@ module.exports = (grunt) ->
       options:
         mangle: false
 
-
-
-
-
   # These plugins provide necessary tasks.
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-concat'
@@ -108,9 +105,9 @@ module.exports = (grunt) ->
 
   # Default task.
   grunt.registerTask 'default', [
-    'sass'
-    'less'
     'nittro'
+    'less'
+    'sass'
     'useminPrepare'
     'netteBasePath'
     'concat'
@@ -118,4 +115,3 @@ module.exports = (grunt) ->
     'postcss'
     'cssmin'
   ]
-

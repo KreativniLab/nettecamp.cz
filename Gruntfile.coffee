@@ -71,7 +71,7 @@ module.exports = (grunt) ->
 
     watch:
       sass:
-        files: ['public/css/site/**/*.sass', 'public/css/site/**/*.scss']
+        files: ['www/css/site/**/*.sass', 'www/css/site/**/*.scss']
         tasks: ['sass', 'postcss:dev']
 
     postcss:

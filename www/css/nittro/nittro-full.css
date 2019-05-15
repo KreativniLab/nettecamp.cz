@@ -3,7 +3,7 @@
   opacity: 0;
 }
 .nittro-transition-fade.nittro-transition-active {
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 }
 .nittro-transition-fade.nittro-transition-out,
 .nittro-transition-fade.nittro-transition-middle {
@@ -52,10 +52,10 @@
   transform: none;
 }
 .nittro-transition-dim.nittro-transition-out {
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 }
 .nittro-transition-dim.nittro-transition-out::before {
-  transition: opacity .3s;
+  transition: opacity 0.3s;
   opacity: 1;
 }
 .nittro-transition-dim.nittro-transition-middle,
@@ -64,10 +64,10 @@
   opacity: 1;
 }
 .nittro-transition-dim.nittro-transition-in {
-  transition: opacity .2s;
+  transition: opacity 0.2s;
 }
 .nittro-transition-dim.nittro-transition-in::before {
-  transition: opacity .2s;
+  transition: opacity 0.2s;
   opacity: 0;
 }
 .nittro-transition-bar::before {

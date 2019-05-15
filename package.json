@@ -1,20 +1,20 @@
 {
   "name": "nettecamp-website",
   "devDependencies": {
-    "foundation-sites": "^5.0.0",
-    "normalize.css": "^7.0.0",
-    "grunt": "^1.0.2",
-    "grunt-contrib-concat": "~1.0.1",
-    "grunt-contrib-cssmin": "^2.2.1",
-    "grunt-contrib-less": "~1.4.1",
-    "grunt-contrib-uglify": "~3.0.1",
-    "grunt-contrib-watch": "~1.0.0",
-    "grunt-nette-basepath": "~0.3.1",
-    "grunt-nittro": "~0.2.1",
-    "grunt-postcss": "~0.8.0",
-    "grunt-sass": "~2.1.0",
-    "grunt-usemin": "~3.1.1",
-    "nittro": "^2.0.33",
-    "autoprefixer": "^7.1.6"
+    "autoprefixer": "^9.5.1",
+    "foundation-sites": "^6.5.3",
+    "motion-ui": "^2.0.3",
+    "grunt": "^1.0.4",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-cssmin": "^3.0.0",
+    "grunt-contrib-less": "^2.0.0",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-nette-basepath": "^0.3.1",
+    "grunt-nittro": "^0.2.1",
+    "grunt-postcss": "^0.9.0",
+    "grunt-sass": "^3.0.2",
+    "grunt-usemin": "^3.1.1",
+    "nittro": "^2.0.59"
   }
 }

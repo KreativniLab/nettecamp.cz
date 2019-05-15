@@ -65,4 +65,14 @@ class Registration extends Entity
 		$this->status = self::STATUS_WAITINGLIST;
 	}
 
+
+	public function getNick()
+	{
+		if ($this->nickname !== ''){
+			return $this->nickname;
+		} else {
+			return $this->name;
+		}
+	}
+
 }

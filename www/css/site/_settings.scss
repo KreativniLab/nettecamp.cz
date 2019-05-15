@@ -70,8 +70,8 @@ $global-font-size: 130%;
 $global-width: rem-calc(1000);
 $global-lineheight: 1.5;
 $foundation-palette: (
-  primary: #D21DA6,
-  secondary: #2ba6cb,
+  primary: #2ba6cb,
+  secondary: #3e7ccb,
   success: #3adb76,
   warning: #ffae00,
   alert: #cc4b37,
@@ -82,10 +82,10 @@ $dark-gray: #8a8a8a;
 $black: #0a0a0a;
 $white: #fefefe;
 $orange: #fa5800;
-$body-background: #1F2251;
-$body-font-color: #FBFFD6;
-//$body-font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-$body-font-family: "Courier", serif;
+$body-background: #fff;
+$body-font-color: #000;
+$body-font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+// $body-font-family: "Courier", serif;
 $body-antialiased: true;
 $global-margin: 1rem;
 $global-padding: 1rem;

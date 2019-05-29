@@ -7,7 +7,7 @@ parameters:
 
     site:
         develMode: false
-        version: 2019
+        version: redesign2019
         disableRegistration: false
         campCapacity: 50
 

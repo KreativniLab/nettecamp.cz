@@ -39,8 +39,7 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 		$this->title = 'Nette Camp / 22.—25. srpna 2019';
 
 		$this->setDefaultSnippets([
-			'content',
-			'title',
+			'content'
 		]);
 
 		$this->disableRegistration = $this->siteLayout->get('disableRegistration', false);

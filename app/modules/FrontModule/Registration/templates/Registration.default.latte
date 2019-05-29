@@ -1,38 +1,35 @@
 {block content}
-<div class="row">
-	<div class="small-12 medium-8 columns" style="padding-top: 2em;">
-		<h1>Registrace na Nette Camp</h1>
-		<h3>Setkání PHP vývojářů v přírodě<br> 22.—25. srpna 2019<br><a href="https://mapy.cz/s/1OqyK" target="_blank">Křižanov, Vysočina</a>
-			<small class="super-small">(ve 4/5 na D1 mezi Prahou a Brnem)</small></h3>
-		<p>
-			<a n:href="Homepage:">&larr; zpět na homepage</a>
-		</p>
-	</div>
-	<div class="small-12 medium-4 columns">
-		<img src="{$basePath}/img/cup.png" alt="hrneček" style="padding-top: 4em;">
-	</div>
-</div>
-
 
 <div class="row">
 	<div class="column">
-		{control participants}
+		<div class="white-paper">
+			<h1>Registrace na Nette Camp</h1>
+			<h2>Cena 4200,-<sup>*</sup></h2>
+			<p><strong class="typo--green">Zahrnuje</strong>: ubytování, stravu (snídaně, oběd, večeře, ovoce a drobnosti k zobání), tekutiny (včetně piva), tričko.</p>
+			<p><strong class="typo--red">Nezahrnuje</strong>: cenu za paintball (není povinný), cca 250,- na místě</p>
+			<p>
+				<small><sup>*</sup>cena 3471,- bez DPH, jsme plátci DPH a rádi vám vystavíme fakturu na firmu</small>
+			</p>
+
+		</div>
 	</div>
 </div>
 
-
 <div n:if="!$disableRegistration" class="row">
-	<div class="column medium-8 medium-centered">
-		{if $count >= $campCapacity}
-			<h3 class="text-center">Kapacita campu je již <span style="color: red">naplněna</span>.</h3>
-			<p class="text-center">ale můžes se tu zapsat jako náhradník a jakmile se uvolní místo, tak ti dáme vědět.</p>
-		{else}
-			<h2 class="text-center">Přidej se i ty <small>kapacita {$count}/{$campCapacity}</small></h2>
-		{/if}
+	<div class="column">
+		<div class="white-paper">
 
-		{control registrationForm}
-		<hr>
 
+			{if $count >= $campCapacity}
+				<h3 class="text-center">Kapacita campu je již <span style="color: red">naplněna</span>.</h3>
+				<p class="text-center">ale můžes se tu zapsat jako náhradník a jakmile se uvolní místo, tak ti dáme vědět.</p>
+			{else}
+				<h1 class="text-center">Přidej se i ty <small>kapacita {$count}/{$campCapacity}</small></h1>
+			{/if}
+
+			{control registrationForm}
+
+		</div>
 	</div>
 </div>
 
@@ -41,13 +38,3 @@
 		{control partnersBlock}
 	</div>
 </div>
-
-<div class="row">
-	<div class="column">
-		<p>
-			<a n:href="Homepage:">&larr; zpět na homepage</a>
-		</p>
-	</div>
-</div>
-
-

@@ -10,10 +10,9 @@ module.exports = (grunt) ->
 
     netteBasePath:
       task:
-        basePath: 'www'
+        basePath: 'public'
         options:
           removeFromPath: ['app/modules/FrontModule/templates/']
-
     nittro:
       options:
         vendor:
@@ -47,9 +46,10 @@ module.exports = (grunt) ->
           factories: null
         stack: true
       js:
-        dest: "www/js/nittro-full.js"
+        dest: "public/js/nittro/nittro-build.js"
       css:
-        dest: "www/css/nittro/nittro-full.less"
+        dest: "public/css/nittro/nittro-build.less"
+
 
     sass:
       options:
@@ -60,18 +60,19 @@ module.exports = (grunt) ->
         sourceMap: true
       dist:
         files:
-          'www/css/site/main.css': 'www/css/site/main.sass'
+          'public/css/site/main.css': 'public/css/site/main.sass'
+
 
     less:
       development:
         options:
-          paths: ['assets/css']
+          paths: ['public/css/nittro']
         files:
-          'www/css/nittro/nittro-full.css': 'www/css/nittro/nittro-full.less'
+          'public/css/nittro/nittro-build.css': 'public/css/nittro/nittro-build.less'
 
     watch:
       sass:
-        files: ['www/css/site/**/*.sass', 'www/css/site/**/*.scss']
+        files: ['public/css/site/**/*.sass']
         tasks: ['sass', 'postcss:dev']
 
     postcss:
@@ -82,14 +83,16 @@ module.exports = (grunt) ->
         ]
 
       dist:
-        src: 'www/css/site/site.min.css'
+        src: 'public/css/site/site.min.css'
 
       dev:
-        src: 'www/css/site/main.css'
+        src: 'public/css/site/main.css'
 
     uglify:
       options:
         mangle: false
+
+
 
   # These plugins provide necessary tasks.
   grunt.loadNpmTasks 'grunt-contrib-watch'
@@ -99,9 +102,9 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-usemin'
   grunt.loadNpmTasks 'grunt-nette-basepath'
   grunt.loadNpmTasks 'grunt-postcss'
+  grunt.loadNpmTasks 'grunt-sass'
   grunt.loadNpmTasks 'grunt-nittro'
   grunt.loadNpmTasks 'grunt-contrib-less'
-  grunt.loadNpmTasks 'grunt-sass'
 
   # Default task.
   grunt.registerTask 'default', [
@@ -112,6 +115,7 @@ module.exports = (grunt) ->
     'netteBasePath'
     'concat'
     'uglify'
-    'postcss'
     'cssmin'
+    'postcss'
   ]
+

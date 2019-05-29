@@ -15,6 +15,7 @@
     "grunt-sass": "^2.1.0",
     "grunt-usemin": "^3.1.1",
     "motion-ui": "^2.0.3",
-    "nittro": "^2.0.59"
+    "nittro": "^2.0.60",
+    "stylelint": "^10.0.1"
   }
 }

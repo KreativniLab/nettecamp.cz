@@ -18,6 +18,9 @@ class RouterFactory
 		$staticRouter = new StaticRouter([
 			'Front:Homepage:default' => '',
 			'Front:Program:default' => 'program',
+			'Front:Team:default' => 'tym',
+			'Front:Location:default' => 'lokace',
+			'Front:History:default' => 'historie',
 			'Front:Partners:default' => 'partneri',
 			'Front:Registration:default' => 'registrace',
 			'Front:Registration:success' => 'registrace-ok',

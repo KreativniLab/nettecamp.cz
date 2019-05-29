@@ -1,0 +1,148 @@
+/*
+	Layout
+hr
+  height: 0
+  background: none
+  border-bottom: 2px dashed #cfdbec
+
+header
+  min-height: 80px
+  padding-top: 20px
+
+.sticky header
+  padding-top: 5px
+  z-index: 100
+  background: white
+  box-shadow: 0px 2px 6px 0px rgba(140,140,140,0.75)
+  width: 100%
+  display: block
+  position: fixed
+  top: 0
+
+.main-navigation__item
+  font-size: 30px
+  color: map-get($foundation-palette, primary)
+  text-decoration: none
+  margin-right: 20px
+  &:hover
+    text-decoration: underline
+
+.main-content
+  background-color: #43B55C
+  background: linear-gradient(180deg, #43B55C 0%, #5C470F 100%)
+
+
+.white-paper
+  background: #F7F7F7
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
+  border-radius: 3px
+  padding: 2em
+  padding-top: 0
+  margin-top: 2em
+  margin-bottom: 3em
+
+
+.error
+  color: #D82734
+  margin-bottom: 10px
+  margin-top: -10px
+  display: block
+
+
+.green,
+.typo--green
+  color: #43B55C
+
+.typo--red
+  color: #D82734
+
+
+
+
+
+.empty-partner
+  border: 2px dashed black
+  margin: 10px
+  padding: 40px
+  font-size: 30px
+  text-align: center
+  display: block
+  text-decoration: none
+  color: black
+
+
+.empty-partner:hover
+  color: black
+  background: #D82734
+
+
+.b-user-badge
+  position: relative
+  background: #C4C4C4
+  border: 5px solid #434343
+  box-sizing: border-box
+  border-radius: 17px
+  display: inline-block
+  padding: 0.4em
+  padding-top: 0.1em
+  padding-right: 2em
+  padding-left: .5em
+  margin: 0.5em
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
+
+.b-user-badge::before
+  z-index: 10
+  content: " "
+  position: absolute
+  display: block
+  width: 10px
+  height: 10px
+  background: #434343
+  border-radius: 5px
+  top: 24px
+  right: 7px
+
+.b-user-badge__image
+  border-radius: 20px
+  width: 40px
+  height: 40px
+  filter: grayscale(100%)
+  margin-top: -6px
+
+.b-user-badge__name
+  font-family: Courier
+  padding-top: 5px
+  display: inline-block
+  font-weight: bold
+  font-size: 25px
+  line-height: 44px
+  color: #B3B3B3
+
+
+.typo--black
+  color: black
+  background: black
+  display: inline-block
+  padding: 2px
+  margin-bottom: 5px
+  user-select: none
+
+/*
+  Block mailchimp
+
+.b-mailchimp
+  background: black
+  padding: 2em
+  color: whitesmoke
+
+.b-mailchimp__input,
+.b-mailchimp__input:focus
+  background: #1A1A20
+  color: whitesmoke
+  border: 1px solid #3d3d3d
+  outline: none !important
+  box-shadow: none
+  margin: 0
+
+.b-mailchimp__button
+  margin: 0

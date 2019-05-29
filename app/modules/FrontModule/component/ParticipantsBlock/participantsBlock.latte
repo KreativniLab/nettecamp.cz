@@ -1,6 +1,10 @@
-<h3>Učastníci {$count} {if $campCapacity > $count}{if !$disableRegistration}/{$campCapacity}{/if}{/if}</h3>
-<p>
-	{foreach $participants as $participant}
-		<img src="https://www.gravatar.com/avatar/{php echo md5($participant->email)}?s=80&r=g&d=mm" class="avatar" /> {$participant->getNick()}{sep}, {/sep}
-	{/foreach}
-</p>
+<h2 class="text-center">Učastníci {$count} {if $campCapacity > $count}{if !$disableRegistration}/{$campCapacity}{/if}{/if}</h2>
+
+
+{foreach $participants as $participant}
+	<div class="b-user-badge">
+		<img src="https://www.gravatar.com/avatar/{php echo md5($participant->email)}?s=80&r=g&d=mm" class="b-user-badge__image" />
+		<span class="b-user-badge__name">{$participant->getNick()}</span>
+	</div>
+
+{/foreach}

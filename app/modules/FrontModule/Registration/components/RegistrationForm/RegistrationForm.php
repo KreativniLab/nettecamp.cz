@@ -68,7 +68,7 @@ class RegistrationForm extends Control
 
 
 
-		$form->addCheckbox('vegetarian', 'nejím maso')->setValue('yes');
+		$form->addCheckbox('vegetarian', 'nejím maso');
 
 		$form->addText('nickname', "nickname:");
 

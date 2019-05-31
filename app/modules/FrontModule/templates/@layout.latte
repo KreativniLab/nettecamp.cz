@@ -41,22 +41,26 @@
 	<script type="text/javascript" src="{$basePath}/js/site/site.min.js?ver={$version}" async defer></script>
 {else}
 	<!-- build:js {$basePath}/js/site/site.min.js -->
-	<script src="{$basePath}/js/nittro-full.js" async defer></script>
+	<script src="{$basePath}/js/nittro/nittro-build.js" async defer></script>
 	<script src="{$basePath}/js/site.js" async defer></script>
 	<!-- endbuild -->
 {/if}
-
 <header>
 	<div class="row">
 		<div class="column">
-			<nav>
-				<a class="main-navigation__item" n:href="Homepage:">Nette Camp</a>
-				<a class="main-navigation__item" n:href="Program:">Program</a>
-				<a class="main-navigation__item" n:href="Registration:">Registrace</a>
-				<a class="main-navigation__item" n:href="Location:">Lokace</a>
-				<a class="main-navigation__item" n:href="Team:">Tým</a>
-				<a class="main-navigation__item" n:href="History:">Historie</a>
-			</nav>
+			{snippet navigation}
+				<a n:href="Homepage:" class="main-navigation__item show-for-small-only">Nette Camp</a>
+				<label class="nav-label" for="nav-toggle" class="">[+] menu</label>
+				<input type="checkbox" id="nav-toggle">
+				<nav>
+					<a class="main-navigation__item" n:href="Homepage:"><span class="hide-for-small-only">Nette Camp</span><span class="show-for-small-only">Homepage</span></a>
+					<a class="main-navigation__item" n:href="Program:">Program</a>
+					<a class="main-navigation__item" n:href="Registration:">Registrace</a>
+					<a class="main-navigation__item" n:href="Location:">Lokace</a>
+					<a class="main-navigation__item" n:href="Team:">Tým</a>
+					<a class="main-navigation__item" n:href="History:">Historie</a>
+				</nav>
+			{/snippet}
 		</div>
 	</div>
 </header>
@@ -96,7 +100,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="medium-2 columns">
+			<div class="medium-2 small-6 columns">
 				<ul class="b-footer__navigation">
 					<li><a href="https://communitte.com/"><strong>Communite</strong></a></li>
 					<li><a href="https://communitte.com/calendar">Calendar</a></li>
@@ -105,7 +109,7 @@
 					<li><a href="https://communitte.com/code">Code</a></li>
 				</ul>
 			</div>
-			<div class="medium-2 columns">
+			<div class="medium-2 small-6 columns">
 				<ul class="b-footer__navigation">
 					<li><a href="https://contributte.org/"><strong>Contributte</strong></a></li>
 					<li><a href="https://www.github.com/contributte">Github</a></li>
@@ -115,7 +119,7 @@
 					<li><a href="https://contributte.org/about.html">Team</a></li>
 				</ul>
 			</div>
-			<div class="medium-2 columns">
+			<div class="medium-2 small-6 columns">
 				<ul class="b-footer__navigation">
 					<li><a href="https://planette.io/"><strong>Planette</strong></a></li>
 					<li><a href="https://github.com/planette/playground">Playground</a></li>
@@ -124,7 +128,7 @@
 					<li><a href="hhttps://github.com/planette">Github</a></li>
 				</ul>
 			</div>
-			<div class="medium-2 columns">
+			<div class="medium-2 small-6 columns">
 				<ul class="b-footer__navigation">
 					<li><a href="https://componette.com/"><strong>Componette</strong></a></li>
 					<li><a href="https://componette.com/search/tracy">Tracy</a></li>
@@ -133,7 +137,7 @@
 					<li><a href="https://github.com/planette/componette.com">Github</a></li>
 				</ul>
 			</div>
-			<div class="medium-2 columns">
+			<div class="medium-2 small-6 columns">
 				<ul class="b-footer__navigation">
 					<li><a href="https://communitte.com/events"><strong>Events</strong></a></li>
 					<li><a href="https://www.posobota.cz">#posobota</a></li>
@@ -141,7 +145,7 @@
 					<li><a href="https://conference.nette.org">nette conference</a></li>
 				</ul>
 			</div>
-			<div class="medium-2 columns">
+			<div class="medium-2 small-6 columns">
 				<ul class="b-footer__navigation">
 					<li><a href="https://nette.org/"><strong>Nette</strong></a></li>
 					<li><a href="https://commits.nette.org">Commits</a></li>

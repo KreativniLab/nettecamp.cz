@@ -19,18 +19,60 @@ header
   position: fixed
   top: 0
 
+nav
+  display: none
+  @media #{$medium-up}
+    display: block
+
+
+#nav-toggle
+  position: absolute
+  left: -10000px
+  top: -10000px
+  width: 0
+  height: 0
+  border: none
+  outline: none
+  background: none
+  opacity: 0
+
+.nav-label
+  position: absolute
+  top: 5px
+  right: 5px
+  height: 60px
+  padding-top: 17px
+
+  @media #{$medium-up}
+    display: none
+
+#nav-toggle:checked + nav
+  display: block
+
 .main-navigation__item
   font-size: 30px
   color: map-get($foundation-palette, primary)
   text-decoration: none
   margin-right: 20px
+  display: block
+  text-decoration: underline
+
   &:hover
-    text-decoration: underline
+    text-decoration: none
+
+  @media #{$medium-up}
+    display: inline-block
 
 .main-content
   background-color: #43B55C
   background: linear-gradient(180deg, #43B55C 0%, #5C470F 100%)
 
+.secret-image
+  margin-top: 20px
+  max-width: 85px
+
+  @media #{$medium-up}
+    max-width: 250px
 
 .white-paper
   background: #F7F7F7
@@ -74,49 +116,6 @@ header
 .empty-partner:hover
   color: black
   background: #D82734
-
-
-.b-user-badge
-  position: relative
-  background: #C4C4C4
-  border: 5px solid #434343
-  box-sizing: border-box
-  border-radius: 17px
-  display: inline-block
-  padding: 0.4em
-  padding-top: 0.1em
-  padding-right: 2em
-  padding-left: .5em
-  margin: 0.5em
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
-
-.b-user-badge::before
-  z-index: 10
-  content: " "
-  position: absolute
-  display: block
-  width: 10px
-  height: 10px
-  background: #434343
-  border-radius: 5px
-  top: 24px
-  right: 7px
-
-.b-user-badge__image
-  border-radius: 20px
-  width: 40px
-  height: 40px
-  filter: grayscale(100%)
-  margin-top: -6px
-
-.b-user-badge__name
-  font-family: Courier
-  padding-top: 5px
-  display: inline-block
-  font-weight: bold
-  font-size: 25px
-  line-height: 44px
-  color: #B3B3B3
 
 
 .typo--black

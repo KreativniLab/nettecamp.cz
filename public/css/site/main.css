@@ -2009,6 +2009,9 @@ select {
 .mt40 {
   margin-top: 40px; }
 
+.mt-20 {
+  margin-top: -20px; }
+
 /*
   Typography */
 a {
@@ -2049,6 +2052,12 @@ figcaption {
 label > input[type='checkbox'] {
   margin-right: 8px; }
 
+.radio-list label {
+  display: inline; }
+
+form .row {
+  margin-top: 1em; }
+
 /*
 	Layout */
 hr {
@@ -2071,19 +2080,61 @@ header {
   position: fixed;
   top: 0; }
 
+nav {
+  display: none; }
+  @media screen and (min-width: 40em) {
+    nav {
+      display: block; } }
+
+#nav-toggle {
+  position: absolute;
+  left: -10000px;
+  top: -10000px;
+  width: 0;
+  height: 0;
+  border: none;
+  outline: none;
+  background: none;
+  opacity: 0; }
+
+.nav-label {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  height: 60px;
+  padding-top: 17px; }
+  @media screen and (min-width: 40em) {
+    .nav-label {
+      display: none; } }
+
+#nav-toggle:checked + nav {
+  display: block; }
+
 .main-navigation__item {
   font-size: 30px;
   color: #1A1A20;
   text-decoration: none;
-  margin-right: 20px; }
+  margin-right: 20px;
+  display: block;
+  text-decoration: underline; }
   .main-navigation__item:hover {
-    text-decoration: underline; }
+    text-decoration: none; }
+  @media screen and (min-width: 40em) {
+    .main-navigation__item {
+      display: inline-block; } }
 
 .main-content {
   background-color: #43B55C;
   background: -webkit-gradient(linear, left top, left bottom, from(#43B55C), to(#5C470F));
   background: -o-linear-gradient(top, #43B55C 0%, #5C470F 100%);
   background: linear-gradient(180deg, #43B55C 0%, #5C470F 100%); }
+
+.secret-image {
+  margin-top: 20px;
+  max-width: 85px; }
+  @media screen and (min-width: 40em) {
+    .secret-image {
+      max-width: 250px; } }
 
 .white-paper {
   background: #F7F7F7;
@@ -2122,51 +2173,6 @@ header {
   color: black;
   background: #D82734; }
 
-.b-user-badge {
-  position: relative;
-  background: #C4C4C4;
-  border: 5px solid #434343;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  border-radius: 17px;
-  display: inline-block;
-  padding: 0.4em;
-  padding-top: 0.1em;
-  padding-right: 2em;
-  padding-left: .5em;
-  margin: 0.5em;
-  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); }
-
-.b-user-badge::before {
-  z-index: 10;
-  content: " ";
-  position: absolute;
-  display: block;
-  width: 10px;
-  height: 10px;
-  background: #434343;
-  border-radius: 5px;
-  top: 24px;
-  right: 7px; }
-
-.b-user-badge__image {
-  border-radius: 20px;
-  width: 40px;
-  height: 40px;
-  -webkit-filter: grayscale(100%);
-          filter: grayscale(100%);
-  margin-top: -6px; }
-
-.b-user-badge__name {
-  font-family: Courier;
-  padding-top: 5px;
-  display: inline-block;
-  font-weight: bold;
-  font-size: 25px;
-  line-height: 44px;
-  color: #B3B3B3; }
-
 .typo--black {
   color: black;
   background: black;
@@ -2200,6 +2206,65 @@ header {
 
 /*
   Homepage */
+.b-user-badge {
+  position: relative;
+  background: #C4C4C4;
+  border: 2px solid #434343;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 17px;
+  display: inline-block;
+  padding: 0.4em;
+  padding-top: 0.1em;
+  padding-right: 2em;
+  padding-left: .5em;
+  margin: 0.5em;
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); }
+  @media screen and (min-width: 40em) {
+    .b-user-badge {
+      border: 5px solid #434343; } }
+
+.b-user-badge::before {
+  z-index: 10;
+  content: " ";
+  position: absolute;
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: #434343;
+  border-radius: 5px;
+  top: 12px;
+  right: 7px; }
+  @media screen and (min-width: 40em) {
+    .b-user-badge::before {
+      top: 24px; } }
+
+.b-user-badge__image {
+  border-radius: 20px;
+  width: 20px;
+  height: 20px;
+  -webkit-filter: grayscale(100%);
+          filter: grayscale(100%); }
+  @media screen and (min-width: 40em) {
+    .b-user-badge__image {
+      border-radius: 20px;
+      width: 40px;
+      height: 40px;
+      margin-top: -6px; } }
+
+.b-user-badge__name {
+  font-family: Courier;
+  padding-top: 3px;
+  display: inline-block;
+  font-weight: bold;
+  font-size: 12px;
+  color: #7f7f7f; }
+  @media screen and (min-width: 40em) {
+    .b-user-badge__name {
+      font-size: 25px;
+      padding-top: 3px; } }
+
 .b-footer {
   background: #222222;
   color: #606060;

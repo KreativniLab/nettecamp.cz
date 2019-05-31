@@ -26,6 +26,21 @@
 		<div class="medium-9 columns">
 			{input phone}
 			{errors phone}
+			<p class="mt-20"><small><em>voláme jen v akutních případech, kdy potřebujem rychlou odpověd</em></small></p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="medium-3 columns medium-text-right">
+			{*			{label invoice}*}
+		</div>
+		<div class="medium-9 columns">
+			{input invoice}
+			{errors invoice}
+			<div id="companyid-container">
+				{label companyid}
+				{input companyid style=>"width:200px"}
+				{errors companyid}
+			</div>
 		</div>
 	</div>
 	<div class="row">
@@ -33,55 +48,51 @@
 			{label nickname}
 		</div>
 		<div class="medium-9 columns">
-			<p><small><em>bude vidět na této stránce</em></small></p>
 			{input nickname}
 			{errors nickname}
-
+			<p class="mt-20"><small><em>použijem ho místo jména na stránkách se seznamem účastníků</em></small></p>
 		</div>
 	</div>
 	<div class="row">
 		<div class="medium-3 columns medium-text-right">
 			{label arrival}
 		</div>
-		<div class="medium-9 columns">
+		<div class="medium-9 columns radio-list">
 			{input arrival}
 			{errors arrival}
 		</div>
 	</div>
+
 	<div class="row">
 		<div class="medium-3 columns medium-text-right">
-			{label skills}
-		</div>
-		<div class="medium-9 columns">
-			{input skills}
-			{errors skills}
-		</div>
-	</div>
-	<div class="row">
-		<div class="medium-3 columns medium-text-right">
-			{label invoice}
-		</div>
-		<div class="medium-9 columns">
-			{input invoice}
-			{errors invoice}
-		</div>
-	</div>
-	<div class="row">
-		<div class="medium-3 columns medium-text-right">
-			{label vegetarian}
+{*			{label vegetarian}*}
+			<label for="">strava:</label>
 		</div>
 		<div class="medium-9 columns">
 			{input vegetarian}
 			{errors vegetarian}
+			<p class="mt-20"><small><em>na místě umí vařit i pro různé diety (lepek apd.) pokud nějakou potřebuješ, napiš nám to do poznámky</em></small></p>
+
 		</div>
 	</div>
 	<div class="row">
 		<div class="medium-3 columns medium-text-right">
 			{label tshirt}
 		</div>
-		<div class="medium-9 columns">
+		<div class="medium-9 columns radio-list">
 			{input tshirt}
 			{errors tshirt}
+		</div>
+	</div>
+	<div class="row">
+		<div class="medium-3 columns medium-text-right">
+			{label skills}
+		</div>
+		<div class="medium-9 columns radio-list">
+			{input skills}
+			{errors skills}
+			<p class="mt-20"><small><em>pomůže nám to pro tvorbu programu</em></small></p>
+
 		</div>
 	</div>
 	<div class="row">
@@ -89,9 +100,10 @@
 			{label presentation}
 		</div>
 		<div class="medium-9 columns">
-			<p><small><em>obsah na Nette Campu si tvoříme sami. Jestli máš oblíbené téma, o kterém rád/a diskutuješ, tak tohle je kolonka přesně pro něj. Připrav si třeba jen na 10min představení nějaké zajímavé technologie, techniky, nástroje a poděl se o to&nbsp;s ostatními</em></small></p>
 			{input presentation rows=>4}
 			{errors presentation}
+			<p class="mt-20"><small><em>obsah na Nette Campu si tvoříme sami. Jestli máš oblíbené téma, o kterém rád/a diskutuješ, tak tohle je kolonka přesně pro něj. Připrav si třeba jen na 10min představení nějaké zajímavé technologie, techniky, nástroje a poděl se o to&nbsp;s ostatními</em></small></p>
+
 		</div>
 	</div>
 	<div class="row">
@@ -99,23 +111,15 @@
 			{label note}
 		</div>
 		<div class="medium-9 columns">
-			<p><small><em>Máš nějaký dotaz? Tip pro nás? Nebo nám pošli IČ firmy</em></small></p>
 			{input note rows=>4}
 			{errors note}
+			<p class="mt-20"><small><em>Máš nějaký dotaz? Tip pro nás?</em></small></p>
+
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="columns medium-10">
-			<p>
-				Cena je: <strong>4200,-</strong> s DPH <br>
-				<small>3471,- bez DPH, jsme plátci DPH</small>
-				<br>
-				<small>fakturu posíláme manuálně, většinou do druhého dne</small>
-
-			</p>
-		</div>
-		<div class="columns medium-2 text-right">
+		<div class="columns medium-offset-3">
 			<input type="submit" class="button" value="Registrovat" />
 		</div>
 

@@ -14,12 +14,13 @@ use Nextras\Orm\Entity\Entity;
  * @property string $phone
  * @property string $arrival
  * @property string $invoice
+ * @property string $companyId
  * @property string $vegetarian
  * @property string $skills
  * @property string $tshirt
  * @property string $presentation
  * @property string $note
- * @property DateTimeImmutable|null $deletedAt {default null}
+ * @property \DateTimeImmutable|null $deletedAt {default null}
  */
 class Registration extends Entity
 {
@@ -37,6 +38,7 @@ class Registration extends Entity
 		string $phone,
 		string $arrival,
 		string $invoice,
+		string $companyId,
 		string $vegetarian,
 		string $skills,
 		string $tshirt,
@@ -57,6 +59,7 @@ class Registration extends Entity
 		$this->tshirt = $tshirt;
 		$this->presentation = $presentation;
 		$this->note = $note;
+		$this->companyId = $companyId;
 	}
 
 

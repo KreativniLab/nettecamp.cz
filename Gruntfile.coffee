@@ -37,12 +37,16 @@ module.exports = (grunt) ->
           keymap: false,
           storage: false
         libraries:
-          js: []
+          js: [
+            'public/js/nittro/NetteBasicFormToggle.js',
+          ]
           css: []
         bootstrap:
           params: null,
           extensions: null,
-          services: null
+          services:
+            netteBasicFormToggle: 'App.NetteBasicFormToggle()!'
+
           factories: null
         stack: true
       js:

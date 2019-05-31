@@ -53,29 +53,24 @@ class RegistrationForm extends Control
 		$form->addText('phone', "telefon:")->setRequired('Vyplň telefon');
 
 		$time = [
-			'ctvrtek' => "čtvrtek",
-			'patek' => 'pátek',
+			'ctvrtek' => "už ve čtvrtek na uvítací párty a páteční přednášky",
+			'patek' => 'až v pátek po práci :-(',
 		];
 
-		$form->addSelect('arrival', 'přijedu ve:', $time);
-		$form->addSelect('invoice', 'fakturu:',
-			['no' => 'neřeším', 'yes' => 'chci na firmu']);
-		$form->addSelect('vegetarian', 'strava:', ['no' => 'sním všechno', 'yes' => 'nejím maso']);
+		$form->addRadioList('arrival', 'přijedu:', $time);
+		$form->addCheckbox('invoice', 'chci fakturu na firmu')
+			 ->addCondition($form::EQUAL, true)
+			 ->toggle('companyid-container');
+
+		$company = $form->addText('companyid', 'IČO');
+		$company->addConditionOn($form['invoice'], Form::EQUAL, true)
+			 ->setRequired('Vyplňte IČO firmy');
+
+
+
+		$form->addCheckbox('vegetarian', 'nejím maso');
 
 		$form->addText('nickname', "nickname:");
-
-		$form->addTextArea('presentation', "workshop/přednáška:")->setRequired('doplň o co se zajímáš');
-
-		$levels = [
-			'rookie' => "Rookie",
-			'normal' => "Normal",
-			'pro' => 'Pro',
-			'allstar' => 'Allstar',
-		];
-
-		$form->addSelect('skills', 'Nette skills:', $levels)
-			 ->setPrompt('?')
-			 ->setRequired('Zvol svojí Nette dovednost');
 
 		$shirts = [
 			'S' => "S",
@@ -85,12 +80,27 @@ class RegistrationForm extends Control
 			'2XL' => "2XL",
 		];
 
-		$form->addSelect('tshirt', 'tríčko:',
-			$shirts)->setPrompt('velikost ?')->setRequired('Zvol velikos trička');
+		$form->addRadioList('tshirt', 'tríčko:', $shirts)->setRequired('Zvol si velikos trička');
 
-		$note = $form->addTextArea('note', 'Poznámka');
-		$note->addConditionOn($form['invoice'], Form::EQUAL, 'yes')
-			 ->setRequired('Doplňte do poznámky IČ firmy');
+		$levels = [
+			'rookie' => "Rookie",
+			'normal' => "Normal",
+			'pro' => 'Pro',
+			'allstar' => 'Allstar',
+			'dgx' => 'DGX',
+		];
+
+		$form->addRadioList('skills', 'Nette skills:', $levels)
+			 ->setRequired('Zvol svojí Nette dovednost');
+
+		$form->addTextArea('presentation', "workshop/přednáška:")->setRequired('doplň o co se zajímáš');
+
+		$form->addTextArea('note', 'Poznámka');
+
+
+		$form->setDefaults([
+			'arrival' => 'ctvrtek',
+		]);
 
 		$form->addSubmit('actionSend', 'Save');
 
@@ -114,7 +124,7 @@ class RegistrationForm extends Control
 	{
 		$values->email = $values->liame;
 
-		$participant = new Registration(2019, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->vegetarian,
+		$participant = new Registration(2019, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian,
 			$values->skills, $values->tshirt, $values->presentation, $values->note);
 
 		if ($this->fullCamp) {

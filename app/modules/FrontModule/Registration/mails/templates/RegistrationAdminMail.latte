@@ -8,7 +8,7 @@
 </head>
 <body>
 	<p style="font-size:18px">Registrace : <strong>{$mailData->name}</strong></p>
-	<p style="font-size:16px">Invoice: <br><strong>{$mailData->invoice}</strong></p>
+	<p style="font-size:16px">Invoice: <br><strong>{$mailData->invoice}  {if $mailData->companyId}(ID: {$mailData->companyId}){/if}</strong></p>
 	<p style="font-size:16px">From: <br><strong>{$mailData->arrival}</strong></p>
 	<p style="font-size:16px">E-mail: <strong><a href="mailto:{$mailData->email}">{$mailData->email}</a></strong></p>
 	<p style="font-size:16px">Telefon: <strong>{$mailData->phone}</strong></p>
@@ -24,6 +24,7 @@
 			<td>when</td>
 			<td>skills</td>
 			<td>invoice</td>
+			<td>company id</td>
 			<td>vegetarian</td>
 			<td>t-shirt</td>
 			<td>talk</td>
@@ -38,6 +39,7 @@
 			<td>{$mailData->arrival}</td>
 			<td>{$mailData->skills}</td>
 			<td>{$mailData->invoice}</td>
+			<td>{$mailData->companyId}</td>
 			<td>{$mailData->vegetarian}</td>
 			<td>{$mailData->tshirt}</td>
 			<td>{$mailData->presentation}</td>

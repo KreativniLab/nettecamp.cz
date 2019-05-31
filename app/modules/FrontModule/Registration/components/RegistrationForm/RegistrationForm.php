@@ -68,7 +68,7 @@ class RegistrationForm extends Control
 
 
 
-		$form->addCheckbox('vegetarian', 'nejím maso');
+		$form->addCheckbox('vegetarian', 'nejím maso')->setValue('yes');
 
 		$form->addText('nickname', "nickname:");
 
@@ -124,6 +124,13 @@ class RegistrationForm extends Control
 	{
 		$values->email = $values->liame;
 
+        if ($values['vegetarian']){
+            $values['vegetarian'] = 'yes';
+        }
+        if ($values['invoice']){
+            $values['invoice'] = 'yes';
+        }
+
 		$participant = new Registration(2019, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian,
 			$values->skills, $values->tshirt, $values->presentation, $values->note);
 
@@ -133,7 +140,8 @@ class RegistrationForm extends Control
 
 		$this->model->persistAndFlush($participant);
 
-		$registrationData = new RegistrationData('2019', $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'],
+
+		$registrationData = new RegistrationData('2019', $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['companyid'],
 			$values['vegetarian'], $values['skills'], $values['tshirt'], $values['presentation'], $values['note']);
 
 		$mail = $this->mailFactory->createByType(RegistrationMail::class, $registrationData);

@@ -16,6 +16,7 @@ class RegistrationData implements IMessageData
 	public $phone;
 	public $arrival;
 	public $invoice;
+    public $companyId;
 	public $vegetarian;
 	public $skills;
 	public $tshirt;
@@ -23,7 +24,7 @@ class RegistrationData implements IMessageData
 	public $note;
 
 
-	/**
+    /**
 	 * RegistrationDTO constructor.
 	 *
 	 * @param $year
@@ -33,13 +34,14 @@ class RegistrationData implements IMessageData
 	 * @param $phone
 	 * @param $arrival
 	 * @param $invoice
+     * @param $companyId
 	 * @param $vegetarian
 	 * @param $skills
 	 * @param $tshirt
 	 * @param $presentation
 	 * @param $note
 	 */
-	public function __construct($year, $name, $nickname, $email, $phone, $arrival, $invoice, $vegetarian, $skills, $tshirt, $presentation, $note)
+	public function __construct($year, $name, $nickname, $email, $phone, $arrival, $invoice, $companyId, $vegetarian, $skills, $tshirt, $presentation, $note)
 	{
 		$this->year = $year;
 		$this->name = $name;
@@ -53,6 +55,7 @@ class RegistrationData implements IMessageData
 		$this->tshirt = $tshirt;
 		$this->presentation = $presentation;
 		$this->note = $note;
-	}
+        $this->companyId = $companyId;
+    }
 
 }

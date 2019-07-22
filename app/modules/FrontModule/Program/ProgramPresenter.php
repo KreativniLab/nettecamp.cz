@@ -9,6 +9,10 @@ class ProgramPresenter extends BasePresenter
 		$this->title = 'Program Nette Campu';
 		$participants = $this->model->registrations->findLatest();
 		$this->template->count = $participants->count();
+
+        $programs = $this->model->programs->findAll()->fetchAll();
+        shuffle($programs);
+        $this->template->programs = $programs;
 	}
 
 	public function renderDefault()

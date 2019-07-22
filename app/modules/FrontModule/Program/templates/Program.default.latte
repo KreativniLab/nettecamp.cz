@@ -15,11 +15,20 @@
 				<small><sup>*</sup> Pokud nemůžeš dorazit už ve čtvrtek, přijeďte třeba až v pátek po práci.</small>
 			</p>
 
+			<div class="b-program">
+				{foreach $programs as $program}
+				<span class="b-program__item" title="{$program->description}">
+					<span class="b-program__name">{$program->author}:</span>
+					<span class="b-program__title">{$program->title}</span></span>{sep},{/sep}
+				{/foreach}
+			</div>
+
+
 			<div class="row">
 				<div class="small-12 medium-6 columns">
 					<h2>Přednášky</h2>
 					<p>Profíci z firem, <span class="typo--black">n</span> <span class="typo--black">serrynaprev</span> kteří se rádi pochlubí na čem a s čím pracují, vás budou lákat jak na technologie, které
-						chcete začít používat nebo rovnou k nim do teamu</p>
+						chcete začít používat</p>
 				</div>
 				<div class="small-12 medium-6 columns text-center">
 

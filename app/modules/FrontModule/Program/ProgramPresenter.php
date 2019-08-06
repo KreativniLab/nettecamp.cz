@@ -10,6 +10,8 @@ class ProgramPresenter extends BasePresenter
 		$participants = $this->model->registrations->findLatest();
 		$this->template->count = $participants->count();
 
+		$this->template->metaOgImage = 'nette-camp-og-program.jpg';
+
         $programs = $this->model->programs->findAll()->fetchAll();
         shuffle($programs);
         $this->template->programs = $programs;

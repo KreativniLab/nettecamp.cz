@@ -1,3 +1,4 @@
 app/config/config.local.neon
 node_modules
 .tmp
+public/data/history/*

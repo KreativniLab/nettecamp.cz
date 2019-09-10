@@ -6,7 +6,13 @@
 
 	<title n:snippet="title">{$title}</title>
 	<meta name="description" content="Setkání PHP vývojářů v přírodě">
+	{ifset $metaOgImage}
+		<meta property="og:image" content="{$baseUrl}/img/meta/{$metaOgImage}">
+    {else}
+		<meta property="og:image" content="{$baseUrl}/img/meta/nette-camp-og.jpg">
+    {/ifset}
 
+	<link rel="apple-touch-icon" sizes="180x180" href="{$basePath}/apple-touch-icon.png">
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
 	{if $production}
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/site/site.min.css?ver={$version}" />

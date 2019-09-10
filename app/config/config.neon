@@ -12,16 +12,16 @@ parameters:
         campCapacity: 50
 
     partners:
-        nms:
-            empty: true
-#            url: https://www.nms.cz/it/
-#            img: img/partner/logo-nms.png
-#            title: NMS Market Research
-        empty1:
-            empty: true
-#            url: https://www.adminus.cz/kariera
-#            img: img/partner/logo-isp.png
-#            title: ISP
+        one:
+#            empty: true
+            url: https://www.jetbrains.com
+            img: img/partner/logo-jetbrains.jpg
+            title: JetBrains
+        two:
+#            empty: true
+            url: https://tlapnet.cz/
+            img: img/partner/logo-tlapnet.jpg
+            title: Tlapnet
         empty2:
             empty: true
 #            url: https://sledovanitv.cz/career

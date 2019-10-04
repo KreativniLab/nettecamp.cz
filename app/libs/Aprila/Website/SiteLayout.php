@@ -3,6 +3,8 @@
  * @author Honza Cerny (http://honzacerny.com)
  */
 
+declare(strict_types=1);
+
 namespace Aprila\Website;
 
 use Nette\SmartObject;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\FrontModule\Components;
 
 use App\FrontModule\Mails\RegistrationAdminMail;
@@ -127,9 +129,13 @@ class RegistrationForm extends Control
 
         if ($values['vegetarian']){
             $values['vegetarian'] = 'yes';
+        } else {
+            $values['vegetarian'] = 'no';
         }
         if ($values['invoice']){
             $values['invoice'] = 'yes';
+        } else {
+            $values['invoice'] = 'no';
         }
 
 		$participant = new Registration(2019, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian,

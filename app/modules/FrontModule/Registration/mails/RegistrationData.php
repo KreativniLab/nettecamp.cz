@@ -3,6 +3,8 @@
  * @author Honza Cerny (http://honzacerny.com)
  */
 
+declare(strict_types=1);
+
 namespace App\FrontModule\Mails;
 
 use Ublaboo\Mailing\IMessageData;

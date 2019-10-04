@@ -32,5 +32,8 @@
 	},
 	"config": {
 		"discard-changes": true
+	},
+	"autoload": {
+		"classmap": ["app/Bootstrap.php"]
 	}
 }

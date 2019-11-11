@@ -28,12 +28,16 @@
 		"nittro/nette-bridges": "^2.0",
 		"ublaboo/mailing": "^1.2",
 		"nextras/orm": "^3.1",
-		"dg/composer-cleaner": "^2.0"
+		"dg/composer-cleaner": "^2.0",
+		"phpstan/phpstan-shim": "0.11.*"
 	},
 	"config": {
 		"discard-changes": true
 	},
 	"autoload": {
 		"classmap": ["app/Bootstrap.php"]
+	},
+	"scripts": {
+		"phpstan": "phpstan analyze -l 1 app"
 	}
 }

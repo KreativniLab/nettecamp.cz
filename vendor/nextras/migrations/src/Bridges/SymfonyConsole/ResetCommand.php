@@ -9,29 +9,27 @@
 
 namespace Nextras\Migrations\Bridges\SymfonyConsole;
 
-use Nette;
 use Nextras\Migrations\Engine\Runner;
-use Nextras\Migrations\Extensions;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
 class ResetCommand extends BaseCommand
 {
+	/** @var string */
+	protected static $defaultName = 'migrations:reset';
+
 	protected function configure()
 	{
-		$this->setName('migrations:reset');
+		$this->setName(self::$defaultName);
 		$this->setDescription('Drops current database and recreates it from scratch');
 		$this->setHelp("Drops current database and runs all migrations");
-		$this->addOption('production', NULL, InputOption::VALUE_NONE, 'Will not import dummy data');
 	}
 
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$withDummy = !$input->getOption('production');
-		$this->runMigrations(Runner::MODE_RESET, $withDummy);
+		$this->runMigrations(Runner::MODE_RESET, $this->config);
 	}
 
 }

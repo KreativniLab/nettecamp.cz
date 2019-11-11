@@ -43,12 +43,11 @@ trait PresenterUtils {
     abstract public function link(string $destination, $args = []) : string;
 
     /**
-     * @param int $code
      * @param string $destination
      * @param array $args
      * @return void
      */
-    abstract public function redirect($code, $destination = NULL, $args = []) : void;
+    abstract public function redirect($destination, $args = []) : void;
 
 
     abstract public function hasFlashSession() : bool;

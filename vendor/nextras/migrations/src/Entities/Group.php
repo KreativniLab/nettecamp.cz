@@ -9,7 +9,12 @@
 
 namespace Nextras\Migrations\Entities;
 
+use Nextras\Migrations\IDiffGenerator;
 
+
+/**
+ * Group of migrations. Forms DAG with other groups.
+ */
 class Group
 {
 	/** @var string */
@@ -23,5 +28,8 @@ class Group
 
 	/** @var string[] */
 	public $dependencies;
+
+	/** @var IDiffGenerator|NULL */
+	public $generator;
 
 }

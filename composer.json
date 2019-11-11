@@ -22,13 +22,13 @@
 		"tracy/tracy": "^2.6",
 		"contributte/console": "^0.5",
 		"nextras/migrations": "^3.0",
-		"nextras/static-router": "v2.0.0-rc2",
+		"nextras/static-router": "v2.0.0",
 		"nextras/mail-panel": "^2.5",
 		"texy/texy": "~2.9.0",
 		"nittro/nette-bridges": "^2.0",
 		"ublaboo/mailing": "^1.2",
 		"nextras/orm": "^3.1",
-		"dg/composer-cleaner": "^0.5.0"
+		"dg/composer-cleaner": "^2.0"
 	},
 	"config": {
 		"discard-changes": true

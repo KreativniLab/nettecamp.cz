@@ -20,9 +20,8 @@ use Nextras\Migrations\IPrinter;
  */
 class DevNull implements IPrinter
 {
-	public function printReset()
+	public function printIntro($mode)
 	{
-
 	}
 
 
@@ -31,7 +30,7 @@ class DevNull implements IPrinter
 	}
 
 
-	public function printExecute(File $file, $count)
+	public function printExecute(File $file, $count, $time)
 	{
 	}
 
@@ -49,5 +48,4 @@ class DevNull implements IPrinter
 	public function printSource($code)
 	{
 	}
-
 }

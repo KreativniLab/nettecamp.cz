@@ -15,6 +15,7 @@ use Nextras\Migrations\Entities\Group;
 use Nextras\Migrations\Entities\Migration;
 use Nextras\Migrations\Exception;
 use Nextras\Migrations\ExecutionException;
+use Nextras\Migrations\IConfiguration;
 use Nextras\Migrations\IDriver;
 use Nextras\Migrations\IExtensionHandler;
 use Nextras\Migrations\IPrinter;
@@ -81,11 +82,22 @@ class Runner
 
 
 	/**
-	 * @param  string $mode self::MODE_CONTINUE|self::MODE_RESET|self::MODE_INIT
+	 * @param  string         $mode self::MODE_CONTINUE|self::MODE_RESET|self::MODE_INIT
+	 * @param  IConfiguration $config
 	 * @return void
 	 */
-	public function run($mode = self::MODE_CONTINUE)
+	public function run($mode = self::MODE_CONTINUE, IConfiguration $config = NULL)
 	{
+		if ($config) {
+			foreach ($config->getGroups() as $group) {
+				$this->addGroup($group);
+			}
+
+			foreach ($config->getExtensionHandlers() as $ext => $handler) {
+				$this->addExtensionHandler($ext, $handler);
+			}
+		}
+
 		if ($mode === self::MODE_INIT) {
 			$this->printer->printSource($this->driver->getInitTableSource() . "\n");
 			$files = $this->finder->find($this->groups, array_keys($this->extensionsHandlers));
@@ -99,9 +111,9 @@ class Runner
 			$this->driver->setupConnection();
 			$this->driver->lock();
 
+			$this->printer->printIntro($mode);
 			if ($mode === self::MODE_RESET) {
 				$this->driver->emptyDatabase();
-				$this->printer->printReset();
 			}
 
 			$this->driver->createTable();
@@ -111,8 +123,9 @@ class Runner
 			$this->printer->printToExecute($toExecute);
 
 			foreach ($toExecute as $file) {
+				$time = microtime(TRUE);
 				$queriesCount = $this->execute($file);
-				$this->printer->printExecute($file, $queriesCount);
+				$this->printer->printExecute($file, $queriesCount, microtime(TRUE) - $time);
 			}
 
 			$this->driver->unlock();

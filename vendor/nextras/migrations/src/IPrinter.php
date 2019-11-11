@@ -18,9 +18,12 @@ use Nextras\Migrations\Entities\File;
 interface IPrinter
 {
 	/**
-	 * Database has been wiped. Occurs only in reset mode.
+	 * Print general info about mode.
+	 * - reset = Database has been wiped.
+	 * - continue = Running new migrations.
+	 * @param  string $mode
 	 */
-	function printReset();
+	function printIntro($mode);
 
 
 	/**
@@ -33,9 +36,10 @@ interface IPrinter
 	/**
 	 * A migration has been successfully executed.
 	 * @param  File $file
-	 * @param  int  $count number of executed queries
+	 * @param  int $count number of executed queries
+	 * @param  float $time elapsed time in milliseconds
 	 */
-	function printExecute(File $file, $count);
+	function printExecute(File $file, $count, $time);
 
 
 	/**

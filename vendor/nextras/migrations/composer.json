@@ -7,29 +7,41 @@
 		"php": ">=5.4"
 	},
 	"require-dev": {
-		"dibi/dibi": "~2.3",
+		"dibi/dibi": "~3.0 | ~4.0",
+		"doctrine/cache": "~1.5",
 		"doctrine/dbal": "~2.5",
+		"doctrine/orm": "~2.5",
+		"mockery/mockery": "~0.9 | ~1.0",
 		"nette/database": "~2.2",
 		"nette/di": "~2.3.12 | ~2.4",
-		"nette/tester": "~1.4",
+		"nette/tester": "~1.7 | ~2.0",
 		"nette/utils": "~2.3",
-		"nextras/dbal": "~1.0 | ~2.0",
-		"mockery/mockery": "~0.9",
-		"symfony/console": "~2.6 | ~3.0",
+		"nextras/dbal": "~1.0 | ~2.0 | ~3.0",
+		"symfony/config": "~2.6 | ~3.0 | ~4.0",
+		"symfony/console": "~2.6 | ~3.0 | ~4.0",
+		"symfony/dependency-injection": "~2.6 | ~3.0 | ~4.0",
+		"symfony/http-kernel": "~2.6 | ~3.0 | ~4.0",
+		"tracy/tracy": "^2.2",
 		"ext-openssl": "*"
 	},
 	"suggest": {
 		"dibi/dibi": "to use DibiAdapter",
 		"nette/database": "to use NetteAdapter",
-		"nextras/dbal": "to use NextrasAdapter"
+		"nextras/dbal": "to use NextrasAdapter",
+		"doctrine/dbal": "to use DoctrineAdapter",
+		"doctrine/orm": "to generate migrations with Doctrine SchemaTool",
+		"symfony/console": "to use Symfony commands"
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "3.0-dev"
+			"dev-master": "3.1-dev"
 		}
 	},
 	"autoload": {
 		"psr-4": { "Nextras\\Migrations\\": "src/" },
 		"classmap": ["src/exceptions.php", "src/deprecated"]
+	},
+	"autoload-dev": {
+		"classmap": ["tests/inc"]
 	}
 }

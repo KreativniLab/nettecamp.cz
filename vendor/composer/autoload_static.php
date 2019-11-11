@@ -10,7 +10,9 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         '59af96974553a1fc6407327354b6f47e' => __DIR__ . '/..' . '/nette/di/src/compatibility.php',
         '19a7e2c3b1d506dcdc1b60aab8e102e4' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/shortcuts.php',
         'e7a6fd2e7a869bb207158e9416bdd9b0' => __DIR__ . '/..' . '/nette/application/src/compatibility.php',
+        'afdda9f94b76f77a7518e02eee753cc9' => __DIR__ . '/..' . '/nette/mail/src/compatibility.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         'a1d067aa2e53d6b47171c03cfc0ea5be' => __DIR__ . '/..' . '/nette/safe-stream/src/loader.php',
         '5d1dcebe069db2f62f5a447526290867' => __DIR__ . '/..' . '/texy/texy/src/texy.php',
     );
@@ -22,9 +24,14 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Php73\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Contracts\\' => 18,
+            'Symfony\\Contracts\\Service\\' => 26,
             'Symfony\\Component\\Console\\' => 26,
+        ),
+        'P' => 
+        array (
+            'Psr\\Container\\' => 14,
         ),
         'N' => 
         array (
@@ -45,17 +52,25 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         array (
             0 => __DIR__ . '/..' . '/ublaboo/mailing/src',
         ),
+        'Symfony\\Polyfill\\Php73\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php73',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Contracts\\' => 
+        'Symfony\\Contracts\\Service\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/contracts',
+            0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
         'Symfony\\Component\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
         ),
         'Nextras\\Routing\\' => 
         array (
@@ -87,6 +102,7 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         'App\\Bootstrap' => __DIR__ . '/../..' . '/app/Bootstrap.php',
         'DG\\ComposerCleaner\\Cleaner' => __DIR__ . '/..' . '/dg/composer-cleaner/src/ComposerCleaner/Cleaner.php',
         'DG\\ComposerCleaner\\Plugin' => __DIR__ . '/..' . '/dg/composer-cleaner/src/ComposerCleaner/Plugin.php',
+        'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
         'Latte\\Compiler' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Compiler.php',
         'Latte\\Engine' => __DIR__ . '/..' . '/latte/latte/src/Latte/Engine.php',
@@ -167,7 +183,6 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         'Nette\\Bridges\\ApplicationDI\\PresenterFactoryCallback' => __DIR__ . '/..' . '/nette/application/src/Bridges/ApplicationDI/PresenterFactoryCallback.php',
         'Nette\\Bridges\\ApplicationDI\\RoutingExtension' => __DIR__ . '/..' . '/nette/application/src/Bridges/ApplicationDI/RoutingExtension.php',
         'Nette\\Bridges\\ApplicationLatte\\ILatteFactory' => __DIR__ . '/..' . '/nette/application/src/Bridges/ApplicationLatte/ILatteFactory.php',
-        'Nette\\Bridges\\ApplicationLatte\\Loader' => __DIR__ . '/..' . '/nette/application/src/Bridges/ApplicationLatte/Loader.php',
         'Nette\\Bridges\\ApplicationLatte\\SnippetBridge' => __DIR__ . '/..' . '/nette/application/src/Bridges/ApplicationLatte/SnippetBridge.php',
         'Nette\\Bridges\\ApplicationLatte\\Template' => __DIR__ . '/..' . '/nette/application/src/Bridges/ApplicationLatte/Template.php',
         'Nette\\Bridges\\ApplicationLatte\\TemplateFactory' => __DIR__ . '/..' . '/nette/application/src/Bridges/ApplicationLatte/TemplateFactory.php',
@@ -274,11 +289,9 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         'Nette\\Database\\SqlPreprocessor' => __DIR__ . '/..' . '/nette/database/src/Database/SqlPreprocessor.php',
         'Nette\\Database\\Structure' => __DIR__ . '/..' . '/nette/database/src/Database/Structure.php',
         'Nette\\Database\\Table\\ActiveRow' => __DIR__ . '/..' . '/nette/database/src/Database/Table/ActiveRow.php',
-        'Nette\\Database\\Table\\ColumnAccessCache' => __DIR__ . '/..' . '/nette/database/src/Database/Table/ColumnAccessCache.php',
         'Nette\\Database\\Table\\GroupedSelection' => __DIR__ . '/..' . '/nette/database/src/Database/Table/GroupedSelection.php',
         'Nette\\Database\\Table\\IRow' => __DIR__ . '/..' . '/nette/database/src/Database/Table/IRow.php',
         'Nette\\Database\\Table\\IRowContainer' => __DIR__ . '/..' . '/nette/database/src/Database/Table/IRowContainer.php',
-        'Nette\\Database\\Table\\ReferenceCache' => __DIR__ . '/..' . '/nette/database/src/Database/Table/ReferenceCache.php',
         'Nette\\Database\\Table\\Selection' => __DIR__ . '/..' . '/nette/database/src/Database/Table/Selection.php',
         'Nette\\Database\\Table\\SqlBuilder' => __DIR__ . '/..' . '/nette/database/src/Database/Table/SqlBuilder.php',
         'Nette\\Database\\UniqueConstraintViolationException' => __DIR__ . '/..' . '/nette/database/src/Database/exceptions.php',
@@ -334,13 +347,16 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         'Nette\\Iterators\\Mapper' => __DIR__ . '/..' . '/nette/utils/src/Iterators/Mapper.php',
         'Nette\\Loaders\\RobotLoader' => __DIR__ . '/..' . '/nette/robot-loader/src/RobotLoader/RobotLoader.php',
         'Nette\\Localization\\ITranslator' => __DIR__ . '/..' . '/nette/utils/src/Utils/ITranslator.php',
+        'Nette\\Mail\\DkimSigner' => __DIR__ . '/..' . '/nette/mail/src/Mail/DkimSigner.php',
         'Nette\\Mail\\FallbackMailer' => __DIR__ . '/..' . '/nette/mail/src/Mail/FallbackMailer.php',
         'Nette\\Mail\\FallbackMailerException' => __DIR__ . '/..' . '/nette/mail/src/Mail/exceptions.php',
-        'Nette\\Mail\\IMailer' => __DIR__ . '/..' . '/nette/mail/src/Mail/IMailer.php',
+        'Nette\\Mail\\Mailer' => __DIR__ . '/..' . '/nette/mail/src/Mail/Mailer.php',
         'Nette\\Mail\\Message' => __DIR__ . '/..' . '/nette/mail/src/Mail/Message.php',
         'Nette\\Mail\\MimePart' => __DIR__ . '/..' . '/nette/mail/src/Mail/MimePart.php',
         'Nette\\Mail\\SendException' => __DIR__ . '/..' . '/nette/mail/src/Mail/exceptions.php',
         'Nette\\Mail\\SendmailMailer' => __DIR__ . '/..' . '/nette/mail/src/Mail/SendmailMailer.php',
+        'Nette\\Mail\\SignException' => __DIR__ . '/..' . '/nette/mail/src/Mail/exceptions.php',
+        'Nette\\Mail\\Signer' => __DIR__ . '/..' . '/nette/mail/src/Mail/Signer.php',
         'Nette\\Mail\\SmtpException' => __DIR__ . '/..' . '/nette/mail/src/Mail/exceptions.php',
         'Nette\\Mail\\SmtpMailer' => __DIR__ . '/..' . '/nette/mail/src/Mail/SmtpMailer.php',
         'Nette\\MemberAccessException' => __DIR__ . '/..' . '/nette/utils/src/Utils/exceptions.php',

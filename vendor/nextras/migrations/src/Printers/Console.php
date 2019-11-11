@@ -22,11 +22,12 @@ class Console implements IPrinter
 {
 	/** @const console colors */
 	const COLOR_ERROR = '1;31';
-	const COLOR_NOTICE = '1;34';
 	const COLOR_SUCCESS = '1;32';
+	const COLOR_INTRO = '1;35';
+	const COLOR_INFO = '1;36';
 
 	/** @var bool */
-	private $useColors;
+	protected $useColors;
 
 
 	public function __construct()
@@ -35,9 +36,10 @@ class Console implements IPrinter
 	}
 
 
-	public function printReset()
+	public function printIntro($mode)
 	{
-		$this->output('RESET', self::COLOR_NOTICE);
+		$this->output('Nextras Migrations');
+		$this->output(strtoupper($mode), self::COLOR_INTRO);
 	}
 
 
@@ -52,11 +54,15 @@ class Console implements IPrinter
 	}
 
 
-	public function printExecute(File $file, $count)
+	public function printExecute(File $file, $count, $time)
 	{
-		$this->output($file->group->name . '/' . $file->name . '; ' . $count . ' queries');
-
+		$this->output(
+			'- ' . $file->group->name . '/' . $file->name . '; '
+			. $this->color($count, self::COLOR_INFO) . ' queries; '
+			. $this->color(sprintf('%0.3f', $time), self::COLOR_INFO) . ' s'
+		);
 	}
+
 
 	public function printDone()
 	{
@@ -87,8 +93,22 @@ class Console implements IPrinter
 		if ($color === NULL || !$this->useColors) {
 			echo "$s\n";
 		} else {
-			echo "\033[{$color}m$s\033[0m\n";
+			echo $this->color($s, $color) . "\n";
 		}
+	}
+
+
+	/**
+	 * @param  string $s
+	 * @param  string $color
+	 * @return string
+	 */
+	protected function color($s, $color)
+	{
+		if (!$this->useColors) {
+			return $s;
+		}
+		return "\033[{$color}m$s\033[22;39m";
 	}
 
 

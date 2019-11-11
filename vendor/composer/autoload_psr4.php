@@ -7,9 +7,11 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Ublaboo\\Mailing\\' => array($vendorDir . '/ublaboo/mailing/src'),
+    'Symfony\\Polyfill\\Php73\\' => array($vendorDir . '/symfony/polyfill-php73'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
-    'Symfony\\Contracts\\' => array($vendorDir . '/symfony/contracts'),
+    'Symfony\\Contracts\\Service\\' => array($vendorDir . '/symfony/service-contracts'),
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
+    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Nextras\\Routing\\' => array($vendorDir . '/nextras/static-router/src'),
     'Nextras\\Orm\\' => array($vendorDir . '/nextras/orm/src'),
     'Nextras\\Migrations\\' => array($vendorDir . '/nextras/migrations/src'),

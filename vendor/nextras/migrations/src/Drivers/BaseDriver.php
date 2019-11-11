@@ -27,6 +27,9 @@ abstract class BaseDriver implements IDriver
 	/** @var string */
 	protected $tableName;
 
+	/** @var NULL|string */
+	protected $tableNameQuoted;
+
 
 	/**
 	 * @param IDbal  $dbal
@@ -35,7 +38,13 @@ abstract class BaseDriver implements IDriver
 	public function __construct(IDbal $dbal, $tableName = 'migrations')
 	{
 		$this->dbal = $dbal;
-		$this->tableName = $dbal->escapeIdentifier($tableName);
+		$this->tableName = $tableName;
+	}
+
+
+	public function setupConnection()
+	{
+		$this->tableNameQuoted = $this->dbal->escapeIdentifier($this->tableName);
 	}
 
 
@@ -53,52 +62,76 @@ abstract class BaseDriver implements IDriver
 	 */
 	public function loadFile($path)
 	{
-		$query = @file_get_contents($path);
-		if ($query === FALSE) {
+		$content = @file_get_contents($path);
+		if ($content === FALSE) {
 			throw new IOException("Cannot open file '$path'.");
 		}
 
+		$queryOffset = 0;
+		$parseOffset = 0;
+		$queries = 0;
+
+		$space = "(?:\\s|/\\*.*\\*/|(?:#|-- )[^\\n]*(?:\\n|\\z)|--(?:\\n|\\z))";
+		$spacesRe = "~\\G{$space}*\\z~";
 		$delimiter = ';';
-		$offset = $queries = 0;
-		$space = "(?:\\s|/\\*.*\\*/|(?:#|-- )[^\\n]*\\n|--\\n)";
+		$delimiterRe = "~\\G{$space}*DELIMITER\\s+(\\S+)~i";
 
-		if ($this instanceof PgSqlDriver) {
-			$parse = '[\'"]|/\*|-- |$|\$[^$]*\$';
-		} else {
-			$parse = '[\'"`#]|/\*|-- |$';
-		}
+		$openRe = $this instanceof PgSqlDriver ? '[\'"]|/\*|-- |\z|\$[^$]*\$' : '[\'"`#]|/\*|-- |\z';
+		$parseRe = "(;|$openRe)";
+		$endReTable = [
+			'\'' => '(\'|\\\\.|\z)s',
+			'"' => '("|\\\\.|\z)s',
+			'/*' => '(\*/|\z)',
+			'[' => '(]|\z)',
+		];
 
-		while ($query != '') {
-			if (!$offset && preg_match("~^{$space}*DELIMITER\\s+(\\S+)~i", $query, $match)) {
+		while (TRUE) {
+			if (preg_match($delimiterRe, $content, $match, 0, $queryOffset)) {
 				$delimiter = $match[1];
-				$query = substr($query, strlen($match[0]));
-			} else {
-				preg_match('(' . preg_quote($delimiter) . "\\s*|$parse)", $query, $match, PREG_OFFSET_CAPTURE, $offset); // should always match
+				$queryOffset += strlen($match[0]);
+				$parseOffset += strlen($match[0]);
+				$parseRe = '(' . preg_quote($delimiter) . "|$openRe)";
+			}
+
+			while (TRUE) {
+				preg_match($parseRe, $content, $match, PREG_OFFSET_CAPTURE, $parseOffset); // should always match
 				$found = $match[0][0];
-				$offset = $match[0][1] + strlen($found);
+				$parseOffset = $match[0][1] + strlen($found);
 
-				if (!$found && rtrim($query) === '') {
+				if ($found === $delimiter) { // delimited query
+					$queryLength = $match[0][1] - $queryOffset;
 					break;
-				}
 
-				if (!$found || rtrim($found) == $delimiter) { // end of a query
-					$q = substr($query, 0, $match[0][1]);
-
-					$queries++;
-					$this->dbal->exec($q);
-
-					$query = substr($query, $offset);
-					$offset = 0;
-				} else { // find matching quote or comment end
-					while (preg_match('(' . ($found == '/*' ? '\*/' : ($found == '[' ? ']' : (preg_match('~^-- |^#~', $found) ? "\n" : preg_quote($found) . "|\\\\."))) . '|$)s', $query, $match, PREG_OFFSET_CAPTURE, $offset)) { //! respect sql_mode NO_BACKSLASH_ESCAPES
+				} elseif ($found) { // find matching quote or comment end
+					$endRe = isset($endReTable[$found]) ? $endReTable[$found] : '(' . (preg_match('~^-- |^#~', $found) ? "\n" : preg_quote($found) . "|\\\\.") . '|\z)s';
+					while (preg_match($endRe, $content, $match, PREG_OFFSET_CAPTURE, $parseOffset)) { //! respect sql_mode NO_BACKSLASH_ESCAPES
 						$s = $match[0][0];
-						$offset = $match[0][1] + strlen($s);
-						if ($s[0] !== '\\') {
-							break;
+						if (strlen($s) === 0) {
+							break 3;
 						}
+
+						$parseOffset = $match[0][1] + strlen($s);
+						if ($s[0] !== '\\') {
+							continue 2;
+						}
+					}
+
+				} else { // last query or EOF
+					if (preg_match($spacesRe, $content, $_, 0, $queryOffset)) {
+						break 2;
+
+					} else {
+						$queryLength = $match[0][1] - $queryOffset;
+						break;
 					}
 				}
 			}
+
+			$q = substr($content, $queryOffset, $queryLength);
+
+			$queries++;
+			$this->dbal->exec($q);
+			$queryOffset = $parseOffset;
 		}
 
 		return $queries;

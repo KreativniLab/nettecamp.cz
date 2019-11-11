@@ -53,6 +53,9 @@ class Session
 	/** @var \SessionHandlerInterface */
 	private $handler;
 
+	/** @var bool */
+	private $readAndClose = false;
+
 
 	public function __construct(IRequest $request, IResponse $response)
 	{
@@ -82,7 +85,7 @@ class Session
 
 		if (!session_id()) { // session is started for first time
 			$id = $this->request->getCookie(session_name());
-			$id = is_string($id) && preg_match('#^[0-9a-zA-Z,-]{22,256}\z#i', $id)
+			$id = is_string($id) && preg_match('#^[0-9a-zA-Z,-]{22,256}$#Di', $id)
 				? $id
 				: session_create_id();
 			session_id($id); // causes resend of a cookie
@@ -90,7 +93,7 @@ class Session
 
 		try {
 			// session_start returns false on failure only sometimes
-			Nette\Utils\Callback::invokeSafe('session_start', [], function (string $message) use (&$e): void {
+			Nette\Utils\Callback::invokeSafe('session_start', [['read_and_close' => $this->readAndClose]], function (string $message) use (&$e): void {
 				$e = new Nette\InvalidStateException($message);
 			});
 		} catch (\Exception $e) {
@@ -232,7 +235,7 @@ class Session
 	 */
 	public function setName(string $name)
 	{
-		if (!preg_match('#[^0-9.][^.]*\z#A', $name)) {
+		if (!preg_match('#[^0-9.][^.]*$#DA', $name)) {
 			throw new Nette\InvalidArgumentException('Session name cannot contain dot.');
 		}
 
@@ -329,6 +332,13 @@ class Session
 			$key = strtolower(preg_replace('#(.)(?=[A-Z])#', '$1_', $key)); // camelCase -> snake_case
 			$normalized[$key] = $value;
 		}
+		if (!empty($normalized['read_and_close'])) {
+			if (session_status() === PHP_SESSION_ACTIVE) {
+				throw new Nette\InvalidStateException('Cannot configure "read_and_close" for already started session.');
+			}
+			$this->readAndClose = (bool) $normalized['read_and_close'];
+			unset($normalized['read_and_close']);
+		}
 		if (session_status() === PHP_SESSION_ACTIVE) {
 			$this->configure($normalized);
 		}
@@ -391,9 +401,9 @@ class Session
 
 		if ($cookie !== $origCookie) {
 			if (PHP_VERSION_ID >= 70300) {
-				session_set_cookie_params($cookie);
+				@session_set_cookie_params($cookie); // @ may trigger warning when session is active since PHP 7.2
 			} else {
-				session_set_cookie_params(
+				@session_set_cookie_params( // @ may trigger warning when session is active since PHP 7.2
 					$cookie['lifetime'],
 					$cookie['path'] . (isset($cookie['samesite']) ? '; SameSite=' . $cookie['samesite'] : ''),
 					$cookie['domain'],

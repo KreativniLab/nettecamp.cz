@@ -12,7 +12,6 @@ namespace Nextras\Migrations\Engine;
 use Nextras\Migrations\Entities\File;
 use Nextras\Migrations\Entities\Group;
 use Nextras\Migrations\Entities\Migration;
-use Nextras\Migrations\Exception;
 use Nextras\Migrations\LogicException;
 
 
@@ -24,7 +23,7 @@ class OrderResolver
 	 * @param  File[]      $files
 	 * @param  string      $mode
 	 * @return File[]
-	 * @throws Exception
+	 * @throws LogicException
 	 */
 	public function resolve(array $migrations, array $groups, array $files, $mode)
 	{
@@ -39,7 +38,7 @@ class OrderResolver
 
 		$migrations = $this->getAssocMigrations($migrations);
 		$files = $this->getAssocFiles($files);
-		$lastMigration = NULL;
+		$lastMigrations = [];
 
 		foreach ($migrations as $groupName => $mg) {
 			if (!isset($groups[$groupName])) {
@@ -62,8 +61,8 @@ class OrderResolver
 					$file = $files[$groupName][$filename];
 					if ($migration->checksum !== $file->checksum) {
 						throw new LogicException(sprintf(
-							'Previously executed migration "%s/%s" has been changed.',
-							$groupName, $filename
+							'Previously executed migration "%s/%s" has been changed. File checksum is "%s", but executed migration had checksum "%s".',
+							$groupName, $filename, $file->checksum, $migration->checksum
 						));
 					}
 					unset($files[$groupName][$filename]);
@@ -75,21 +74,31 @@ class OrderResolver
 					));
 				}
 
-				if ($lastMigration === NULL || strcmp($migration->filename, $lastMigration->filename) > 0) {
-					$lastMigration = $migration;
+				if (!isset($lastMigrations[$groupName]) || strcmp($filename, $lastMigrations[$groupName]) > 0) {
+					$lastMigrations[$groupName] = $filename;
 				}
 			}
 		}
 
 		$files = $this->getFlatFiles($files);
 		$files = $this->sortFiles($files, $groups);
-		if ($files && $lastMigration) {
-			$firstFile = reset($files);
-			if (strcmp($firstFile->name, $lastMigration->filename) < 0) {
-				throw new LogicException(sprintf(
-					'New migration "%s/%s" must follow after the latest executed migration "%s/%s".',
-					$firstFile->group->name, $firstFile->name, $lastMigration->group, $lastMigration->filename
-				));
+
+		foreach ($groups as $group) {
+			if (!isset($lastMigrations[$group->name])) {
+				continue;
+			}
+
+			foreach ($this->getFirstFiles($files) as $file) {
+				if (strcmp($file->name, $lastMigrations[$group->name]) >= 0) {
+					continue;
+				}
+
+				if ($this->isGroupDependentOn($groups, $file->group, $group) || $this->isGroupDependentOn($groups, $group, $file->group)) {
+					throw new LogicException(sprintf(
+						'New migration "%s/%s" must follow after the latest executed migration "%s/%s".',
+						$file->group->name, $file->name, $group->name, $lastMigrations[$group->name]
+					));
+				}
 			}
 		}
 
@@ -144,6 +153,7 @@ class OrderResolver
 	{
 		$visited = [];
 		$queue = $groupB->dependencies;
+		$queue[] = $groupB->name;
 		while ($node = array_shift($queue)) {
 			if (isset($visited[$node])) {
 				continue;
@@ -205,9 +215,25 @@ class OrderResolver
 
 
 	/**
+	 * @param  File[] $files
+	 * @return File[] first file for each group
+	 */
+	protected function getFirstFiles(array $files)
+	{
+		$firstFiles = [];
+		foreach ($files as $file) {
+			if (!isset($firstFiles[$file->group->name])) {
+				$firstFiles[$file->group->name] = $file;
+			}
+		}
+		return $firstFiles;
+	}
+
+
+	/**
 	 * @param  Group[] $groups
 	 * @return void
-	 * @throws Exception
+	 * @throws LogicException
 	 */
 	private function validateGroups(array $groups)
 	{

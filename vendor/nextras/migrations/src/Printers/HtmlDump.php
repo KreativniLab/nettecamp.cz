@@ -9,6 +9,7 @@
 
 namespace Nextras\Migrations\Printers;
 
+use Nextras\Migrations\Engine\Runner;
 use Nextras\Migrations\Entities\File;
 use Nextras\Migrations\Exception;
 use Nextras\Migrations\IPrinter;
@@ -26,9 +27,13 @@ class HtmlDump implements IPrinter
 	private $index;
 
 
-	public function printReset()
+	public function printIntro($mode)
 	{
-		$this->output('     RESET: All tables, views and data has been destroyed!');
+		if ($mode === Runner::MODE_RESET) {
+			$this->output('     RESET: All tables, views and data has been destroyed!');
+		} else {
+			$this->output('     CONTINUE: Running only new migrations.');
+		}
 	}
 
 
@@ -45,13 +50,13 @@ class HtmlDump implements IPrinter
 	}
 
 
-	public function printExecute(File $file, $count)
+	public function printExecute(File $file, $count, $time)
 	{
 		$format = '%0' . strlen($this->count) . 'd';
 		$name = htmlspecialchars($file->group->name . '/' . $file->name);
 		$this->output(sprintf(
-			$format . '/' . $format . ': <strong>%s</strong> (%d %s)',
-			++$this->index, $this->count, $name, $count, ($count === 1 ? 'query' : 'queries')
+			$format . '/' . $format . ': <strong>%s</strong> (%d %s, %0.3f s)',
+			++$this->index, $this->count, $name, $count, ($count === 1 ? 'query' : 'queries'), $time
 		));
 	}
 

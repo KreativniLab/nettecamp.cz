@@ -11,6 +11,7 @@ namespace Nextras\Migrations\Extensions;
 
 use Nextras\Migrations\Entities\File;
 use Nextras\Migrations\IExtensionHandler;
+use Nextras\Migrations\IOException;
 
 
 /**
@@ -20,16 +21,15 @@ use Nextras\Migrations\IExtensionHandler;
 class PhpHandler implements IExtensionHandler
 {
 	/** @var array name => value */
-	private $params = [];
+	private $params;
+
 
 	/**
 	 * @param array $params name => value
 	 */
 	public function __construct(array $params = [])
 	{
-		foreach ($params as $name => $value) {
-			$this->addParameter($name, $value);
-		}
+		$this->params = $params;
 	}
 
 
@@ -54,10 +54,18 @@ class PhpHandler implements IExtensionHandler
 	}
 
 
-	public function execute(File $sql)
+	/**
+	 * @param  File $file
+	 * @return int number of queries
+	 */
+	public function execute(File $file)
 	{
-		extract($this->params);
-		return include $sql->path;
+		extract($this->params, EXTR_SKIP);
+		$count = @include $file->path;
+		if ($count === FALSE) {
+			throw new IOException("Cannot include file '{$file->path}'.");
+		}
+		return $count;
 	}
 
 }

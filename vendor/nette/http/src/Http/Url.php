@@ -324,7 +324,7 @@ class Url implements \JsonSerializable
 	public function getHostUrl(): string
 	{
 		return ($this->scheme ? $this->scheme . ':' : '')
-			. (($authority = $this->getAuthority()) ? '//' . $authority : '');
+			. (($authority = $this->getAuthority()) !== '' ? '//' . $authority : '');
 	}
 
 
@@ -429,7 +429,7 @@ class Url implements \JsonSerializable
 	public static function parseQuery(string $s): array
 	{
 		$s = str_replace(['%5B', '%5b'], '[', $s);
-		$s = preg_replace('#&([^[&=]+)([^&]*)#', '&0[$1]$2', '&' . $s);
+		$s = preg_replace('#([&;])([^[&;=]+)([^&;]*)#', '&0[$2]$3', '&' . $s);
 		parse_str($s, $res);
 		return $res[0] ?? [];
 	}

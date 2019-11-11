@@ -26,7 +26,10 @@ class Cleaner
 	private $removedCount = 0;
 
 	/** @var array */
-	private static $allowedComposerTypes = [NULL, 'library', 'composer-plugin'];
+	private static $allowedComposerTypes = [null, 'library', 'composer-plugin'];
+
+	/** @var string[] */
+	private static $alwaysIgnore = ['composer.json', 'license*', 'LICENSE*', '.phpstorm.meta.php'];
 
 
 	public function __construct(IOInterface $io, Filesystem $fileSystem)
@@ -41,66 +44,84 @@ class Cleaner
 	 */
 	public function clean($vendorDir, array $ignorePaths = [])
 	{
-		foreach (new FileSystemIterator($vendorDir) as $packageVendor) {
+		foreach (new FilesystemIterator($vendorDir) as $packageVendor) {
 			if (!$packageVendor->isDir()) {
 				continue;
 			}
-			foreach (new FileSystemIterator($packageVendor) as $packageName) {
+			foreach (new FilesystemIterator($packageVendor) as $packageName) {
 				if (!$packageName->isDir()) {
 					continue;
 				}
 				$name = $packageVendor->getFileName() . '/' . $packageName->getFileName();
-				$ignore = isset($ignorePaths[$name]) ? (array) $ignorePaths[$name] : [];
-				$this->io->write("Package $name", TRUE, IOInterface::VERBOSE);
-				$this->processPackage((string) $packageName, $ignore);
+				$ignore = isset($ignorePaths[$name]) ? $ignorePaths[$name] : null;
+				if ($ignore === true) {
+					$this->io->write("Composer cleaner: Skipped package $name", true, IOInterface::VERBOSE);
+				} else {
+					$this->io->write("Composer cleaner: Package $name", true, IOInterface::VERBOSE);
+					$this->processPackage((string) $packageName, (array) $ignore);
+				}
 			}
 		}
-		$this->io->write("Removed $this->removedCount files or directories.");
+		$this->io->write("Composer cleaner: Removed $this->removedCount files or directories.");
 	}
 
 
 	/**
 	 * @return void
 	 */
-	private function processPackage($packageDir, array $ignorePaths)
+	private function processPackage($packageDir, array $ignoreFiles)
 	{
 		$data = $this->loadComposerJson($packageDir);
-		$type = isset($data->type) ? $data->type : NULL;
-		if (!$data || !in_array($type, self::$allowedComposerTypes, TRUE)) {
+		$type = isset($data->type) ? $data->type : null;
+		if (!$data || !in_array($type, self::$allowedComposerTypes, true)) {
 			return;
 		}
 
-		$paths = array_fill_keys($ignorePaths, TRUE);
-
 		foreach ($this->getExcludes($data) as $exclude) {
 			$dir = trim(ltrim($exclude, '.'), '/');
-			if ($dir && strpos($dir, '..') === FALSE && !isset($paths[$dir])) {
+			if ($dir && strpos($dir, '..') === false && !self::matchMask($dir, $ignoreFiles)) {
 				$path = $packageDir . '/' . $dir;
-				$this->io->write("Removing $path", TRUE, IOInterface::VERBOSE);
+				$this->io->write("Composer cleaner: Removing $path", true, IOInterface::VERBOSE);
 				$this->fileSystem->remove($path);
 				$this->removedCount++;
 			}
 		}
 
 		foreach ($this->getSources($data) as $source) {
-			$dir = strstr(ltrim(ltrim($source, '.'), '/') . '/', '/', TRUE);
-			$paths[$dir] = TRUE;
+			$dir = strstr(ltrim(ltrim($source, '.'), '/') . '/', '/', true);
+			$ignoreFiles[] = $dir;
 		}
 
-		if (!$paths || isset($paths[''])) {
+		if (!$ignoreFiles || self::matchMask('', $ignoreFiles)) {
 			return;
 		}
 
-		$paths['composer.json'] = TRUE;
+		$ignoreFiles = array_merge($ignoreFiles, self::$alwaysIgnore);
 
-		foreach (new FileSystemIterator($packageDir) as $path) {
+		foreach (new FilesystemIterator($packageDir) as $path) {
 			$fileName = $path->getFileName();
-			if (!isset($paths[$fileName]) && strncasecmp($fileName, 'license', 7)) {
-				$this->io->write("Removing $path", TRUE, IOInterface::VERBOSE);
+			if (!self::matchMask($fileName, $ignoreFiles)) {
+				$this->io->write("Composer cleaner: Removing $path", true, IOInterface::VERBOSE);
 				$this->fileSystem->remove($path);
 				$this->removedCount++;
 			}
 		}
+	}
+
+
+	/**
+	 * @param  string
+	 * @param  string[]
+	 * @return bool
+	 */
+	public static function matchMask($fileName, array $patterns)
+	{
+		foreach ($patterns as $pattern) {
+			if (fnmatch($pattern, $fileName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 
@@ -157,21 +178,20 @@ class Cleaner
 
 
 	/**
-	 * @return stdClass|NULL
+	 * @return stdClass|null
 	 */
 	public function loadComposerJson($dir)
 	{
 		$file = $dir . '/composer.json';
 		if (!is_file($file)) {
-			$this->io->writeError("File $file not found.", TRUE, IOInterface::VERBOSE);
+			$this->io->writeError("Composer cleaner: File $file not found.", true, IOInterface::VERBOSE);
 			return;
 		}
 		$data = json_decode(file_get_contents($file));
 		if (!$data instanceof stdClass) {
-			$this->io->writeError("Invalid $file.");
+			$this->io->writeError("Composer cleaner: Invalid $file.");
 			return;
 		}
 		return $data;
 	}
-
 }

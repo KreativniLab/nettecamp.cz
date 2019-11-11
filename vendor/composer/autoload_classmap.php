@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Bootstrap' => $baseDir . '/app/Bootstrap.php',
     'DG\\ComposerCleaner\\Cleaner' => $vendorDir . '/dg/composer-cleaner/src/ComposerCleaner/Cleaner.php',
     'DG\\ComposerCleaner\\Plugin' => $vendorDir . '/dg/composer-cleaner/src/ComposerCleaner/Plugin.php',
     'Latte\\CompileException' => $vendorDir . '/latte/latte/src/Latte/exceptions.php',

@@ -84,6 +84,7 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
     );
 
     public static $classMap = array (
+        'App\\Bootstrap' => __DIR__ . '/../..' . '/app/Bootstrap.php',
         'DG\\ComposerCleaner\\Cleaner' => __DIR__ . '/..' . '/dg/composer-cleaner/src/ComposerCleaner/Cleaner.php',
         'DG\\ComposerCleaner\\Plugin' => __DIR__ . '/..' . '/dg/composer-cleaner/src/ComposerCleaner/Plugin.php',
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',

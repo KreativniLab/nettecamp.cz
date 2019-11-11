@@ -1,0 +1,17 @@
+includes:
+	- extension.neon
+	- rules.neon
+	- vendor/phpstan/phpstan-php-parser/extension.neon
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+	- vendor/phpstan/phpstan-phpunit/rules.neon
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+	excludes_analyse:
+		- %rootDir%/../../../tests/*/data/*
+		- %rootDir%/../../../tests/NetteObjectChild.php
+
+	ignoreErrors:
+		- '~^Parameter \#1 \$node \(.*\) of method .*Rule::processNode\(\) should be contravariant with parameter \$node \(PhpParser\\Node\) of method PHPStan\\Rules\\Rule::processNode\(\)$~'
+		- '~^Variable property access on PhpParser\\Node\.$~'

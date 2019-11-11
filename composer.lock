@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e077bd479e00f80fb385cbd86d12e129",
+    "content-hash": "40c6975bcfd14fdc16a042159e1ffd88",
     "packages": [
         {
             "name": "contributte/console",
@@ -1798,6 +1798,75 @@
             "description": "Nittro PHP bridges",
             "homepage": "https://www.nittro.org/",
             "time": "2019-08-28T13:44:24+00:00"
+        },
+        {
+            "name": "phpstan/phpstan-nette",
+            "version": "0.11.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan-nette.git",
+                "reference": "356ee9e80b07d46ac24f1bdbb8bc469e14bb9965"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/356ee9e80b07d46ac24f1bdbb8bc469e14bb9965",
+                "reference": "356ee9e80b07d46ac24f1bdbb8bc469e14bb9965",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "^4.0",
+                "php": "~7.1",
+                "phpstan/phpstan": "^0.11.7"
+            },
+            "conflict": {
+                "nette/application": "<2.3.0",
+                "nette/component-model": "<2.3.0",
+                "nette/di": "<2.3.0",
+                "nette/forms": "<2.3.0",
+                "nette/http": "<2.3.0",
+                "nette/utils": "<2.3.0"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "^3.0.1",
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "nette/application": "^2.3.0 || ^3.0.0",
+                "nette/component-model": "^2.3.0 || ^3.0.0",
+                "nette/di": "^2.3.0 || ^3.0.0",
+                "nette/forms": "^2.3.0 || ^3.0.0",
+                "nette/http": "^2.3.0 || ^3.0.0",
+                "nette/utils": "^2.3.0 || ^3.0.0",
+                "phing/phing": "^2.13.0",
+                "phpstan/phpstan-php-parser": "^0.11",
+                "phpstan/phpstan-phpunit": "^0.11",
+                "phpstan/phpstan-strict-rules": "^0.11",
+                "phpunit/phpunit": "^7.0",
+                "satooshi/php-coveralls": "^1.0",
+                "slevomat/coding-standard": "^4.5.2"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.11-dev"
+                },
+                "phpstan": {
+                    "includes": [
+                        "extension.neon",
+                        "rules.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Nette Framework class reflection extension for PHPStan",
+            "time": "2019-05-17T17:49:09+00:00"
         },
         {
             "name": "phpstan/phpstan-shim",

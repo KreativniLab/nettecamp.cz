@@ -16,6 +16,8 @@ class ErrorPresenter extends Nette\Application\UI\Presenter
 
 	public function __construct(ILogger $logger)
 	{
+        parent::__construct();
+
 		$this->logger = $logger;
 	}
 

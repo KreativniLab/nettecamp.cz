@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "40c6975bcfd14fdc16a042159e1ffd88",
@@ -480,16 +480,16 @@
         },
         {
             "name": "nette/database",
-            "version": "v3.0.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/database.git",
-                "reference": "cacc110893578eb03d4aaaa46bb962ac666f89dd"
+                "reference": "e17242a71a251cd09e209c1e2bdb530112a6efa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/database/zipball/cacc110893578eb03d4aaaa46bb962ac666f89dd",
-                "reference": "cacc110893578eb03d4aaaa46bb962ac666f89dd",
+                "url": "https://api.github.com/repos/nette/database/zipball/e17242a71a251cd09e209c1e2bdb530112a6efa8",
+                "reference": "e17242a71a251cd09e209c1e2bdb530112a6efa8",
                 "shasum": ""
             },
             "require": {
@@ -548,7 +548,7 @@
                 "queries",
                 "sqlite"
             ],
-            "time": "2019-09-30T08:58:55+00:00"
+            "time": "2019-11-19T18:28:25+00:00"
         },
         {
             "name": "nette/di",
@@ -1910,6 +1910,7 @@
                 "MIT"
             ],
             "description": "PHPStan Phar distribution",
+            "abandoned": "phpstan/phpstan",
             "time": "2019-10-22T20:46:16+00:00"
         },
         {

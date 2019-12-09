@@ -24,7 +24,7 @@
 		"nextras/migrations": "^3.0",
 		"nextras/static-router": "v2.0.0",
 		"nextras/mail-panel": "^2.5",
-		"texy/texy": "~2.9.0",
+		"texy/texy": "~3.0.1",
 		"nittro/nette-bridges": "^2.0",
 		"ublaboo/mailing": "^1.2",
 		"nextras/orm": "^3.1",

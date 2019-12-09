@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40c6975bcfd14fdc16a042159e1ffd88",
+    "content-hash": "ff4a0ee4d924eaf62c9a9faf883ed984",
     "packages": [
         {
             "name": "contributte/console",
@@ -1910,6 +1910,7 @@
                 "MIT"
             ],
             "description": "PHPStan Phar distribution",
+            "abandoned": "phpstan/phpstan",
             "time": "2019-10-22T20:46:16+00:00"
         },
         {
@@ -2213,29 +2214,34 @@
         },
         {
             "name": "texy/texy",
-            "version": "v2.9.2",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "1792af01d09307c6480d38dbbacaa3b67c40bc99"
+                "reference": "4a9719709a0137f5066c9a7f3681c05f7aa353bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/1792af01d09307c6480d38dbbacaa3b67c40bc99",
-                "reference": "1792af01d09307c6480d38dbbacaa3b67c40bc99",
+                "url": "https://api.github.com/repos/dg/texy/zipball/4a9719709a0137f5066c9a7f3681c05f7aa353bb",
+                "reference": "4a9719709a0137f5066c9a7f3681c05f7aa353bb",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.4"
+                "php": ">=7.1"
             },
             "replace": {
                 "dg/texy": "*"
             },
             "require-dev": {
-                "nette/tester": "~1.5",
+                "nette/tester": "^2.0",
                 "tracy/tracy": "^2.4"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "src/"
@@ -2269,7 +2275,7 @@
                 "wiki",
                 "xhtml"
             ],
-            "time": "2018-06-22T09:50:22+00:00"
+            "time": "2019-11-19T19:18:59+00:00"
         },
         {
             "name": "tracy/tracy",

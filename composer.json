@@ -27,10 +27,12 @@
 		"texy/texy": "~2.9.0",
 		"nittro/nette-bridges": "^2.0",
 		"ublaboo/mailing": "^1.2",
-		"nextras/orm": "^3.1",
-		"dg/composer-cleaner": "^2.0",
-		"phpstan/phpstan-shim": "0.11.*",
-		"phpstan/phpstan-nette": "0.11.*"
+		"nextras/orm": "^3.1"
+	},
+	"require-dev": {
+		"dg/composer-cleaner": "^2.1",
+		"phpstan/phpstan": "^0.12.3",
+		"phpstan/phpstan-nette": "^0.12.0"
 	},
 	"config": {
 		"discard-changes": true
@@ -39,7 +41,7 @@
 		"classmap": ["app/Bootstrap.php"]
 	},
 	"scripts": {
-		"phpstan": "phpstan analyze -l 1 app"
+		"phpstan": "vendor/bin/phpstan analyze -l 1 app"
 	},
 	"extra": {
 		"cleaner-ignore": {

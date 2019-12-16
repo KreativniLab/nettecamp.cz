@@ -10,8 +10,8 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         '59af96974553a1fc6407327354b6f47e' => __DIR__ . '/..' . '/nette/di/src/compatibility.php',
         '19a7e2c3b1d506dcdc1b60aab8e102e4' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/shortcuts.php',
         'e7a6fd2e7a869bb207158e9416bdd9b0' => __DIR__ . '/..' . '/nette/application/src/compatibility.php',
-        '574b1c4a61c193090943a4fe80c967e5' => __DIR__ . '/..' . '/phpstan/phpstan-shim/bootstrap.php',
         'afdda9f94b76f77a7518e02eee753cc9' => __DIR__ . '/..' . '/nette/mail/src/compatibility.php',
+        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         'a1d067aa2e53d6b47171c03cfc0ea5be' => __DIR__ . '/..' . '/nette/safe-stream/src/loader.php',
@@ -33,6 +33,7 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         'P' => 
         array (
             'Psr\\Container\\' => 14,
+            'PhpParser\\' => 10,
             'PHPStan\\' => 8,
         ),
         'N' => 
@@ -73,6 +74,10 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'PhpParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
         'PHPStan\\' => 
         array (

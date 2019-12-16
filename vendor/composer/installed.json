@@ -1805,6 +1805,60 @@
         ]
     },
     {
+        "name": "nikic/php-parser",
+        "version": "v4.3.0",
+        "version_normalized": "4.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nikic/PHP-Parser.git",
+            "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9a9981c347c5c49d6dfe5cf826bb882b824080dc",
+            "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc",
+            "shasum": ""
+        },
+        "require": {
+            "ext-tokenizer": "*",
+            "php": ">=7.0"
+        },
+        "require-dev": {
+            "ircmaxell/php-yacc": "0.0.5",
+            "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
+        },
+        "time": "2019-11-08T13:50:10+00:00",
+        "bin": [
+            "bin/php-parse"
+        ],
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "4.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "PhpParser\\": "lib/PhpParser"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Nikita Popov"
+            }
+        ],
+        "description": "A PHP parser written in PHP",
+        "keywords": [
+            "parser",
+            "php"
+        ]
+    },
+    {
         "name": "nittro/nette-bridges",
         "version": "v2.1.3",
         "version_normalized": "2.1.3.0",
@@ -1849,24 +1903,66 @@
         "homepage": "https://www.nittro.org/"
     },
     {
-        "name": "phpstan/phpstan-nette",
-        "version": "0.11.1",
-        "version_normalized": "0.11.1.0",
+        "name": "phpstan/phpstan",
+        "version": "0.12.3",
+        "version_normalized": "0.12.3.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/phpstan/phpstan-nette.git",
-            "reference": "356ee9e80b07d46ac24f1bdbb8bc469e14bb9965"
+            "url": "https://github.com/phpstan/phpstan.git",
+            "reference": "c15a6ea55da71d8133399306f560cfe4d30301b7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/356ee9e80b07d46ac24f1bdbb8bc469e14bb9965",
-            "reference": "356ee9e80b07d46ac24f1bdbb8bc469e14bb9965",
+            "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c15a6ea55da71d8133399306f560cfe4d30301b7",
+            "reference": "c15a6ea55da71d8133399306f560cfe4d30301b7",
+            "shasum": ""
+        },
+        "require": {
+            "nikic/php-parser": "^4.3.0",
+            "php": "^7.1"
+        },
+        "time": "2019-12-14T13:41:17+00:00",
+        "bin": [
+            "phpstan",
+            "phpstan.phar"
+        ],
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.12-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "PHPStan - PHP Static Analysis Tool"
+    },
+    {
+        "name": "phpstan/phpstan-nette",
+        "version": "0.12.0",
+        "version_normalized": "0.12.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phpstan/phpstan-nette.git",
+            "reference": "e02aa18dcf7481d9b677fb21e0ba89124a44c89d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/e02aa18dcf7481d9b677fb21e0ba89124a44c89d",
+            "reference": "e02aa18dcf7481d9b677fb21e0ba89124a44c89d",
             "shasum": ""
         },
         "require": {
             "nikic/php-parser": "^4.0",
             "php": "~7.1",
-            "phpstan/phpstan": "^0.11.7"
+            "phpstan/phpstan": "^0.12"
         },
         "conflict": {
             "nette/application": "<2.3.0",
@@ -1887,18 +1983,18 @@
             "nette/http": "^2.3.0 || ^3.0.0",
             "nette/utils": "^2.3.0 || ^3.0.0",
             "phing/phing": "^2.13.0",
-            "phpstan/phpstan-php-parser": "^0.11",
-            "phpstan/phpstan-phpunit": "^0.11",
-            "phpstan/phpstan-strict-rules": "^0.11",
+            "phpstan/phpstan-php-parser": "^0.12",
+            "phpstan/phpstan-phpunit": "^0.12",
+            "phpstan/phpstan-strict-rules": "^0.12",
             "phpunit/phpunit": "^7.0",
             "satooshi/php-coveralls": "^1.0",
             "slevomat/coding-standard": "^4.5.2"
         },
-        "time": "2019-05-17T17:49:09+00:00",
+        "time": "2019-11-27T08:55:47+00:00",
         "type": "phpstan-extension",
         "extra": {
             "branch-alias": {
-                "dev-master": "0.11-dev"
+                "dev-master": "0.12-dev"
             },
             "phpstan": {
                 "includes": [
@@ -1918,52 +2014,6 @@
             "MIT"
         ],
         "description": "Nette Framework class reflection extension for PHPStan"
-    },
-    {
-        "name": "phpstan/phpstan-shim",
-        "version": "0.11.19",
-        "version_normalized": "0.11.19.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/phpstan/phpstan-shim.git",
-            "reference": "e3c06b1d63691dae644ae1e5b540905c8c021801"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/phpstan/phpstan-shim/zipball/e3c06b1d63691dae644ae1e5b540905c8c021801",
-            "reference": "e3c06b1d63691dae644ae1e5b540905c8c021801",
-            "shasum": ""
-        },
-        "require": {
-            "php": "~7.1"
-        },
-        "replace": {
-            "nikic/php-parser": "^4.0.2",
-            "phpstan/phpdoc-parser": "^0.3.3",
-            "phpstan/phpstan": "self.version"
-        },
-        "time": "2019-10-22T20:46:16+00:00",
-        "bin": [
-            "phpstan",
-            "phpstan.phar"
-        ],
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.11-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "bootstrap.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "PHPStan Phar distribution"
     },
     {
         "name": "psr/container",

@@ -6,10 +6,8 @@ php:
 before_install:
   - phpenv config-rm xdebug.ini || return 0 # Turn off XDebug
 
-install:
-  - travis_retry composer install --no-progress --prefer-dist # Install dependencies
-
 script:
+  - composer validate
   - composer phpstan
 
 after_failure:
@@ -27,4 +25,4 @@ sudo: false
 
 cache:
   directories:
-    - $HOME/.composer/cache
+    - $HOME/.composer/cache/files

@@ -60,12 +60,13 @@ class RegistrationForm extends Control
 		];
 
 		$form->addRadioList('arrival', 'přijedu:', $time);
-		$form->addCheckbox('invoice', 'chci fakturu na firmu')
+		$invoice = $form->addCheckbox('invoice', 'chci fakturu na firmu');
+		$invoice
 			 ->addCondition($form::EQUAL, true)
 			 ->toggle('companyid-container');
 
 		$company = $form->addText('companyid', 'IČO');
-		$company->addConditionOn($form['invoice'], Form::EQUAL, true)
+		$company->addConditionOn($invoice, Form::EQUAL, true)
 			 ->setRequired('Vyplňte IČO firmy');
 
 
@@ -107,14 +108,16 @@ class RegistrationForm extends Control
 
 		$form->addSubmit('actionSend', 'Save');
 
-		$form->onValidate[] = function ($form, $values) {
-			if (!$values->email === '') {
+		$form->onValidate[] = function () use ($form): void {
+			$values = $form->getValues();
+
+			if ($values->email !== '') {
 				$form->addError('spam protection activated');
-				return false;
 			}
 		};
 
-		$form->onSuccess[] = function ($form, $values) {
+		$form->onSuccess[] = function () use ($form): void {
+			$values = $form->getValues();
 			$this->processForm($values);
 			$this->onSave($this, $this->registration);
 		};
@@ -123,20 +126,20 @@ class RegistrationForm extends Control
 	}
 
 
-	private function processForm($values)
+	private function processForm(ArrayHash $values): void
 	{
 		$values->email = $values->liame;
 
-        if ($values['vegetarian']){
-            $values['vegetarian'] = 'yes';
-        } else {
-            $values['vegetarian'] = 'no';
-        }
-        if ($values['invoice']){
-            $values['invoice'] = 'yes';
-        } else {
-            $values['invoice'] = 'no';
-        }
+		if ($values['vegetarian']){
+			$values['vegetarian'] = 'yes';
+		} else {
+			$values['vegetarian'] = 'no';
+		}
+		if ($values['invoice']){
+			$values['invoice'] = 'yes';
+		} else {
+			$values['invoice'] = 'no';
+		}
 
 		$participant = new Registration(2020, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian,
 			$values->skills, $values->tshirt, $values->presentation, $values->note);
@@ -148,7 +151,7 @@ class RegistrationForm extends Control
 		$this->model->persistAndFlush($participant);
 
 
-		$registrationData = new RegistrationData('2020', $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['companyid'],
+		$registrationData = new RegistrationData(2020, $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['companyid'],
 			$values['vegetarian'], $values['skills'], $values['tshirt'], $values['presentation'], $values['note']);
 
 		$mail = $this->mailFactory->createByType(RegistrationMail::class, $registrationData);

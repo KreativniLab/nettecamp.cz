@@ -22,11 +22,7 @@ class ErrorPresenter extends Nette\Application\UI\Presenter
 	}
 
 
-	/**
-	 * @param  \Exception
-	 * @return void
-	 */
-	public function renderDefault($exception)
+	public function renderDefault(\Exception $exception): void
 	{
 		if ($exception instanceof Nette\Application\BadRequestException) {
 			$code = $exception->getCode();

@@ -19,5 +19,6 @@ return array(
     'Nextras\\Migrations\\' => array($vendorDir . '/nextras/migrations/src'),
     'Nextras\\MailPanel\\' => array($vendorDir . '/nextras/mail-panel/src'),
     'Nextras\\Dbal\\' => array($vendorDir . '/nextras/dbal/src'),
+    'NetteCamp\\PHPStan\\Reflections\\' => array($baseDir . '/.phpstan/Reflections'),
     'Contributte\\Console\\' => array($vendorDir . '/contributte/console/src'),
 );

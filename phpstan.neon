@@ -1,7 +1,16 @@
 parameters:
+	paths:
+		- app
+	level: 5
 	autoload_directories:
 		- app
 
+services:
+	-
+		# tell phpstan we have Nette\Bridges\ApplicationLatte\Template in $this->template
+		class: NetteCamp\PHPStan\Reflections\TemplatePropertyReflectionExtension
+		tags:
+			- phpstan.broker.propertiesClassReflectionExtension
 
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon

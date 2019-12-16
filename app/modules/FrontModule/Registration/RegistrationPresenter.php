@@ -55,7 +55,7 @@ class RegistrationPresenter extends BasePresenter
 
 		$form = $this->registrationFormFactory->create($fullCamp);
 
-		$form->onSave[] = function () use ($fullCamp) {
+		$form->onSave[] = function () use ($fullCamp): void {
 			if ($fullCamp) {
 				$this->postGet('Registration:waitinglist');
 				$this->setView('waitinglist');

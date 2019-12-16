@@ -40,8 +40,13 @@
 	"autoload": {
 		"classmap": ["app/Bootstrap.php"]
 	},
+	"autoload-dev": {
+		"psr-4": {
+			"NetteCamp\\PHPStan\\Reflections\\": ".phpstan/Reflections"
+		}
+	},
 	"scripts": {
-		"phpstan": "vendor/bin/phpstan analyze -l 1 app"
+		"phpstan": "vendor/bin/phpstan analyze"
 	},
 	"extra": {
 		"cleaner-ignore": {

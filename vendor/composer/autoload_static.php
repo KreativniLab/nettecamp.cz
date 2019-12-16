@@ -43,6 +43,7 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
             'Nextras\\Migrations\\' => 19,
             'Nextras\\MailPanel\\' => 18,
             'Nextras\\Dbal\\' => 13,
+            'NetteCamp\\PHPStan\\Reflections\\' => 30,
         ),
         'C' => 
         array (
@@ -102,6 +103,10 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         'Nextras\\Dbal\\' => 
         array (
             0 => __DIR__ . '/..' . '/nextras/dbal/src',
+        ),
+        'NetteCamp\\PHPStan\\Reflections\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/.phpstan/Reflections',
         ),
         'Contributte\\Console\\' => 
         array (

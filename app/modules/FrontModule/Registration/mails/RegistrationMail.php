@@ -13,6 +13,9 @@ class RegistrationMail extends AbstractMail implements IComposableMail
 {
 	public function compose(Nette\Mail\Message $message, ?IMessageData $mailData): void
 	{
+		// make IComposableMail generic class
+		assert($mailData instanceof RegistrationData);
+
 		$message->setFrom($this->mailAddresses['default_sender']);
 		$message->addReplyTo($this->mailAddresses['default_recipient']);
 		$message->addTo($mailData->email);

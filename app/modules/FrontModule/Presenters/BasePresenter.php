@@ -38,7 +38,7 @@ class BasePresenter extends Nittro\Bridges\NittroUI\Presenter
 	{
 		parent::startup();
 
-		$this->title = 'Nette Camp / 22.—25. srpna 2019';
+		$this->title = 'Nette Camp / 20.—23. srpna 2020';
 
 		$this->setDefaultSnippets([
 			'content',

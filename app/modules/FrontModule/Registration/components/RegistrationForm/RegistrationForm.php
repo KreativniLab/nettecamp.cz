@@ -148,7 +148,7 @@ class RegistrationForm extends Control
 		$this->model->persistAndFlush($participant);
 
 
-		$registrationData = new RegistrationData('2019', $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['companyid'],
+		$registrationData = new RegistrationData('2020', $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['companyid'],
 			$values['vegetarian'], $values['skills'], $values['tshirt'], $values['presentation'], $values['note']);
 
 		$mail = $this->mailFactory->createByType(RegistrationMail::class, $registrationData);

@@ -138,7 +138,7 @@ class RegistrationForm extends Control
             $values['invoice'] = 'no';
         }
 
-		$participant = new Registration(2019, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian,
+		$participant = new Registration(2020, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian,
 			$values->skills, $values->tshirt, $values->presentation, $values->note);
 
 		if ($this->fullCamp) {

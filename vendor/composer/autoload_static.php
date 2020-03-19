@@ -9,11 +9,11 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
     public static $files = array (
         '59af96974553a1fc6407327354b6f47e' => __DIR__ . '/..' . '/nette/di/src/compatibility.php',
         '19a7e2c3b1d506dcdc1b60aab8e102e4' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/shortcuts.php',
+        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         'e7a6fd2e7a869bb207158e9416bdd9b0' => __DIR__ . '/..' . '/nette/application/src/compatibility.php',
         'afdda9f94b76f77a7518e02eee753cc9' => __DIR__ . '/..' . '/nette/mail/src/compatibility.php',
-        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
+        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         'a1d067aa2e53d6b47171c03cfc0ea5be' => __DIR__ . '/..' . '/nette/safe-stream/src/loader.php',
         '5d1dcebe069db2f62f5a447526290867' => __DIR__ . '/..' . '/texy/texy/src/texy.php',
     );
@@ -29,11 +29,13 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Contracts\\Service\\' => 26,
             'Symfony\\Component\\Console\\' => 26,
+            'SlevomatCodingStandard\\' => 23,
         ),
         'P' => 
         array (
             'Psr\\Container\\' => 14,
             'PhpParser\\' => 10,
+            'PHPStan\\PhpDocParser\\' => 21,
             'PHPStan\\' => 8,
         ),
         'N' => 
@@ -44,6 +46,11 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
             'Nextras\\MailPanel\\' => 18,
             'Nextras\\Dbal\\' => 13,
             'NetteCamp\\PHPStan\\Reflections\\' => 30,
+        ),
+        'J' => 
+        array (
+            'JakubOnderka\\PhpConsoleHighlighter\\' => 35,
+            'JakubOnderka\\PhpConsoleColor\\' => 29,
         ),
         'C' => 
         array (
@@ -72,6 +79,10 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
         ),
+        'SlevomatCodingStandard\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slevomat/coding-standard/SlevomatCodingStandard',
+        ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
@@ -79,6 +90,10 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'PHPStan\\PhpDocParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
         'PHPStan\\' => 
         array (
@@ -108,6 +123,14 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         array (
             0 => __DIR__ . '/../..' . '/.phpstan/Reflections',
         ),
+        'JakubOnderka\\PhpConsoleHighlighter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
+        ),
+        'JakubOnderka\\PhpConsoleColor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
+        ),
         'Contributte\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/contributte/console/src',
@@ -118,7 +141,39 @@ class ComposerStaticInitc330b77d32f18dfb63cd092218876cf9
         'App\\Bootstrap' => __DIR__ . '/../..' . '/app/Bootstrap.php',
         'DG\\ComposerCleaner\\Cleaner' => __DIR__ . '/..' . '/dg/composer-cleaner/src/ComposerCleaner/Cleaner.php',
         'DG\\ComposerCleaner\\Plugin' => __DIR__ . '/..' . '/dg/composer-cleaner/src/ComposerCleaner/Plugin.php',
+        'ExampleClass' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/tests/skip-on-5.3/class.php',
+        'ExampleTrait' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/tests/skip-on-5.3/trait.php',
+        'JakubOnderka\\PhpParallelLint\\ArrayIterator' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Settings.php',
+        'JakubOnderka\\PhpParallelLint\\Blame' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Error.php',
+        'JakubOnderka\\PhpParallelLint\\ConsoleWriter' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
+        'JakubOnderka\\PhpParallelLint\\Error' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Error.php',
+        'JakubOnderka\\PhpParallelLint\\ErrorFormatter' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/ErrorFormatter.php',
+        'JakubOnderka\\PhpParallelLint\\Exception' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/exceptions.php',
+        'JakubOnderka\\PhpParallelLint\\FileWriter' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
+        'JakubOnderka\\PhpParallelLint\\IWriter' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
+        'JakubOnderka\\PhpParallelLint\\InvalidArgumentException' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/exceptions.php',
+        'JakubOnderka\\PhpParallelLint\\JsonOutput' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
+        'JakubOnderka\\PhpParallelLint\\Manager' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Manager.php',
+        'JakubOnderka\\PhpParallelLint\\MultipleWriter' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
+        'JakubOnderka\\PhpParallelLint\\NotExistsPathException' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/exceptions.php',
+        'JakubOnderka\\PhpParallelLint\\NullWriter' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
+        'JakubOnderka\\PhpParallelLint\\Output' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
+        'JakubOnderka\\PhpParallelLint\\ParallelLint' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/ParallelLint.php',
+        'JakubOnderka\\PhpParallelLint\\Process\\GitBlameProcess' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Process/GitBlameProcess.php',
+        'JakubOnderka\\PhpParallelLint\\Process\\LintProcess' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Process/LintProcess.php',
+        'JakubOnderka\\PhpParallelLint\\Process\\PhpExecutable' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Process/PhpExecutable.php',
+        'JakubOnderka\\PhpParallelLint\\Process\\PhpProcess' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Process/PhpProcess.php',
+        'JakubOnderka\\PhpParallelLint\\Process\\Process' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Process/Process.php',
+        'JakubOnderka\\PhpParallelLint\\Process\\SkipLintProcess' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Process/SkipLintProcess.php',
+        'JakubOnderka\\PhpParallelLint\\RecursiveDirectoryFilterIterator' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Manager.php',
+        'JakubOnderka\\PhpParallelLint\\Result' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Result.php',
+        'JakubOnderka\\PhpParallelLint\\RunTimeException' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/exceptions.php',
+        'JakubOnderka\\PhpParallelLint\\Settings' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Settings.php',
+        'JakubOnderka\\PhpParallelLint\\SyntaxError' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Error.php',
+        'JakubOnderka\\PhpParallelLint\\TextOutput' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
+        'JakubOnderka\\PhpParallelLint\\TextOutputColored' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
+        'JsonSerializable' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/JsonSerializable.php',
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
         'Latte\\Compiler' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Compiler.php',
         'Latte\\Engine' => __DIR__ . '/..' . '/latte/latte/src/Latte/Engine.php',

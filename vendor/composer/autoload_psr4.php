@@ -11,8 +11,10 @@ return array(
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Contracts\\Service\\' => array($vendorDir . '/symfony/service-contracts'),
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
+    'SlevomatCodingStandard\\' => array($vendorDir . '/slevomat/coding-standard/SlevomatCodingStandard'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
     'PHPStan\\' => array($vendorDir . '/phpstan/phpstan-nette/src'),
     'Nextras\\Routing\\' => array($vendorDir . '/nextras/static-router/src'),
     'Nextras\\Orm\\' => array($vendorDir . '/nextras/orm/src'),
@@ -20,5 +22,7 @@ return array(
     'Nextras\\MailPanel\\' => array($vendorDir . '/nextras/mail-panel/src'),
     'Nextras\\Dbal\\' => array($vendorDir . '/nextras/dbal/src'),
     'NetteCamp\\PHPStan\\Reflections\\' => array($baseDir . '/.phpstan/Reflections'),
+    'JakubOnderka\\PhpConsoleHighlighter\\' => array($vendorDir . '/jakub-onderka/php-console-highlighter/src'),
+    'JakubOnderka\\PhpConsoleColor\\' => array($vendorDir . '/jakub-onderka/php-console-color/src'),
     'Contributte\\Console\\' => array($vendorDir . '/contributte/console/src'),
 );

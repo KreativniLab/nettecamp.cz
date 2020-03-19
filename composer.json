@@ -47,7 +47,15 @@
 		}
 	},
 	"scripts": {
-		"phpstan": "vendor/bin/phpstan analyze"
+		"phpstan": "vendor/bin/phpstan analyze",
+		"lint": "linter app",
+		"cs": "codesniffer app",
+		"csf": "codefixer app",
+		"qa": [
+			"@lint",
+			"@phpstan",
+			"@cs"
+		]
 	},
 	"extra": {
 		"cleaner-ignore": {

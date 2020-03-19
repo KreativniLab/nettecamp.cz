@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace App\Model;
 
@@ -14,19 +12,16 @@ use Nextras\Orm\Entity\Entity;
  * @property int $attendance
  * @property string $linkForum
  * @property string $linkFacebook
-
  */
 class History extends Entity
 {
 
-	public function __construct(
-		int $year,
-		string $name
-	) {
-		parent::__construct();
+    public function __construct(int $year, string $name)
+    {
+        parent::__construct();
 
-		$this->year = $year;
-		$this->name = $name;
-	}
+        $this->year = $year;
+        $this->name = $name;
+    }
 
 }

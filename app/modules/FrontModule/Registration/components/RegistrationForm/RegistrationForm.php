@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace App\FrontModule\Components;
 
@@ -20,151 +18,139 @@ use Ublaboo\Mailing\MailFactory;
 class RegistrationForm extends Control
 {
 
-	/** @var callable[] */
-	public $onSave = [];
+    /** @var callable[] */
+    public $onSave = [];
 
-	/** @var ArrayHash */
-	private $registration;
+    /** @var ArrayHash */
+    private $registration;
 
-	/** @var MailFactory */
-	private $mailFactory;
+    /** @var MailFactory */
+    private $mailFactory;
 
-	/** @var bool */
-	private $fullCamp;
+    /** @var bool */
+    private $fullCamp;
 
-	/** @var Model */
-	private $model;
+    /** @var Model */
+    private $model;
 
-
-	public function __construct($fullCamp = false, Model $model, MailFactory $mailFactory)
-	{
-		$this->mailFactory = $mailFactory;
-		$this->fullCamp = $fullCamp;
-		$this->model = $model;
-	}
-
-
-	public function createComponentRegistrationForm()
-	{
-		$form = new Form();
-
-		$form->addHidden('email');
-		$form->addText('name', "jméno a příjmení:")->setRequired('Vyplň jméno a příjmení');
-		$form->addText('liame', "email:")->setRequired('Vyplň email')->addRule(Form::EMAIL,
-			'emailová adresa je špatně zadaná');
-		$form->addText('phone', "telefon:")->setRequired('Vyplň telefon');
-
-		$time = [
-			'ctvrtek' => "už ve čtvrtek na uvítací párty a páteční přednášky",
-			'patek' => 'až v pátek po práci :-(',
-		];
-
-		$form->addRadioList('arrival', 'přijedu:', $time);
-		$invoice = $form->addCheckbox('invoice', 'chci fakturu na firmu');
-		$invoice
-			 ->addCondition($form::EQUAL, true)
-			 ->toggle('companyid-container');
-
-		$company = $form->addText('companyid', 'IČO');
-		$company->addConditionOn($invoice, Form::EQUAL, true)
-			 ->setRequired('Vyplňte IČO firmy');
+    public function __construct(bool $fullCamp, Model $model, MailFactory $mailFactory)
+    {
+        $this->mailFactory = $mailFactory;
+        $this->fullCamp = $fullCamp;
+        $this->model = $model;
+    }
 
 
+    public function createComponentRegistrationForm(): Form
+    {
+        $form = new Form();
 
-		$form->addCheckbox('vegetarian', 'nejím maso');
+        $form->addHidden('email');
+        $form->addText('name', 'jméno a příjmení:')->setRequired('Vyplň jméno a příjmení');
+        $form->addText('liame', 'email:')->setRequired('Vyplň email')->addRule(
+            Form::EMAIL,
+            'emailová adresa je špatně zadaná'
+        );
+        $form->addText('phone', 'telefon:')->setRequired('Vyplň telefon');
 
-		$form->addText('nickname', "nickname:");
+        $time = [
+            'ctvrtek' => 'už ve čtvrtek na uvítací párty a páteční přednášky',
+            'patek' => 'až v pátek po práci :-(',
+        ];
 
-		$shirts = [
-			'S' => "S",
-			'M' => "M",
-			'L' => "L",
-			'XL' => "XL",
-			'2XL' => "2XL",
-		];
+        $form->addRadioList('arrival', 'přijedu:', $time);
+        $invoice = $form->addCheckbox('invoice', 'chci fakturu na firmu');
+        $invoice
+            ->addCondition($form::EQUAL, true)
+            ->toggle('companyid-container');
 
-		$form->addRadioList('tshirt', 'tríčko:', $shirts)->setRequired('Zvol si velikos trička');
-//		$form->addHidden('tshirt', 'NULL');
+        $company = $form->addText('companyid', 'IČO');
+        $company->addConditionOn($invoice, Form::EQUAL, true)
+            ->setRequired('Vyplňte IČO firmy');
 
-		$levels = [
-			'rookie' => "Rookie",
-			'normal' => "Normal",
-			'pro' => 'Pro',
-			'allstar' => 'Allstar',
-			'dgx' => 'DGX',
-		];
+        $form->addCheckbox('vegetarian', 'nejím maso');
 
-		$form->addRadioList('skills', 'Nette skills:', $levels)
-			 ->setRequired('Zvol svojí Nette dovednost');
+        $form->addText('nickname', 'nickname:');
 
-		$form->addTextArea('presentation', "workshop/přednáška:")->setRequired('doplň o co se zajímáš');
+        $shirts = [
+            'S' => 'S',
+            'M' => 'M',
+            'L' => 'L',
+            'XL' => 'XL',
+            '2XL' => '2XL',
+        ];
 
-		$form->addTextArea('note', 'Poznámka');
+        $form->addRadioList('tshirt', 'tríčko:', $shirts)->setRequired('Zvol si velikos trička');
+//      $form->addHidden('tshirt', 'NULL');
 
+        $levels = [
+            'rookie' => 'Rookie',
+            'normal' => 'Normal',
+            'pro' => 'Pro',
+            'allstar' => 'Allstar',
+            'dgx' => 'DGX',
+        ];
 
-		$form->setDefaults([
-			'arrival' => 'ctvrtek',
-		]);
+        $form->addRadioList('skills', 'Nette skills:', $levels)
+            ->setRequired('Zvol svojí Nette dovednost');
 
-		$form->addSubmit('actionSend', 'Save');
+        $form->addTextArea('presentation', 'workshop/přednáška:')->setRequired('doplň o co se zajímáš');
 
-		$form->onValidate[] = function () use ($form): void {
-			$values = $form->getValues();
+        $form->addTextArea('note', 'Poznámka');
 
-			if ($values->email !== '') {
-				$form->addError('spam protection activated');
-			}
-		};
+        $form->setDefaults([
+            'arrival' => 'ctvrtek',
+        ]);
 
-		$form->onSuccess[] = function () use ($form): void {
-			$values = $form->getValues();
-			$this->processForm($values);
-			$this->onSave($this, $this->registration);
-		};
+        $form->addSubmit('actionSend', 'Save');
 
-		return $form;
-	}
+        $form->onValidate[] = function () use ($form): void {
+            $values = $form->getValues();
 
+            if ($values->email !== '') {
+                $form->addError('spam protection activated');
+            }
+        };
 
-	private function processForm(ArrayHash $values): void
-	{
-		$values->email = $values->liame;
+        $form->onSuccess[] = function () use ($form): void {
+            $values = $form->getValues();
+            $this->processForm($values);
+            $this->onSave($this, $this->registration);
+        };
 
-		if ($values['vegetarian']){
-			$values['vegetarian'] = 'yes';
-		} else {
-			$values['vegetarian'] = 'no';
-		}
-		if ($values['invoice']){
-			$values['invoice'] = 'yes';
-		} else {
-			$values['invoice'] = 'no';
-		}
-
-		$participant = new Registration(2020, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian,
-			$values->skills, $values->tshirt, $values->presentation, $values->note);
-
-		if ($this->fullCamp) {
-			$participant->setInWaitinglist();
-		}
-
-		$this->model->persistAndFlush($participant);
-
-
-		$registrationData = new RegistrationData(2020, $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['companyid'],
-			$values['vegetarian'], $values['skills'], $values['tshirt'], $values['presentation'], $values['note']);
-
-		$mail = $this->mailFactory->createByType(RegistrationMail::class, $registrationData);
-		$mail->send();
-
-		$mailAdmin = $this->mailFactory->createByType(RegistrationAdminMail::class, $registrationData);
-		$mailAdmin->send();
-	}
+        return $form;
+    }
 
 
-	public function render()
-	{
-		$this->template->render(__DIR__ . '/registrationForm.latte');
-	}
+    private function processForm(ArrayHash $values): void
+    {
+        $values->email = $values->liame;
+
+        $values['vegetarian'] = $values['vegetarian'] ? 'yes' : 'no';
+
+        $values['invoice'] = $values['invoice'] ? 'yes' : 'no';
+
+        $participant = new Registration(2020, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian, $values->skills, $values->tshirt, $values->presentation, $values->note);
+
+        if ($this->fullCamp) {
+            $participant->setInWaitinglist();
+        }
+
+        $this->model->persistAndFlush($participant);
+
+        $registrationData = new RegistrationData(2020, $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['companyid'], $values['vegetarian'], $values['skills'], $values['tshirt'], $values['presentation'], $values['note']);
+
+        $mail = $this->mailFactory->createByType(RegistrationMail::class, $registrationData);
+        $mail->send();
+
+        $mailAdmin = $this->mailFactory->createByType(RegistrationAdminMail::class, $registrationData);
+        $mailAdmin->send();
+    }
+
+
+    public function render(): void
+    {
+        $this->template->render(__DIR__ . '/registrationForm.latte');
+    }
 
 }

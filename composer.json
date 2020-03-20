@@ -32,7 +32,8 @@
 	"require-dev": {
 		"dg/composer-cleaner": "^2.1",
 		"phpstan/phpstan": "^0.12.3",
-		"phpstan/phpstan-nette": "^0.12.0"
+		"phpstan/phpstan-nette": "^0.12.0",
+		"ninjify/qa": "^0.10.0"
 	},
 	"config": {
 		"discard-changes": true
@@ -46,7 +47,15 @@
 		}
 	},
 	"scripts": {
-		"phpstan": "vendor/bin/phpstan analyze"
+		"phpstan": "vendor/bin/phpstan analyze",
+		"lint": "linter app",
+		"cs": "codesniffer app",
+		"csf": "codefixer app",
+		"qa": [
+			"@lint",
+			"@phpstan",
+			"@cs"
+		]
 	},
 	"extra": {
 		"cleaner-ignore": {

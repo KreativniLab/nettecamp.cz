@@ -8,7 +8,7 @@ before_install:
 
 script:
   - composer validate
-  - composer phpstan
+  - composer qa
 
 after_failure:
   - for i in $(find tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done # Print *.actual content

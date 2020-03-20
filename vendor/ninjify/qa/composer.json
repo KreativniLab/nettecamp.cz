@@ -1,0 +1,32 @@
+{
+  "name": "ninjify/qa",
+  "description": "Quality assurance for your PHP projects",
+  "keywords": ["quality", "assurance", "codesniffer", "linter", "php", "nette"],
+  "type": "library",
+  "license": ["MIT"],
+  "homepage": "https://github.com/ninjify/qa",
+  "authors": [
+    {
+      "name": "Milan Felix Šulc",
+      "homepage": "https://f3l1x.io"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "ninjify/coding-standard": "^0.9.0",
+    "jakub-onderka/php-console-highlighter": "^0.4.0",
+    "jakub-onderka/php-parallel-lint": "^1.0.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "bin": [
+    "bin/codesniffer",
+    "bin/codefixer",
+    "bin/linter"
+  ],
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.10.x-dev"
+    }
+  }
+}

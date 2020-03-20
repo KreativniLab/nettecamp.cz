@@ -1,9 +1,4 @@
-<?php
-/**
- * @author Honza Cerny (http://honzacerny.com)
- */
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Aprila\Website;
 
@@ -11,59 +6,56 @@ use Nette\SmartObject;
 
 class SiteLayout
 {
-	use SmartObject;
 
-	public $develMode = FALSE;
+    use SmartObject;
 
-	public $versionName = 'public';
+    /** @var bool  */
+    public $develMode = false;
 
-	public $googleAnalytics = FALSE;
+    /** @var int|string  */
+    public $versionName = 'public';
 
-	protected $settings;
+    /** @var bool|string  */
+    public $googleAnalytics = false;
 
+    /** @var mixed  */
+    protected $settings;
 
-	/**
-	 * SiteLayout constructor.
-	 *
-	 * @param array $settings
-	 */
-	public function __construct($settings = NULL)
-	{
-		if ($settings) {
-			$this->settings = $settings;
+    /**
+     * @param mixed $settings
+     */
+    public function __construct($settings = null)
+    {
+        if ($settings) {
+            $this->settings = $settings;
 
-			if (isset($settings['develMode'])) {
-				$this->develMode = boolval($settings['develMode']);
-			}
+            if (isset($settings['develMode'])) {
+                $this->develMode = boolval($settings['develMode']);
+            }
 
-			if (isset($settings['versionName'])) {
-				$this->versionName = (string)$settings['versionName'];
-			}
+            if (isset($settings['versionName'])) {
+                $this->versionName = (string) $settings['versionName'];
+            }
 
-			if (isset($settings['googleAnalytics'])) {
-				$this->googleAnalytics = (string)$settings['googleAnalytics'];
-			}
+            if (isset($settings['googleAnalytics'])) {
+                $this->googleAnalytics = (string) $settings['googleAnalytics'];
+            }
 
-			if ($this->develMode) {
-				$this->versionName = time();
-			}
+            if ($this->develMode) {
+                $this->versionName = time();
+            }
+        }
+    }
 
-		}
-	}
+    /**
+     * get setting
+     *
+     * @param string|int|bool|null $default
+     * @return mixed
+     */
+    public function get(string $name = '', $default = null)
+    {
+        return $this->settings[$name] ?? $default;
+    }
 
-	/**
-	 * get setting
-	 *
-	 * @param string $name
-	 * @param mixed $default
-	 */
-	public function get($name = '', $default = NULL)
-	{
-		if (isset($this->settings[$name])){
-			return $this->settings[$name];
-
-		} else {
-			return $default;
-		}
-	}
 }

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace App\Model;
 
@@ -9,21 +7,26 @@ use Nextras\Orm\Repository\Repository;
 
 class RegistrationRepository extends Repository
 {
-	public static function getEntityClassNames(): array
-	{
-		return [Registration::class];
-	}
+
+    /**
+     * @return string[]
+     */
+    public static function getEntityClassNames(): array
+    {
+        return [Registration::class];
+    }
 
 
-	/**
-	 * @return ICollection|Registration[]
-	 */
-	public function findLatest()
-	{
-		return $this->findBy([
-			'year' => date('Y'),
-			'deletedAt' => null,
-			'status' => Registration::STATUS_REGISTRATION,
-		])->orderBy('id', ICollection::DESC);
-	}
+    /**
+     * @return ICollection|Registration[]
+     */
+    public function findLatest()
+    {
+        return $this->findBy([
+            'year' => date('Y'),
+            'deletedAt' => null,
+            'status' => Registration::STATUS_REGISTRATION,
+        ])->orderBy('id', ICollection::DESC);
+    }
+
 }

@@ -3,7 +3,6 @@
 namespace App\FrontModule\Components;
 
 use App\FrontModule\Mails\RegistrationAdminMail;
-use App\FrontModule\Mails\RegistrationData;
 use App\FrontModule\Mails\RegistrationMail;
 use App\Model\Model;
 use App\Model\Registration;
@@ -64,7 +63,7 @@ class RegistrationForm extends Control
             ->addCondition($form::EQUAL, true)
             ->toggle('companyid-container');
 
-        $company = $form->addText('companyid', 'IČO');
+        $company = $form->addText('companyId', 'IČO');
         $company->addConditionOn($invoice, Form::EQUAL, true)
             ->setRequired('Vyplňte IČO firmy');
 
@@ -104,16 +103,15 @@ class RegistrationForm extends Control
 
         $form->addSubmit('actionSend', 'Save');
 
-        $form->onValidate[] = function () use ($form): void {
-            $values = $form->getValues();
+        $form->setMappedType(Registration::class);
 
-            if ($values->email !== '') {
+        $form->onValidate[] = function (Form $form): void {
+            if ($form->getComponent('email')->getValue() !== '') {
                 $form->addError('spam protection activated');
             }
         };
 
-        $form->onSuccess[] = function () use ($form): void {
-            $values = $form->getValues();
+        $form->onSuccess[] = function (Form $form, Registration $values): void {
             $this->processForm($values);
             $this->onSave($this, $this->registration);
         };
@@ -122,28 +120,18 @@ class RegistrationForm extends Control
     }
 
 
-    private function processForm(ArrayHash $values): void
+    private function processForm(Registration $participant): void
     {
-        $values->email = $values->liame;
-
-        $values['vegetarian'] = $values['vegetarian'] ? 'yes' : 'no';
-
-        $values['invoice'] = $values['invoice'] ? 'yes' : 'no';
-
-        $participant = new Registration(2020, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian, $values->skills, $values->tshirt, $values->presentation, $values->note);
-
         if ($this->fullCamp) {
             $participant->setInWaitinglist();
         }
 
         $this->model->persistAndFlush($participant);
 
-        $registrationData = new RegistrationData(2020, $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['companyid'], $values['vegetarian'], $values['skills'], $values['tshirt'], $values['presentation'], $values['note']);
-
-        $mail = $this->mailFactory->createByType(RegistrationMail::class, $registrationData);
+        $mail = $this->mailFactory->createByType(RegistrationMail::class, $participant);
         $mail->send();
 
-        $mailAdmin = $this->mailFactory->createByType(RegistrationAdminMail::class, $registrationData);
+        $mailAdmin = $this->mailFactory->createByType(RegistrationAdminMail::class, $participant);
         $mailAdmin->send();
     }
 

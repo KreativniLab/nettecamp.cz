@@ -4,6 +4,7 @@ namespace App\Model;
 
 use DateTimeImmutable;
 use Nextras\Orm\Entity\Entity;
+use Ublaboo\Mailing\IMessageData;
 
 /**
  * @property int $id {primary}
@@ -14,16 +15,18 @@ use Nextras\Orm\Entity\Entity;
  * @property string $email
  * @property string $phone
  * @property string $arrival
- * @property string $invoice
+ * @property mixed $invoice
  * @property string $companyId
- * @property string $vegetarian
+ * @property mixed $vegetarian
  * @property string $skills
  * @property string $tshirt
  * @property string $presentation
  * @property string $note
  * @property DateTimeImmutable|null $deletedAt {default null}
+ *
+ * @property string $liame {virtual}
  */
-class Registration extends Entity
+class Registration extends Entity implements IMessageData
 {
 
     public const STATUS_REGISTRATION = 'registration';
@@ -31,25 +34,21 @@ class Registration extends Entity
     public const STATUS_STORNO = 'storno';
     public const STATUS_PAYED = 'payed';
 
-    public function __construct(int $year, string $name, string $nickname, string $email, string $phone, string $arrival, string $invoice, string $companyId, string $vegetarian, string $skills, string $tshirt, string $presentation, string $note)
+    public function __construct()
     {
         parent::__construct();
-
-        $this->year = $year;
-        $this->name = $name;
-        $this->nickname = $nickname;
-        $this->email = $email;
-        $this->phone = $phone;
-        $this->arrival = $arrival;
-        $this->invoice = $invoice;
-        $this->vegetarian = $vegetarian;
-        $this->skills = $skills;
-        $this->tshirt = $tshirt;
-        $this->presentation = $presentation;
-        $this->note = $note;
-        $this->companyId = $companyId;
+        $this->year = (int) date('Y');
     }
 
+    public function setterLiame(string $value): void
+    {
+        $this->email = $value;
+    }
+
+    public function getterLiame(): string
+    {
+        return $this->email;
+    }
 
     public function setInWaitinglist(): void
     {

@@ -2,6 +2,7 @@
 
 namespace App\FrontModule\Mails;
 
+use App\Model\Registration;
 use Nette;
 use Ublaboo\Mailing\AbstractMail;
 use Ublaboo\Mailing\IComposableMail;
@@ -13,7 +14,7 @@ final class RegistrationAdminMail extends AbstractMail implements IComposableMai
     public function compose(Nette\Mail\Message $message, ?IMessageData $mailData): void
     {
         // make IComposableMail generic class
-        assert($mailData instanceof RegistrationData);
+        assert($mailData instanceof Registration);  // Maybe interface???
 
         $message->setFrom($this->mailAddresses['default_sender']);
         $message->addReplyTo($mailData->email, $mailData->name);

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if git remote | grep live; then
+#    echo prepare
+#    grunt
+#    touch version
+#    date '+%d_%m_%Y_%H_%M_%S' > ./version
+#    git add version
+#    git add public/css/site/app.min.css
+#    git add public/js/site/app.min.js
+#    git commit -m '[build] version X.X'
+    echo push to server
+    git push live master:production --force
+#    echo reset
+#    git reset --hard HEAD~1
+    echo done
+else
+    echo run install command;
+    echo git remote add live git@server.disconnect.cz:www.nettecamp.cz
+fi

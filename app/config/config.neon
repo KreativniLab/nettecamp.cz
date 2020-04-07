@@ -59,15 +59,15 @@ ublaboo.mailing:
     ]
 
 nextras.dbal:
-	driver: mysqli
-	host: %database.host%
-	username: %database.user%
-	password: %database.password%
-	database: %database.dbname%
+    driver: mysqli
+    host: %database.host%
+    username: %database.user%
+    password: %database.password%
+    database: %database.dbname%
 
 
 nextras.orm:
-	model: App\Model\Model
+    model: App\Model\Model
 
 latte:
     macros:

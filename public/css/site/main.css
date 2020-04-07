@@ -2052,6 +2052,9 @@ figcaption {
 label > input[type='checkbox'] {
   margin-right: 8px; }
 
+ul > li.error {
+  color: red; }
+
 .radio-list label {
   display: inline; }
 

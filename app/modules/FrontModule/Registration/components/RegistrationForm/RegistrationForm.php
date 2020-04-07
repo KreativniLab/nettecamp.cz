@@ -2,15 +2,12 @@
 
 namespace App\FrontModule\Components;
 
-use App\FrontModule\Mails\RegistrationAdminMail;
-use App\FrontModule\Mails\RegistrationData;
-use App\FrontModule\Mails\RegistrationMail;
 use App\Model\Model;
 use App\Model\Registration;
+use Contributte\Mailing\IMailBuilderFactory;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Ublaboo\Mailing\MailFactory;
 
 /**
  * @method onSave(RegistrationForm $self, $registration)
@@ -24,8 +21,8 @@ class RegistrationForm extends Control
     /** @var ArrayHash */
     private $registration;
 
-    /** @var MailFactory */
-    private $mailFactory;
+    /** @var IMailBuilderFactory */
+    private $mailBuilderFactory;
 
     /** @var bool */
     private $fullCamp;
@@ -33,11 +30,11 @@ class RegistrationForm extends Control
     /** @var Model */
     private $model;
 
-    public function __construct(bool $fullCamp, Model $model, MailFactory $mailFactory)
+    public function __construct(bool $fullCamp, Model $model, IMailBuilderFactory $mailBuilderFactory)
     {
-        $this->mailFactory = $mailFactory;
         $this->fullCamp = $fullCamp;
         $this->model = $model;
+        $this->mailBuilderFactory = $mailBuilderFactory;
     }
 
 
@@ -63,7 +60,7 @@ class RegistrationForm extends Control
             ->addCondition($form::EQUAL, true)
             ->toggle('companyid-container');
 
-        $company = $form->addText('companyid', 'IČO');
+        $company = $form->addText('companyId', 'IČO');
         $company->addConditionOn($invoice, Form::EQUAL, true)
             ->setRequired('Vyplňte IČO firmy');
 
@@ -129,11 +126,13 @@ class RegistrationForm extends Control
 
     private function processForm(ArrayHash $values): void
     {
+        $year = (int) date('Y');
+
         $values['vegetarian'] = $values['vegetarian'] ? 'yes' : 'no';
 
         $values['invoice'] = $values['invoice'] ? 'yes' : 'no';
 
-        $participant = new Registration(2020, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyid, $values->vegetarian, $values->skills, $values->tshirt, $values->presentation, $values->note);
+        $participant = new Registration($year, $values->name, $values->nickname, $values->email, $values->phone, $values->arrival, $values->invoice, $values->companyId, $values->vegetarian, $values->skills, $values->tshirt, $values->presentation, $values->note);
 
         if ($this->fullCamp) {
             $participant->setInWaitinglist();
@@ -141,13 +140,36 @@ class RegistrationForm extends Control
 
         $this->model->persistAndFlush($participant);
 
-        $registrationData = new RegistrationData(2020, $values['name'], $values['nickname'], $values['email'], $values['phone'], $values['arrival'], $values['invoice'], $values['companyid'], $values['vegetarian'], $values['skills'], $values['tshirt'], $values['presentation'], $values['note']);
+        // mails
+        // Admin email
+        $mail = $this->mailBuilderFactory->create();
 
-        $mail = $this->mailFactory->createByType(RegistrationMail::class, $registrationData);
+        $mail->setFrom($participant->email, $participant->name);
+        $mail->setSubject('Nette Camp Registrace: ' . $participant->name);
+        $mail->addTo('petra@kreativnilaborator.cz');
+        $mail->addCc('honza@kreativnilaborator.cz');
+
+        // Template
+        $mail->setTemplateFile(__DIR__ . '/mails/registrationAdmin.latte');
+        $mail->setParameters((array) $values);
+
+        // Sending
         $mail->send();
 
-        $mailAdmin = $this->mailFactory->createByType(RegistrationAdminMail::class, $registrationData);
-        $mailAdmin->send();
+        // Customer email
+        $mailCustomer = $this->mailBuilderFactory->create();
+
+        $mailCustomer->setFrom('hello@nettecamp.cz');
+        $mailCustomer->setSubject('Registrace na Nette Camp ' . $participant->year);
+        $mailCustomer->addTo($participant->email, $participant->name);
+
+        // Template
+        $mailCustomer->setTemplateFile(__DIR__ . '/mails/registration.latte');
+        $mailCustomer->setParameters((array) $values);
+        $mailCustomer->setParameters(['year' => $year]);
+
+        // Sending
+        $mailCustomer->send();
     }
 
 

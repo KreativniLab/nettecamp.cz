@@ -34,8 +34,8 @@ php:
 
 extensions:
     contribute.console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
+    contributte.mailing: Contributte\Mailing\DI\MailingExtension
     nextras.migrations: Nextras\Migrations\Bridges\NetteDI\MigrationsExtension
-    ublaboo.mailing: Ublaboo\Mailing\DI\MailingExtension
     nextras.dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
     nextras.orm: Nextras\Orm\Bridges\NetteDI\OrmExtension
 
@@ -43,20 +43,17 @@ extensions:
 contribute.console:
     url: https://www.nettecamp.cz
 
+contributte.mailing:
+    template:
+        defaults:
+            layout: @@default
+        config:
+            layout: @@default
+
 nextras.migrations:
     dir: %appDir%/../migrations # migrations base directory
     driver: mysql               # pgsql or mysql
     dbal: nextras               # nextras, nette, doctrine or dibi
-
-ublaboo.mailing:
-    do: both # log|send|both
-    logDirectory: '%appDir%/../log/mails' # this is default option
-    mailImagesBasePath: %wwwDir% # this is default option
-    mails: [
-        default_sender: hello@nettecamp.cz
-        default_recipient: petra@kreativnilaborator.cz
-        copy_recipient: honza@kreativnilaborator.cz
-    ]
 
 nextras.dbal:
     driver: mysqli

@@ -1,4 +1,5 @@
 app/config/config.local.neon
 node_modules
+vendor
 .tmp
 public/data/history/*

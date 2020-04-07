@@ -1,2 +1,2 @@
+composer install
 delete temp/cache
-composer

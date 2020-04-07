@@ -4,42 +4,42 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f788c281be563ffc429772fba6653d9",
+    "content-hash": "f1d9f9de9aadbacca346db1dec67d8c1",
     "packages": [
         {
             "name": "contributte/console",
-            "version": "v0.5",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contributte/console.git",
-                "reference": "9ad9eb8fd88d2e0fa0047d5506a3183e1c3743c3"
+                "reference": "5bf019e2df77683a2473129f8aa6af32c8ab7c3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contributte/console/zipball/9ad9eb8fd88d2e0fa0047d5506a3183e1c3743c3",
-                "reference": "9ad9eb8fd88d2e0fa0047d5506a3183e1c3743c3",
+                "url": "https://api.github.com/repos/contributte/console/zipball/5bf019e2df77683a2473129f8aa6af32c8ab7c3e",
+                "reference": "5bf019e2df77683a2473129f8aa6af32c8ab7c3e",
                 "shasum": ""
             },
             "require": {
-                "php": ">= 7.1",
-                "symfony/console": "^4.0.0"
-            },
-            "conflict": {
-                "nette/utils": "<2.5.2"
+                "contributte/di": "^0.4.0",
+                "php": "^7.2",
+                "symfony/console": "^4.2.9|^5.0.0"
             },
             "require-dev": {
-                "nette/di": "~2.4.11",
-                "nette/http": "~2.4.8",
-                "ninjify/nunjuck": "^0.2.0",
-                "ninjify/qa": "^0.8.0"
-            },
-            "suggest": {
-                "nette/di": "to use ConsoleExtension[CompilerExtension]"
+                "nette/http": "~3.0.1",
+                "ninjify/nunjuck": "^0.3.0",
+                "ninjify/qa": "^0.10.0",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan-deprecation-rules": "^0.11.2",
+                "phpstan/phpstan-nette": "^0.11.1",
+                "phpstan/phpstan-shim": "^0.11.8",
+                "phpstan/phpstan-strict-rules": "^0.11.1",
+                "symfony/event-dispatcher": "^4.0.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-develop": "0.6.x-dev"
+                    "dev-master": "0.7.x-dev"
                 }
             },
             "autoload": {
@@ -64,7 +64,74 @@
                 "nette",
                 "symfony"
             ],
-            "time": "2018-06-21T18:48:21+00:00"
+            "time": "2020-01-03T18:18:33+00:00"
+        },
+        {
+            "name": "contributte/di",
+            "version": "v0.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contributte/di.git",
+                "reference": "9ec21373c037838a61bac5a1b1833b84b9d1e7d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contributte/di/zipball/9ec21373c037838a61bac5a1b1833b84b9d1e7d3",
+                "reference": "9ec21373c037838a61bac5a1b1833b84b9d1e7d3",
+                "shasum": ""
+            },
+            "require": {
+                "nette/di": "~3.0.2",
+                "nette/utils": "~3.0.3|~3.1.0",
+                "php": "^7.2"
+            },
+            "conflict": {
+                "nette/di": "<3.0.0"
+            },
+            "require-dev": {
+                "nette/bootstrap": "~3.0.0",
+                "nette/robot-loader": "~3.0.4|~3.1.0|~3.2.1",
+                "ninjify/nunjuck": "^0.3.0",
+                "ninjify/qa": "^0.10.0",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan-deprecation-rules": "^0.11",
+                "phpstan/phpstan-nette": "^0.11",
+                "phpstan/phpstan-shim": "^0.11",
+                "phpstan/phpstan-strict-rules": "^0.11"
+            },
+            "suggest": {
+                "nette/reflection": "to use AutoloadExtension[CompilerExtension]",
+                "nette/robot-loader": "to use AutoloadExtension[CompilerExtension]"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contributte\\DI\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Milan Felix Šulc",
+                    "homepage": "https://f3l1x.io"
+                }
+            ],
+            "description": "Extra contrib to nette/di",
+            "homepage": "https://github.com/contributte/di",
+            "keywords": [
+                "dependency",
+                "inject",
+                "nette"
+            ],
+            "time": "2020-01-05T18:11:45+00:00"
         },
         {
             "name": "contributte/recaptcha",
@@ -1872,41 +1939,41 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.4.7",
+            "version": "v5.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "10bb3ee3c97308869d53b3e3d03f6ac23ff985f7"
+                "reference": "5fa1caadc8cdaa17bcfb25219f3b53fe294a9935"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/10bb3ee3c97308869d53b3e3d03f6ac23ff985f7",
-                "reference": "10bb3ee3c97308869d53b3e3d03f6ac23ff985f7",
+                "url": "https://api.github.com/repos/symfony/console/zipball/5fa1caadc8cdaa17bcfb25219f3b53fe294a9935",
+                "reference": "5fa1caadc8cdaa17bcfb25219f3b53fe294a9935",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1.3",
+                "php": "^7.2.5",
                 "symfony/polyfill-mbstring": "~1.0",
                 "symfony/polyfill-php73": "^1.8",
                 "symfony/service-contracts": "^1.1|^2"
             },
             "conflict": {
-                "symfony/dependency-injection": "<3.4",
-                "symfony/event-dispatcher": "<4.3|>=5",
+                "symfony/dependency-injection": "<4.4",
+                "symfony/event-dispatcher": "<4.4",
                 "symfony/lock": "<4.4",
-                "symfony/process": "<3.3"
+                "symfony/process": "<4.4"
             },
             "provide": {
                 "psr/log-implementation": "1.0"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "^3.4|^4.0|^5.0",
-                "symfony/dependency-injection": "^3.4|^4.0|^5.0",
-                "symfony/event-dispatcher": "^4.3",
+                "symfony/config": "^4.4|^5.0",
+                "symfony/dependency-injection": "^4.4|^5.0",
+                "symfony/event-dispatcher": "^4.4|^5.0",
                 "symfony/lock": "^4.4|^5.0",
-                "symfony/process": "^3.4|^4.0|^5.0",
-                "symfony/var-dumper": "^4.3|^5.0"
+                "symfony/process": "^4.4|^5.0",
+                "symfony/var-dumper": "^4.4|^5.0"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
@@ -1917,7 +1984,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.4-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -1958,7 +2025,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-03-30T11:41:10+00:00"
+            "time": "2020-03-30T11:42:42+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2165,42 +2232,46 @@
         },
         {
             "name": "texy/texy",
-            "version": "v2.9.3",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "e35cd3e8c51aff8e2f08fd0e0113d9a0e07e5de9"
+                "reference": "6f7a7fee99adcfef053237fecb790ae449957275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/e35cd3e8c51aff8e2f08fd0e0113d9a0e07e5de9",
-                "reference": "e35cd3e8c51aff8e2f08fd0e0113d9a0e07e5de9",
+                "url": "https://api.github.com/repos/dg/texy/zipball/6f7a7fee99adcfef053237fecb790ae449957275",
+                "reference": "6f7a7fee99adcfef053237fecb790ae449957275",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.4"
+                "php": ">=7.1"
             },
             "replace": {
                 "dg/texy": "*"
             },
             "require-dev": {
-                "nette/tester": "^1.7 || ^2.0",
+                "latte/latte": "^2.6",
+                "nette/tester": "^2.0",
+                "phpstan/phpstan": "^0.12",
                 "tracy/tracy": "^2.4"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "src/"
-                ],
-                "files": [
-                    "src/texy.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause",
-                "GPL-2.0",
-                "GPL-3.0"
+                "GPL-2.0-only",
+                "GPL-3.0-only"
             ],
             "authors": [
                 {
@@ -2218,10 +2289,9 @@
                 "text",
                 "textile",
                 "texy",
-                "wiki",
-                "xhtml"
+                "wiki"
             ],
-            "time": "2019-11-19T19:25:16+00:00"
+            "time": "2020-01-20T20:23:58+00:00"
         },
         {
             "name": "tracy/tracy",
@@ -2897,7 +2967,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">= 7.1"
+        "php": ">= 7.3"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

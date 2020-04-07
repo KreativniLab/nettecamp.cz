@@ -45,6 +45,9 @@ class RegistrationForm extends Control
     {
         $form = new Form();
 
+        $form->addInvisibleReCaptcha('recaptcha')
+            ->setMessage('Are you a bot?');
+
         $form->addText('name', 'jméno a příjmení:')->setRequired('Vyplň jméno a příjmení');
         $form->addText('email', 'email:')->setRequired('Vyplň email')->addRule(
             Form::EMAIL,

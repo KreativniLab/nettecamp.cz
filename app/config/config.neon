@@ -38,7 +38,7 @@ extensions:
     ublaboo.mailing: Ublaboo\Mailing\DI\MailingExtension
     nextras.dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
     nextras.orm: Nextras\Orm\Bridges\NetteDI\OrmExtension
-
+    contributte.recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
 
 contribute.console:
     url: https://www.nettecamp.cz

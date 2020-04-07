@@ -119,10 +119,17 @@
 		</div>
 	</div>
 
+    <div class="form-group">
+        <div n:name="recaptcha"></div>
+    </div>
+
 	<div class="row">
 		<div class="columns medium-offset-3">
 			<input type="submit" class="button" value="Registrovat" />
 		</div>
 	</div>
 {/form}
+<script src="https://www.google.com/recaptcha/api.js?render=explicit"></script>
+<script src="{$basePath}/js/invisibleRecaptcha.js"></script>
+
 {/snippet}

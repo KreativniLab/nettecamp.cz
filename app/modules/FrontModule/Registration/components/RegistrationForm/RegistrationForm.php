@@ -45,13 +45,12 @@ class RegistrationForm extends Control
     {
         $form = new Form();
 
-        $form->addHidden('email');
         $form->addText('name', 'jméno a příjmení:')->setRequired('Vyplň jméno a příjmení');
-        $form->addText('liame', 'email:')->setRequired('Vyplň email')->addRule(
+        $form->addText('email', 'email:')->setRequired('Vyplň email')->addRule(
             Form::EMAIL,
             'emailová adresa je špatně zadaná'
         );
-        $form->addText('phone', 'telefon:')->setRequired('Vyplň telefon');
+        $form->addText('phone', 'telefon:')->setRequired('Vyplň telefon')->setDefaultValue('+420');
 
         $time = [
             'ctvrtek' => 'už ve čtvrtek na uvítací párty a páteční přednášky',
@@ -104,18 +103,24 @@ class RegistrationForm extends Control
 
         $form->addSubmit('actionSend', 'Save');
 
-        $form->onValidate[] = function () use ($form): void {
-            $values = $form->getValues();
-
-            if ($values->email !== '') {
-                $form->addError('spam protection activated');
-            }
-        };
-
         $form->onSuccess[] = function () use ($form): void {
             $values = $form->getValues();
             $this->processForm($values);
             $this->onSave($this, $this->registration);
+        };
+
+        $form->onValidate[] = function () use ($form): void {
+            $values = $form->getValues();
+
+            if (strpos($values['name'], ' ') === false) {
+                $form->addError('zadejte jméno a příjmení oddělené mezerou');
+            }
+        };
+
+        $form->onError[] = function (): void {
+            if ($this->getPresenter()->isAjax()) {
+                $this->redrawControl('registrationFormSnippet');
+            }
         };
 
         return $form;
@@ -124,8 +129,6 @@ class RegistrationForm extends Control
 
     private function processForm(ArrayHash $values): void
     {
-        $values->email = $values->liame;
-
         $values['vegetarian'] = $values['vegetarian'] ? 'yes' : 'no';
 
         $values['invoice'] = $values['invoice'] ? 'yes' : 'no';

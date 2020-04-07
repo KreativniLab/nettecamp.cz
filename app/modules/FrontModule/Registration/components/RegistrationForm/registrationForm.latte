@@ -1,3 +1,4 @@
+{snippet registrationFormSnippet}
 {form registrationForm id=>"registrationForm"}
 	<ul n:formErrors class="form-errors"></ul>
 
@@ -12,11 +13,11 @@
 	</div>
 	<div class="row">
 		<div class="medium-3 columns medium-text-right">
-			{label liame}
+			{label email}
 		</div>
 		<div class="medium-9 columns">
-			{input liame}
-			{errors liame}
+			{input email}
+			{errors email}
 		</div>
 	</div>
 	<div class="row">
@@ -122,6 +123,6 @@
 		<div class="columns medium-offset-3">
 			<input type="submit" class="button" value="Registrovat" />
 		</div>
-
 	</div>
 {/form}
+{/snippet}

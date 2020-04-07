@@ -18,16 +18,16 @@
 		"nette/safe-stream": "2.4.*",
 		"nette/security": "3.0.*",
 		"nette/utils": "3.1.*",
-		"latte/latte": "2.7.*",
+		"latte/latte": "2.6.*",
 		"tracy/tracy": "2.7.*",
 		"contributte/console": "0.8.*",
     "contributte/recaptcha": "3.3.*",
+    "contributte/mailing": "0.3.*",
 		"nextras/migrations": "3.1.*",
 		"nextras/static-router": "v2.0.*",
 		"nextras/mail-panel": "2.5.*",
 		"texy/texy": "3.1.*",
 		"nittro/nette-bridges": "2.1.*",
-		"ublaboo/mailing": "^1.2",
 		"nextras/orm": "3.1.*"
 	},
 	"require-dev": {
@@ -58,9 +58,12 @@
 			"@cs"
 		]
 	},
-	"extra": {
-		"cleaner-ignore": {
-			"phpstan/phpstan-nette": true
-		}
-	}
+  "extra": {
+    "cleaner-ignore": {
+      "phpstan/phpstan-nette": true,
+      "contributte/mailing": [
+        "resources"
+      ]
+    }
+  }
 }

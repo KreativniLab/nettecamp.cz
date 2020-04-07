@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1d9f9de9aadbacca346db1dec67d8c1",
+    "content-hash": "48db852e0a85f076f8be167df14ee848",
     "packages": [
         {
             "name": "contributte/console",
@@ -134,6 +134,70 @@
             "time": "2020-01-05T18:11:45+00:00"
         },
         {
+            "name": "contributte/mailing",
+            "version": "v0.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contributte/mailing.git",
+                "reference": "5c4237cd0fa36706fd0f0f6256277bb6267fbfcd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contributte/mailing/zipball/5c4237cd0fa36706fd0f0f6256277bb6267fbfcd",
+                "reference": "5c4237cd0fa36706fd0f0f6256277bb6267fbfcd",
+                "shasum": ""
+            },
+            "require": {
+                "latte/latte": "~2.5.1|~2.6.0",
+                "nette/application": "~3.0.0",
+                "nette/di": "~3.0.0",
+                "nette/mail": "~3.0.1|~3.1.0",
+                "php": "^7.2"
+            },
+            "conflict": {
+                "nette/di": "<3.0.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2.4",
+                "ninjify/nunjuck": "^0.3.0",
+                "ninjify/qa": "^0.10.0",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan-deprecation-rules": "^0.11",
+                "phpstan/phpstan-nette": "^0.11",
+                "phpstan/phpstan-shim": "^0.11",
+                "phpstan/phpstan-strict-rules": "^0.11"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contributte\\Mailing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Milan Felix Šulc",
+                    "homepage": "https://f3l1x.io"
+                }
+            ],
+            "description": "Sending emails with pleasure and prepared templates.",
+            "homepage": "https://github.com/contributte/mailing",
+            "keywords": [
+                "mail",
+                "mailing",
+                "nette"
+            ],
+            "time": "2020-01-05T18:37:06+00:00"
+        },
+        {
             "name": "contributte/recaptcha",
             "version": "v3.3.0",
             "source": {
@@ -198,16 +262,16 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.7.1",
+            "version": "v2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "f2854b9261bfafe1d526cd836d8e8e11e14ae93b"
+                "reference": "bb3e57a815cb48ed282671ec206caae531aa2985"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/f2854b9261bfafe1d526cd836d8e8e11e14ae93b",
-                "reference": "f2854b9261bfafe1d526cd836d8e8e11e14ae93b",
+                "url": "https://api.github.com/repos/nette/latte/zipball/bb3e57a815cb48ed282671ec206caae531aa2985",
+                "reference": "bb3e57a815cb48ed282671ec206caae531aa2985",
                 "shasum": ""
             },
             "require": {
@@ -219,7 +283,6 @@
                 "nette/application": "<2.4.1"
             },
             "require-dev": {
-                "nette/php-generator": "^3.3.4",
                 "nette/tester": "~2.0",
                 "nette/utils": "^3.0",
                 "phpstan/phpstan": "^0.12",
@@ -229,13 +292,12 @@
                 "ext-fileinfo": "to use filter |datastream",
                 "ext-iconv": "to use filters |reverse, |substring",
                 "ext-mbstring": "to use filters like lower, upper, capitalize, ...",
-                "nette/php-generator": "to use tag {templatePrint}",
                 "nette/utils": "to use filter |webalize"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -271,7 +333,7 @@
                 "template",
                 "twig"
             ],
-            "time": "2020-04-01T14:27:27+00:00"
+            "time": "2020-03-04T09:44:23+00:00"
         },
         {
             "name": "nette/application",
@@ -2365,60 +2427,6 @@
                 "profiler"
             ],
             "time": "2020-02-23T18:40:15+00:00"
-        },
-        {
-            "name": "ublaboo/mailing",
-            "version": "v1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ublaboo/mailing.git",
-                "reference": "244e8832d3cc8ec6bfd68f5297526b8792b4b684"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ublaboo/mailing/zipball/244e8832d3cc8ec6bfd68f5297526b8792b4b684",
-                "reference": "244e8832d3cc8ec6bfd68f5297526b8792b4b684",
-                "shasum": ""
-            },
-            "require": {
-                "latte/latte": "~2.4 || ~3.0",
-                "nette/application": "~2.4 || ~3.0",
-                "nette/di": "~2.4 || ~3.0",
-                "nette/mail": "~2.4 || ~3.0",
-                "nette/utils": "~2.4 || ~3.0",
-                "php": ">= 7.1"
-            },
-            "require-dev": {
-                "mockery/mockery": "~1.0",
-                "nette/tester": "~2.0",
-                "tracy/tracy": "^2.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Ublaboo\\Mailing\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Pavel Janda",
-                    "homepage": "http://paveljanda.com"
-                }
-            ],
-            "description": "Extension for Nette Framework: Easy & object-oriented way of sending & logging mails",
-            "homepage": "https://ublaboo.org/mailing",
-            "keywords": [
-                "extension",
-                "log",
-                "mail",
-                "mailing",
-                "nette"
-            ],
-            "time": "2019-05-09T11:26:12+00:00"
         }
     ],
     "packages-dev": [

@@ -21,6 +21,7 @@
 		"latte/latte": "^2.5",
 		"tracy/tracy": "^2.6",
 		"contributte/console": "^0.5",
+    "contributte/recaptcha": "3.3.*",
 		"nextras/migrations": "^3.0",
 		"nextras/static-router": "v2.0.0",
 		"nextras/mail-panel": "^2.5",

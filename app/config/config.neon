@@ -13,12 +13,12 @@ parameters:
 
     partners:
         one:
-            empty: true
+#            empty: true
             url: https://www.jetbrains.com
             img: img/partner/logo-jetbrains.png
             title: JetBrains
         two:
-            empty: true
+#            empty: true
             url: https://www.peckadesign.cz/
             img: img/partner/logo-peckadesign.png
             title: PeckaDesign

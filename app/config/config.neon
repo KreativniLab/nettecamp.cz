@@ -14,14 +14,14 @@ parameters:
     partners:
         one:
             empty: true
-#            url: https://www.jetbrains.com
-#            img: img/partner/logo-jetbrains.jpg
-#            title: JetBrains
+            url: https://www.jetbrains.com
+            img: img/partner/logo-jetbrains.png
+            title: JetBrains
         two:
             empty: true
-#            url: https://tlapnet.cz/
-#            img: img/partner/logo-tlapnet.jpg
-#            title: Tlapnet
+            url: https://www.peckadesign.cz/
+            img: img/partner/logo-peckadesign.png
+            title: PeckaDesign
         empty2:
             empty: true
 #            url: https://sledovanitv.cz/career

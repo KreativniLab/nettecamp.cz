@@ -2885,6 +2885,10 @@ _context.invoke('Utils', function (Arrays, Strings, undefined) {
         },
 
         trigger: function (elem, evt, params) {
+            if (!(elem = getElem(elem))) {
+                return;
+            }
+
             var module = knownEvents[evt] || 'CustomEvent',
                 event;
 
@@ -2894,15 +2898,12 @@ _context.invoke('Utils', function (Arrays, Strings, undefined) {
 
             try {
                 event = knownEventModules[module].create(evt, params);
-
             } catch (e) {
                 event = document.createEvent(knownEventModules[module].name || module);
                 knownEventModules[module].init(event, evt, params);
-
             }
 
-            return getElem(elem).dispatchEvent(event);
-
+            return elem.dispatchEvent(event);
         },
 
         delegate: function(sel, handler) {
@@ -3077,7 +3078,7 @@ _context.invoke('Utils', function (Arrays, Strings, undefined) {
             classes = prepare(arguments);
 
             for (var i = 0; i < classes.length; i++) {
-                if (!elem.classList.contains(classes[i])) {
+                if (!elem.classList || !elem.classList.contains(classes[i])) {
                     return false;
 
                 }
@@ -8669,7 +8670,9 @@ _context.invoke('Nittro.Page', function (DOM, Arrays) {
         this._.anchor.style.height = '1px';
         this._.anchor.style.marginTop = '-1px';
 
-        window.history.scrollRestoration = 'manual';
+        if ('scrollRestoration' in window.history) {
+            window.history.scrollRestoration = 'manual';
+        }
         this._.page.on('ready', this._init.bind(this));
         this._.page.on('transaction-created', this._initTransaction.bind(this));
     }, {

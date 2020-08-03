@@ -7,7 +7,7 @@ parameters:
 
     site:
         develMode: false
-        version: program
+        version: night
         disableRegistration: false
         campCapacity: 50
 

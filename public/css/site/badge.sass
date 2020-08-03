@@ -1,7 +1,7 @@
 .b-user-badge
   position: relative
-  background: #C4C4C4
-  border: 2px solid #434343
+  background: #000
+  border: 2px solid #F8FAA5
   box-sizing: border-box
   border-radius: 17px
   display: inline-block
@@ -13,38 +13,12 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
 
   @media #{$medium-up}
-    border: 5px solid #434343
-
-
-.b-user-badge::before
-  z-index: 10
-  content: " "
-  position: absolute
-  display: block
-  width: 10px
-  height: 10px
-  background: #434343
-  border-radius: 5px
-  top: 12px
-  right: 7px
-  @media #{$medium-up}
-    top: 24px
-
+    border: 5px solid #F8FAA5
 
 .b-user-badge__image
-  border-radius: 20px
-  width: 20px
-  height: 20px
-  filter: grayscale(100%)
-
-  @media #{$medium-up}
-    border-radius: 20px
-    width: 40px
-    height: 40px
-    margin-top: -6px
+  display: none
 
 .b-user-badge__name
-  font-family: Courier
   padding-top: 3px
   display: inline-block
   font-weight: bold
@@ -53,3 +27,4 @@
   @media #{$medium-up}
     font-size: 25px
     padding-top: 3px
+    padding-left: 20px

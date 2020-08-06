@@ -79,8 +79,8 @@ class RegistrationForm extends Control
             '2XL' => '2XL',
         ];
 
-        $form->addRadioList('tshirt', 'tríčko:', $shirts)->setRequired('Zvol si velikos trička');
-//      $form->addHidden('tshirt', 'NULL');
+        // $form->addRadioList('tshirt', 'tríčko:', $shirts)->setRequired('Zvol si velikos trička');
+     $form->addHidden('tshirt', 'NULL');
 
         $levels = [
             'rookie' => 'Rookie',

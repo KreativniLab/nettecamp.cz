@@ -6,7 +6,7 @@
 			<h1>Historie</h1>
 
 			{foreach $history as $camp}
-				<h2 class="mt40">$history[{$camp->name}] = {$camp->year}</h2>
+				<h2 class="margin-top-3">$history[{$camp->name}] = {$camp->year}</h2>
 				<p>
 					<a href="{$camp->linkForum}">Nette Camp {$camp->year} – Setkání příznivců Nette Framework mimo město</a>
 					{if $camp->linkFacebook}<br>

@@ -22,11 +22,11 @@ parameters:
             url: https://www.peckadesign.cz/
             img: img/partner/logo-peckadesign.png
             title: PeckaDesign
-        empty2:
-            empty: true
-#            url: https://sledovanitv.cz/career
-#            img: img/partner/logo-sledovani.png
-#            title: sledovani
+        three:
+#            empty: true
+            url: https://etyka.cz/kariera
+            img: img/partner/logo-etyka.png
+            title: ETYKA.
 
 
 php:

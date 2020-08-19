@@ -8,7 +8,7 @@ parameters:
     site:
         develMode: false
         version: utility
-        disableRegistration: false
+        disableRegistration: true
         campCapacity: 50
 
     partners:

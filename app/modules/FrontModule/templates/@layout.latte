@@ -61,7 +61,7 @@
 				<nav>
 					<a class="main-navigation__item" n:href="Homepage:"><span class="hide-for-small-only">Nette Camp</span><span class="show-for-small-only">Homepage</span></a>
 					<a class="main-navigation__item" n:href="Program:">Program</a>
-					<a class="main-navigation__item" n:href="Registration:">Registrace</a>
+					<a n:if="!$disableRegistration" class="main-navigation__item" n:href="Registration:">Registrace</a>
 					<a class="main-navigation__item" n:href="Location:">Lokace</a>
 					<a class="main-navigation__item" n:href="Team:">Tým</a>
 					<a class="main-navigation__item" n:href="History:">Historie</a>

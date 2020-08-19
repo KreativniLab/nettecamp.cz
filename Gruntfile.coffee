@@ -12,7 +12,7 @@ module.exports = (grunt) ->
       task:
         basePath: 'public'
         options:
-          removeFromPath: ['app/modules/FrontModule/templates/']
+          removeFromPath: ['app\\modules\\FrontModule\\templates\\']
     nittro:
       options:
         vendor:
